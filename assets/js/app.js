@@ -258,11 +258,13 @@
 
   /* ---------- ABAP Quest teaser: progress saved by quest.html in this browser ---------- */
   (function questProgress() {
-    const el = $('[data-quest-progress]');
-    if (!el) return;
     let st = null;
     try { st = JSON.parse(localStorage.getItem('abapquest.portfolio.v1') || 'null'); } catch (e) { /* no storage */ }
     if (!st || !st.xp) return;
+    const mark = $('.qb-mark');
+    if (mark) mark.textContent = '?';   // like a quest in progress
+    const el = $('[data-quest-progress]');
+    if (!el) return;
     const level = st.level || 1;
     const bosses = Object.values(st.bosses || {}).filter(b => b && b.won).length;
     el.innerHTML = `<span lang="en">Your progress: level ${level} · ${bosses} of 8 bosses defeated</span>` +
@@ -335,6 +337,7 @@
     sTitle.innerHTML = card.querySelector('h3').innerHTML;
     sKicker.textContent = kickerOf(card);
     sTile.innerHTML = card.querySelector('.tile').innerHTML;
+    sheet.style.setProperty('--sec', getComputedStyle(card).getPropertyValue('--sec').trim() || '114, 182, 255');   // the section's colour
     sBody.replaceChildren(card.querySelector('template.detail').content.cloneNode(true));
     $$('pre[data-hl]', sBody).forEach(renderLines);
     edgeUpdaters.length = 0;

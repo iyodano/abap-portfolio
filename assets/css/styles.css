@@ -77,7 +77,7 @@ code, pre, textarea, .mono { font-family: var(--font-mono); }
 .nav-links a:hover { color: var(--ink); background: rgba(255, 255, 255, .08); }
 
 /* ---------- Layout ---------- */
-main { max-width: 1120px; margin: 0 auto; padding: 28px 16px 64px; display: flex; flex-direction: column; gap: 56px; }
+main { max-width: 1120px; margin: 0 auto; padding: 28px 16px 64px; display: flex; flex-direction: column; gap: clamp(56px, 8vw, 92px); }
 section > .sec-head { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
 .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
 .sec-head h2 { font-size: clamp(26px, 3.4vw, 34px); font-weight: 650; }
@@ -580,6 +580,17 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
   .node { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(40, 70, 140, .32); }
 }
 
+/* ---------- ABAP Quest badge in the navigation bar ("!" new, "?" started) ---------- */
+.quest-badge { display: inline-flex; align-items: center; gap: 8px; flex: none; text-decoration: none; color: #f6dca0; font: 600 13.5px var(--font-body);
+  padding: 3px 12px 3px 3px; border-radius: 999px; background: rgba(244, 203, 110, .1); border: 1px solid rgba(244, 203, 110, .35); transition: background .2s, border-color .2s; }
+.quest-badge:hover { background: rgba(244, 203, 110, .18); border-color: rgba(244, 203, 110, .6); }
+.qb-mark { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 700 17px/1 "Cinzel", Georgia, serif; color: #2a1a02;
+  background: radial-gradient(circle at 35% 30%, #fff2c4, #f4cb6e 45%, #d9982f);
+  box-shadow: 0 0 0 1px rgba(255, 226, 154, .6), 0 0 14px 2px rgba(244, 203, 110, .55); animation: qb-bob 2.6s ease-in-out infinite; }
+@keyframes qb-bob { 50% { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(255, 226, 154, .7), 0 0 20px 4px rgba(244, 203, 110, .7); } }
+@media (max-width: 640px) { .quest-badge { padding: 3px; gap: 0; } .quest-badge .qb-label { display: none; } }
+@media (prefers-reduced-motion: reduce) { .qb-mark { animation: none; } }
+
 /* ---------- ABAP Quest teaser (the game itself is quest.html) ---------- */
 .quest-teaser { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 24px; align-items: center;
   border-radius: var(--r-card); padding: clamp(20px, 3.5vw, 34px); color: inherit; text-decoration: none; transition: transform .3s var(--ease), border-color .3s; }
@@ -614,3 +625,24 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
 }
 @media (hover: none) { .quest-teaser:hover { transform: none; border-color: rgba(244, 203, 110, .3); } }
 @media (prefers-reduced-motion: reduce) { .qt-walk { animation: none; display: none; } }
+
+/* ---------- Section identity: a number, a line and a colour per section ----------
+   Sections with a .sec-head are numbered in order (01, 02…). --sec is the section's colour (r, g, b);
+   it tints the label, its line, the glow behind the title, the card icons and tags, and the card once opened. */
+main { counter-reset: sec; --sec: 114, 182, 255; }
+#profile  { --sec: 114, 182, 255; }   /* blue */
+#projects { --sec: 127, 227, 207; }   /* mint */
+#docs     { --sec: 183, 160, 255; }   /* violet */
+#tools    { --sec: 255, 166, 128; }   /* coral (the game is gold) */
+section > .sec-head { position: relative; }
+section > .sec-head::before { content: ""; position: absolute; left: -120px; top: -90px; width: 560px; height: 280px; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(var(--sec), .16), transparent); }
+section > .sec-head .eyebrow { display: flex; align-items: center; gap: 12px; color: rgb(var(--sec)); }
+section > .sec-head .eyebrow::before { counter-increment: sec; content: counter(sec, decimal-leading-zero); font: 500 13px var(--font-mono); letter-spacing: 0; color: var(--ink-dim); }
+section > .sec-head .eyebrow::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(var(--sec), .55), transparent 80%); }
+section .card .tile, .sheet-head .tile { color: rgb(var(--sec)); background: linear-gradient(150deg, rgba(var(--sec), .3), rgba(var(--sec), .07)); border-color: rgba(var(--sec), .32); }
+section .card .tag { background: rgba(var(--sec), .1); color: rgb(var(--sec)); border-color: rgba(var(--sec), .24); }
+section .card.glass:hover { border-color: rgba(var(--sec), .45); }
+.sheet-head .kicker { color: rgb(var(--sec, 114, 182, 255)); }
+@media (max-width: 640px) { section > .sec-head::before { left: -60px; width: 400px; height: 240px; } }
+@media (hover: none) { section .card.glass:hover { border-color: var(--stroke); } }
