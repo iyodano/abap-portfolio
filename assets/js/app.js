@@ -130,8 +130,10 @@
   // One line of code. --i is its indentation, so on phones a wrapped line keeps a hanging indent;
   // the run of spaces that aligns an end-of-line comment is marked so it can shrink there.
   const codeLine = (line, plain) => {
-    const html = (plain ? escHtml(line) : hlLine(line)).replace(/ {3,}(?=<span class="c">&quot;)/g, m => `<span class="pad">${m}</span>`);
-    return `<span class="lc" style="--i:${line.match(/^ */)[0].length}">${html}</span>`;
+    const ind = line.match(/^ */)[0].length;
+    const html = (plain ? escHtml(line) : hlLine(line)).replace(/^ +/, '')
+      .replace(/ {3,}(?=<span class="c">&quot;)/g, m => `<span class="pad">${m}</span>`);
+    return `<span class="lc" style="--i:${ind}"><span class="ind">${' '.repeat(ind)}</span>${html}</span>`;
   };
   const renderLines = pre => {
     pre.innerHTML = pre.textContent.replace(/\s+$/, '').split('\n').map(l => `<span class="ln">${codeLine(l)}</span>`).join('');
@@ -565,6 +567,12 @@ ENDFORM.`,
     const ta = $('#conv-in', root);
     const gut = $('.gutter .g', root);
     const out = $('.out-code', root);
+    out.classList.add('lines');
+    // Phones: the editor wraps long lines (its line numbers are hidden there, see styles.css)
+    const phone = matchMedia('(max-width: 640px)');
+    const setWrap = () => ta.setAttribute('wrap', phone.matches ? 'soft' : 'off');
+    setWrap();
+    if (phone.addEventListener) phone.addEventListener('change', setWrap);
     const sum = $('.summary', root);
     const notesEl = $('.notes', root);
     const inl = $('#conv-inline', root);
@@ -585,7 +593,7 @@ ENDFORM.`,
       last = r;
       const chg = new Set(r.changedLines);
       out.innerHTML = r.code
-        ? r.code.split('\n').map((l, k) => `<span class="ln${chg.has(k + 1) ? ' chg' : ''}"><span class="num">${k + 1}</span>${hlLine(l)}</span>`).join('')
+        ? r.code.split('\n').map((l, k) => `<span class="ln${chg.has(k + 1) ? ' chg' : ''}"><span class="num">${k + 1}</span>${codeLine(l)}</span>`).join('')
         : `<span class="ln"><span class="num"></span><span class="empty">${t('resultHere')}</span></span>`;
       const warns = r.notes.filter(n => n.level === 'warn').length;
       sum.innerHTML = `<span class="stat"><b>${r.stats.statements}</b> ${t('statements')}</span><span class="stat"><b>${r.stats.changed}</b> ${t('changed')}</span>` +

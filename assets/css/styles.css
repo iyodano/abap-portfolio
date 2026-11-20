@@ -18,6 +18,7 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }   /* no automatic text inflation when the phone rotates */
 html.locked { overflow: hidden; }
 body {
   overflow-x: clip;
@@ -540,18 +541,29 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
 }
 
 /* ---------- Phones: code wraps instead of being cut ----------
-   Each line is <span class="ln"> (+ gutter) + <span class="lc" style="--i:indent">. A long line continues
-   two characters further in than its own indentation, so the structure of the code stays readable. */
+   Each line is <span class="ln"> + line number + <span class="lc" style="--i:indent"><span class="ind">spaces</span>code</span>.
+   On phones the spaces are replaced by a left margin capped at 12 characters, and a long line continues
+   two characters further in. Nothing can be pushed out of view, however deep the indentation. */
 @media (max-width: 640px) {
-  .code-block.lines { overflow-x: hidden; font-size: 12px; line-height: 1.6; }
+  pre.lines { overflow-x: auto; -webkit-mask-image: none !important; mask-image: none !important; }
+  .code-block.lines { font-size: 12px; line-height: 1.6; }
   .code-window .code-block.lines { font-size: 11.5px; padding: 8px 0 12px; }
-  .code-block.lines .ln { display: flex; align-items: flex-start; min-width: 0; padding-right: 10px; white-space: normal; }
-  .code-block.lines .g { flex: none; width: 2.8em; padding-right: .8em; margin-right: 0; }
-  .code-block.lines .lc { flex: 1; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere;
-    padding-left: calc((var(--i, 0) + 2) * 1ch); text-indent: calc((var(--i, 0) + 2) * -1ch); }
-  .code-block.lines .pad { display: inline-block; width: 2ch; overflow: hidden; vertical-align: top; white-space: pre; }
+  pre.lines .ln { display: flex; align-items: flex-start; min-width: 0; padding-right: 10px; white-space: normal; }
+  pre.lines .g, pre.lines .num { flex: none; width: 2.8em; padding-right: .8em; margin-right: 0; }
+  pre.lines .lc { flex: 1; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere;
+    padding-left: calc((min(var(--i, 0), 12) + 2) * 1ch); text-indent: -2ch; }
+  pre.lines .ind { display: none; }
+  pre.lines .pad { display: inline-block; width: 2ch; overflow: hidden; vertical-align: top; white-space: pre; }
   .code-panel { margin: 0 -12px; padding: 14px 12px; }
   .code-window { border-radius: 14px; }
+
+  /* The ABAP converter: result like the code above; the editor wraps, with its text drawn at 16px
+     (so iPhone does not zoom in when you tap it) and scaled to the same 11.5px */
+  .out-code.lines { font-size: 11.5px; }
+  .editor { display: block; overflow: hidden; }
+  .editor .gutter { display: none; }
+  textarea.code { display: block; font-size: 16px; width: calc(100% / .72); height: calc(100% / .72); transform: scale(.72); transform-origin: 0 0;
+    white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: hidden; padding: 16px 18px; }
 }
 @media (prefers-reduced-motion: reduce) { .card.landing::after { animation: none; display: none; } }
 
