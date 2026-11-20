@@ -12,6 +12,7 @@
 */
 import { readFileSync, writeFileSync, readdirSync, existsSync, watch } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
@@ -433,7 +434,13 @@ function build() {
   const main = projects.filter(p => p.meta.place === 'main').sort(byOrder);
   const more = projects.filter(p => p.meta.place === 'more').sort(byOrder);
   const block = `${START}\n${main.map(renderMain).join('\n\n')}\n${renderMoreCard(more)}\n      ${END}`;
-  const next = html.slice(0, a) + block + html.slice(b + END.length);
+  let next = html.slice(0, a) + block + html.slice(b + END.length);
+  // Cache busting: assets/…css|js?v=<content hash>, so phones and GitHub Pages never serve an old copy
+  next = next.replace(/((?:src|href)=")(assets\/[^"?]+\.(?:css|js))(?:\?v=\w+)?"/g, (m, pre, path) => {
+    const file = join(ROOT, path);
+    if (!existsSync(file)) return m;
+    return `${pre}${path}?v=${createHash('sha1').update(readFileSync(file)).digest('hex').slice(0, 8)}"`;
+  });
   if (next !== html) writeFileSync(INDEX, next);
   const stamp = new Date().toLocaleTimeString();
   console.log(`✓ ${stamp}  ${main.length} on the front page, ${more.length} in "More projects"${next === html ? ' (no changes)' : ' → index.html'}`);

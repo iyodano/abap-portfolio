@@ -554,3 +554,17 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
   .code-window { border-radius: 14px; }
 }
 @media (prefers-reduced-motion: reduce) { .card.landing::after { animation: none; display: none; } }
+
+/* ---------- Touch screens: frosted look without real-time blur ----------
+   On phones and tablets, twenty backdrop-filter cards over the animated background had to be re-blurred
+   after every sheet closed, and the cards looked dark for a few seconds. Here the glass is "pre-frosted":
+   a tinted, more opaque background that looks the same over this navy page and costs nothing to draw. */
+@media (hover: none), (max-width: 640px) {
+  .glass { -webkit-backdrop-filter: none; backdrop-filter: none;
+    background: linear-gradient(160deg, rgba(150, 190, 255, .16), rgba(120, 160, 255, .05) 62%), rgba(10, 26, 66, .72); }
+  .card.glass.more-card { background: linear-gradient(105deg, rgba(114, 182, 255, .14), rgba(255, 255, 255, .03) 42%, rgba(127, 227, 207, .08)), rgba(10, 26, 66, .7); }
+  .scrim { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(2, 6, 18, .74); }
+  .sheet { -webkit-backdrop-filter: none; backdrop-filter: none; background: linear-gradient(170deg, rgba(22, 44, 92, .985), rgba(8, 20, 46, .99)); }
+  .close { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(40, 64, 120, .9); }
+  .node { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(40, 70, 140, .32); }
+}
