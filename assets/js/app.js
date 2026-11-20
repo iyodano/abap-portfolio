@@ -256,6 +256,21 @@
     scrollTo({ top: a.dataset.scroll === 'home' ? 0 : y, behavior: reduced ? 'auto' : 'smooth' });
   }));
 
+  /* ---------- ABAP Quest teaser: progress saved by quest.html in this browser ---------- */
+  (function questProgress() {
+    const el = $('[data-quest-progress]');
+    if (!el) return;
+    let st = null;
+    try { st = JSON.parse(localStorage.getItem('abapquest.portfolio.v1') || 'null'); } catch (e) { /* no storage */ }
+    if (!st || !st.xp) return;
+    const level = st.level || 1;
+    const bosses = Object.values(st.bosses || {}).filter(b => b && b.won).length;
+    el.innerHTML = `<span lang="en">Your progress: level ${level} · ${bosses} of 8 bosses defeated</span>` +
+      `<span lang="es">Tu progreso: nivel ${level} · ${bosses} de 8 jefes derrotados</span>`;
+    el.hidden = false;
+    $$('[data-quest-cta]').forEach(s => { s.textContent = s.lang === 'es' ? 'Continuar la aventura' : 'Continue the quest'; });
+  })();
+
   /* ---------- Card sheen that follows the pointer ---------- */
   $$('.card').forEach(c => c.addEventListener('pointermove', e => {
     const r = c.getBoundingClientRect();

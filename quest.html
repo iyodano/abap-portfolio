@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-es="ABAP Quest · Un RPG para aprender ABAP moderno">ABAP Quest · An RPG to learn modern ABAP</title>
+<meta name="description" content="ABAP Quest: a small browser RPG to learn modern ABAP. Eight zones, nine bosses and 97 questions on ADT, modern syntax, OO, ABAP Unit, CDS, RAP, clean core and HCM integrations, in English and Spanish.">
+<link rel="icon" href="assets/img/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/img/icon-192.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#030a19">
+<script>
+  // Same language as the portfolio: saved choice, otherwise the browser language.
+  (function () {
+    var lang = 'en';
+    try { lang = localStorage.getItem('lang') || ((navigator.language || '').toLowerCase().indexOf('es') === 0 ? 'es' : 'en'); } catch (e) { /* no storage */ }
+    document.documentElement.lang = lang === 'es' ? 'es' : 'en';
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css?v=53075434">
+<link rel="stylesheet" href="assets/css/quest.css?v=9f46da3c">
+</head>
+<body class="quest-page">
+<!--
+  ABAP Quest. The page is drawn by assets/js/quest.js from the content in assets/js/quest-data.js
+  (zones, bosses, levels, achievements and questions, in English and Spanish).
+  Progress is saved only in the visitor's browser (localStorage key "abapquest.portfolio.v1").
+-->
+<div class="bg" aria-hidden="true"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+
+<!-- Icon sprite: <svg class="i"><use href="#q-name"/></svg> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="q-tent" viewBox="0 0 24 24"><path d="M2.5 20.5h19"/><path d="M3.5 20.5 12 6l8.5 14.5"/><path d="M12 13 9.5 20.5M12 13l2.5 7.5"/><path d="M12 6V2.5l3.5 1.2L12 5"/></symbol>
+  <symbol id="q-tree" viewBox="0 0 24 24"><path d="M12 2.5 6.5 10h3L5 16.5h14L14.5 10h3z"/><path d="M12 16.5v5"/></symbol>
+  <symbol id="q-castle" viewBox="0 0 24 24"><path d="M3.5 21V8.5h3v2h2v-2h3v2h1v-2h3v2h2v-2h3V21z"/><path d="M10 21v-3.5a2 2 0 0 1 4 0V21"/><path d="M12 8.5V3l3 1.2L12 5.4"/></symbol>
+  <symbol id="q-tower" viewBox="0 0 24 24"><path d="M7.5 21.5V9.5h9v12z"/><path d="M6 9.5V5h2.5v2H11V5h2v2h2.5V5H18v4.5"/><path d="M10.5 21.5v-3a1.5 1.5 0 0 1 3 0v3M11 12.5h2v2.5h-2z"/></symbol>
+  <symbol id="q-pick" viewBox="0 0 24 24"><path d="M3 9.5C7 4.5 15 3.2 21 6.8"/><path d="M13.6 5.2 5.5 21.5"/><path d="M11.4 9.6l1.9 1"/></symbol>
+  <symbol id="q-anvil" viewBox="0 0 24 24"><path d="M2.5 7.5h14c0 2.8 2 4 5 4v1.5h-6.2l-1.3 3h2.5v3.5H6.5V16H9l-1.3-3C4.5 13 2.5 10.6 2.5 7.5z"/><path d="M18 3.5l1.5 1.5M20.5 2.5v1.5M15.5 2.5l.8 1.4"/></symbol>
+  <symbol id="q-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.5 5.8v5.7c0 4.6 3.2 8.2 7.5 9.7 4.3-1.5 7.5-5.1 7.5-9.7V5.8z"/><path d="M12 6.5v11M7.8 11h8.4"/></symbol>
+  <symbol id="q-anchor" viewBox="0 0 24 24"><circle cx="12" cy="4.8" r="2.1"/><path d="M12 6.9v14.3M8 10.5h8"/><path d="M4.3 13.5a7.7 7.7 0 0 0 15.4 0"/><path d="m2.8 15.2 1.5-1.7 1.8 1.3M21.2 15.2l-1.5-1.7-1.8 1.3"/></symbol>
+  <symbol id="q-skull" viewBox="0 0 24 24"><path d="M12 2.8a7.6 7.6 0 0 0-7.6 7.6c0 2.6 1.3 4.6 3.1 5.8v3a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-3c1.8-1.2 3.1-3.2 3.1-5.8A7.6 7.6 0 0 0 12 2.8z"/><circle cx="8.9" cy="11" r="1.7"/><circle cx="15.1" cy="11" r="1.7"/><path d="M10.4 20.2v-2.4M13.6 20.2v-2.4M12 13.6l-.9 1.6h1.8z"/></symbol>
+  <symbol id="q-crown" viewBox="0 0 24 24"><path d="M3.2 8.3 7.6 12 12 5.2 16.4 12l4.4-3.7-1.9 10.2H5.1z"/><path d="M5.1 21h13.8"/></symbol>
+  <symbol id="q-heart" viewBox="0 0 24 24"><path d="M12 20.3S4.2 15.7 4.2 9.8A4.4 4.4 0 0 1 12 7a4.4 4.4 0 0 1 7.8 2.8c0 5.9-7.8 10.5-7.8 10.5z"/></symbol>
+  <symbol id="q-flame" viewBox="0 0 24 24"><path d="M12 21.2c-3.7 0-6.2-2.5-6.2-5.8 0-3.5 2.7-5.3 3.7-8.6.4 1.9 1.6 2.9 2.7 3.3.5-3.3 1.9-5.6 1.5-7.4 3.1 1.9 4.5 6.4 4.5 9.9 0 5.2-2.5 8.6-6.2 8.6z"/></symbol>
+  <symbol id="q-star" viewBox="0 0 24 24"><path d="m12 3.2 2.7 5.5 6 .9-4.4 4.2 1.1 6-5.4-2.9-5.4 2.9 1.1-6-4.4-4.2 6-.9z"/></symbol>
+  <symbol id="q-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="q-sword" viewBox="0 0 24 24"><path d="M20.5 3.5v3.8L9.6 18.2l-3.8-3.8L16.7 3.5z"/><path d="m4.4 13 6.6 6.6M3.2 20.8l3-3"/></symbol>
+  <symbol id="q-review" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 0 1 13.3-4.8L20 9.5"/><path d="M20 4.5v5h-5"/><path d="M19.5 12a7.5 7.5 0 0 1-13.3 4.8L4 14.5"/><path d="M4 19.5v-5h5"/></symbol>
+  <symbol id="q-scroll" viewBox="0 0 24 24"><path d="M7.5 3.5h10.5a2.5 2.5 0 0 1 0 5h-1.5"/><path d="M16.5 6v12.5a2.5 2.5 0 0 1-2.5 2.5H6a2.5 2.5 0 0 1 0-5h8"/><path d="M7.5 3.5A2.5 2.5 0 0 0 5 6v10"/><path d="M9 8.5h4.5M9 12h4.5"/></symbol>
+  <symbol id="q-book" viewBox="0 0 24 24"><path d="M2.8 5.5c3-1.2 6.2-1.1 9.2.8 3-1.9 6.2-2 9.2-.8v13.3c-3-1.1-6.2-1-9.2.9-3-1.9-6.2-2-9.2-.9z"/><path d="M12 6.3v13.4"/></symbol>
+  <symbol id="q-trophy" viewBox="0 0 24 24"><path d="M7.5 3.5h9v5.5a4.5 4.5 0 0 1-9 0z"/><path d="M7.5 5.5H4.3a3.3 3.3 0 0 0 3.6 4.4M16.5 5.5h3.2a3.3 3.3 0 0 1-3.6 4.4"/><path d="M12 13.5v3.5M8.5 21h7M9.5 17h5v4h-5z"/></symbol>
+  <symbol id="q-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="m15.6 8.4-2.2 5-5 2.2 2.2-5z"/></symbol>
+  <symbol id="q-bolt" viewBox="0 0 24 24"><path d="M13.2 2.8 4.8 13.6h6.3l-1.3 7.6 8.4-10.8h-6.3z"/></symbol>
+  <symbol id="q-check" viewBox="0 0 24 24"><path d="m4.8 12.6 4.6 4.6 9.8-9.9"/></symbol>
+  <symbol id="q-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="q-back" viewBox="0 0 24 24"><path d="M19.5 12h-15M10.5 6l-6 6 6 6"/></symbol>
+  <symbol id="q-play" viewBox="0 0 24 24"><path d="M8 5.2v13.6L18.6 12z"/></symbol>
+  <symbol id="q-map" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="q-trash" viewBox="0 0 24 24"><path d="M4.5 6.5h15M9.5 6.5V4h5v2.5M6.5 6.5l1 14h9l1-14"/></symbol>
+  <symbol id="q-out" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
+</svg>
+
+<header class="nav">
+  <div class="nav-inner glass">
+    <a class="brand q-brand" href="#" data-home><span class="q-mono"><svg class="i"><use href="#q-sword"/></svg></span><span class="name">ABAP Quest</span></a>
+    <nav class="nav-links" aria-label="Pages" data-es-aria-label="Páginas">
+      <a href="index.html"><span lang="en">← Portfolio</span><span lang="es">← Portfolio</span></a>
+    </nav>
+    <div class="lang-switch" role="group" aria-label="Language" data-es-aria-label="Idioma">
+      <button type="button" data-lang="en" aria-pressed="true" title="English">
+        <svg class="flag" viewBox="0 0 60 30" aria-hidden="true"><clipPath id="flag-uk-s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="flag-uk-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#flag-uk-s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#flag-uk-t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>
+        <span>EN</span>
+      </button>
+      <button type="button" data-lang="es" aria-pressed="false" title="Español">
+        <svg class="flag" viewBox="0 0 60 30" aria-hidden="true" preserveAspectRatio="none"><rect width="60" height="30" fill="#AA151B"/><rect y="7.5" width="60" height="15" fill="#F1BF00"/></svg>
+        <span>ES</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="quest" class="q-main">
+  <noscript>
+    <p class="q-noscript glass" lang="en">ABAP Quest needs JavaScript. Enable it and reload the page.</p>
+    <p class="q-noscript glass" lang="es">ABAP Quest necesita JavaScript. Actívalo y recarga la página.</p>
+  </noscript>
+</main>
+<footer>
+  <span lang="en">ABAP Quest · Your progress is saved only in this browser.</span>
+  <span lang="es">ABAP Quest · Tu progreso se guarda solo en este navegador.</span>
+</footer>
+<div class="q-toasts" aria-live="polite"></div>
+
+<script src="assets/js/quest-data.js?v=7e584e2a"></script>
+<script src="assets/js/quest.js?v=31c60e28"></script>
+</body>
+</html>

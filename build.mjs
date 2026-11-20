@@ -418,6 +418,14 @@ ${items.map(renderMoreItem).join('\n')}
 }
 
 /* ---------------------------------------------------------------- build */
+const PAGES = ['quest.html'];
+// Cache busting: assets/…css|js?v=<content hash>, so phones and GitHub Pages never serve an old copy
+const bust = html => html.replace(/((?:src|href)=")(assets\/[^"?]+\.(?:css|js))(?:\?v=\w+)?"/g, (m, pre, path) => {
+  const file = join(ROOT, path);
+  if (!existsSync(file)) return m;
+  return `${pre}${path}?v=${createHash('sha1').update(readFileSync(file)).digest('hex').slice(0, 8)}"`;
+});
+
 function build() {
   const html = readFileSync(INDEX, 'utf8');
   const a = html.indexOf(START), b = html.indexOf(END);
@@ -435,13 +443,15 @@ function build() {
   const more = projects.filter(p => p.meta.place === 'more').sort(byOrder);
   const block = `${START}\n${main.map(renderMain).join('\n\n')}\n${renderMoreCard(more)}\n      ${END}`;
   let next = html.slice(0, a) + block + html.slice(b + END.length);
-  // Cache busting: assets/…css|js?v=<content hash>, so phones and GitHub Pages never serve an old copy
-  next = next.replace(/((?:src|href)=")(assets\/[^"?]+\.(?:css|js))(?:\?v=\w+)?"/g, (m, pre, path) => {
-    const file = join(ROOT, path);
-    if (!existsSync(file)) return m;
-    return `${pre}${path}?v=${createHash('sha1').update(readFileSync(file)).digest('hex').slice(0, 8)}"`;
-  });
+  next = bust(next);
   if (next !== html) writeFileSync(INDEX, next);
+  // The other pages (quest.html) only get their asset versions refreshed
+  for (const page of PAGES) {
+    const file = join(ROOT, page);
+    if (!existsSync(file)) continue;
+    const src = readFileSync(file, 'utf8'), out = bust(src);
+    if (out !== src) { writeFileSync(file, out); console.log(`✓ asset versions updated → ${page}`); }
+  }
   const stamp = new Date().toLocaleTimeString();
   console.log(`✓ ${stamp}  ${main.length} on the front page, ${more.length} in "More projects"${next === html ? ' (no changes)' : ' → index.html'}`);
 }

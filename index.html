@@ -6,6 +6,10 @@
 <!-- TODO: your name in both titles (English text, Spanish in data-es) -->
 <title data-es="Daniel Cárdenas Roca · SAP ABAP y Employee Central Payroll">Daniel Cárdenas Roca · SAP ABAP & Employee Central Payroll</title>
 <meta name="description" content="SAP ABAP developer working on SAP SuccessFactors Employee Central Payroll: EC to ECP replication, payroll reporting and integrations through SAP Integration Suite.">
+<link rel="icon" href="assets/img/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/img/icon-192.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#030a19">
 <script>
   // Pick the language before the first paint: saved choice, otherwise the browser language.
   (function () {
@@ -16,8 +20,8 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=c332c0f7">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css?v=53075434">
 </head>
 <body>
 <!--
@@ -61,12 +65,13 @@
 
 <header class="nav">
   <div class="nav-inner glass">
-    <!-- TODO: your initials and name -->
-    <a class="brand" href="#home" data-scroll="home"><span class="monogram">DC</span><span class="name">Daniel Cárdenas Roca</span></a>
+    <!-- Logo: assets/img/logo.png (the site icons are in the same folder) -->
+    <a class="brand" href="#home" data-scroll="home"><img class="logo" src="assets/img/logo.png" alt="" width="34" height="34"><span class="name">Daniel Cárdenas Roca</span></a>
     <nav class="nav-links" aria-label="Sections" data-es-aria-label="Secciones">
       <a href="#projects" data-scroll="projects"><span lang="en">Projects</span><span lang="es">Proyectos</span></a>
       <a href="#docs" data-scroll="docs"><span lang="en">Docs</span><span lang="es">Documentación</span></a>
       <a href="#tools" data-scroll="tools"><span lang="en">Tools</span><span lang="es">Herramientas</span></a>
+      <a href="#quest" data-scroll="quest">Quest</a>
       <a href="#contact" data-scroll="contact"><span lang="en">Contact</span><span lang="es">Contacto</span></a>
     </nav>
     <div class="lang-switch" role="group" aria-label="Language" data-es-aria-label="Idioma">
@@ -2187,6 +2192,23 @@ IF sy-subrc EQ 0.</pre></div>
     </div>
   </section>
 
+  <!-- ================= ABAP QUEST ================= -->
+  <!-- The game lives in quest.html (assets/js/quest.js + quest-data.js). Saved progress is shown here by app.js. -->
+  <section id="quest" aria-labelledby="quest-title">
+    <a class="quest-teaser glass" href="quest.html">
+      <div class="qt-copy">
+        <p class="eyebrow qt-eyebrow"><span lang="en">Side project · Game</span><span lang="es">Proyecto paralelo · Juego</span></p>
+        <h2 id="quest-title" class="qt-title">ABAP Quest</h2>
+        <p lang="en">A small browser RPG to learn modern ABAP. Eight zones, from the ADT camp to the port of integrations, each guarded by a boss, and a final go-live to survive. Every answer comes with an explanation, missed questions come back for review, and your progress stays in your browser.</p>
+        <p lang="es">Un pequeño RPG en el navegador para aprender ABAP moderno. Ocho zonas, del campamento de ADT al puerto de las integraciones, cada una con su jefe, y un go-live final al que sobrevivir. Cada respuesta trae su explicación, las preguntas falladas vuelven para repasarlas y tu progreso se queda en tu navegador.</p>
+        <div class="tags"><span class="tag"><span lang="en">8 zones</span><span lang="es">8 zonas</span></span><span class="tag"><span lang="en">9 bosses</span><span lang="es">9 jefes</span></span><span class="tag"><span lang="en">97 challenges</span><span lang="es">97 retos</span></span><span class="tag">EN · ES</span></div>
+        <p class="qt-progress" data-quest-progress hidden></p>
+        <span class="btn qt-btn"><span lang="en" data-quest-cta>Start the quest</span><span lang="es" data-quest-cta>Empezar la aventura</span><svg class="i"><use href="#i-arrow"/></svg></span>
+      </div>
+      <svg class="qt-map" viewBox="0 0 410 220" aria-hidden="true"><path class="qt-path" d="M38,182 C48,175.7 93.3,159.3 98,144 C102.7,128.7 61,105.7 66,90 C71,74.3 106,53 128,50 C150,47 179.3,58.7 198,72 C216.7,85.3 221.3,117 240,130 C258.7,143 294.3,156.7 310,150 C325.7,143.3 323,108.3 334,90 C345,71.7 369,48.3 376,40"/><path class="qt-walk" d="M38,182 C48,175.7 93.3,159.3 98,144 C102.7,128.7 61,105.7 66,90 C71,74.3 106,53 128,50 C150,47 179.3,58.7 198,72 C216.7,85.3 221.3,117 240,130 C258.7,143 294.3,156.7 310,150 C325.7,143.3 323,108.3 334,90 C345,71.7 369,48.3 376,40" pathLength="1"/><g class="qt-node" transform="translate(38 182)"><circle r="17"/><g class="qt-ic" transform="translate(-10 -10) scale(.84)"><path d="M2.5 20.5h19"/><path d="M3.5 20.5 12 6l8.5 14.5"/><path d="M12 13 9.5 20.5M12 13l2.5 7.5"/><path d="M12 6V2.5l3.5 1.2L12 5"/></g></g><g class="qt-node" transform="translate(98 144)"><circle r="17"/><g class="qt-ic" transform="translate(-10 -10) scale(.84)"><path d="M12 2.5 6.5 10h3L5 16.5h14L14.5 10h3z"/><path d="M12 16.5v5"/></g></g><g class="qt-node" transform="translate(66 90)"><circle r="17"/><g class="qt-ic" transform="translate(-10 -10) scale(.84)"><path d="M3.5 21V8.5h3v2h2v-2h3v2h1v-2h3v2h2v-2h3V21z"/><path d="M10 21v-3.5a2 2 0 0 1 4 0V21"/><path d="M12 8.5V3l3 1.2L12 5.4"/></g></g><g class="qt-node" transform="translate(128 50)"><circle r="17"/><g class="qt-ic" transform="translate(-10 -10) scale(.84)"><path d="M7.5 21.5V9.5h9v12z"/><path d="M6 9.5V5h2.5v2H11V5h2v2h2.5V5H18v4.5"/><path d="M10.5 21.5v-3a1.5 1.5 0 0 1 3 0v3M11 12.5h2v2.5h-2z"/></g></g><g class="qt-node" transform="translate(198 72)"><circle r="17"/><g class="qt-ic" transform="translate(-10 -10) scale(.84)"><path d="M3 9.5C7 4.5 15 3.2 21 6.8"/><path d="M13.6 5.2 5.5 21.5"/><path d="M11.4 9.6l1.9 1"/></g></g><g class="qt-node" transform="translate(240 130)"><circle r="17"/><g class="qt-ic" transform="translate(-10 -10) scale(.84)"><path d="M2.5 7.5h14c0 2.8 2 4 5 4v1.5h-6.2l-1.3 3h2.5v3.5H6.5V16H9l-1.3-3C4.5 13 2.5 10.6 2.5 7.5z"/><path d="M18 3.5l1.5 1.5M20.5 2.5v1.5M15.5 2.5l.8 1.4"/></g></g><g class="qt-node" transform="translate(310 150)"><circle r="17"/><g class="qt-ic" transform="translate(-10 -10) scale(.84)"><path d="M12 2.8 4.5 5.8v5.7c0 4.6 3.2 8.2 7.5 9.7 4.3-1.5 7.5-5.1 7.5-9.7V5.8z"/><path d="M12 6.5v11M7.8 11h8.4"/></g></g><g class="qt-node" transform="translate(334 90)"><circle r="17"/><g class="qt-ic" transform="translate(-10 -10) scale(.84)"><circle cx="12" cy="4.8" r="2.1"/><path d="M12 6.9v14.3M8 10.5h8"/><path d="M4.3 13.5a7.7 7.7 0 0 0 15.4 0"/><path d="m2.8 15.2 1.5-1.7 1.8 1.3M21.2 15.2l-1.5-1.7-1.8 1.3"/></g></g><g class="qt-node qt-raid" transform="translate(376 40)"><rect x="-15" y="-15" width="30" height="30" rx="7" transform="rotate(45)"/><g class="qt-ic" transform="translate(-10 -10) scale(.84)"><path d="M12 2.8a7.6 7.6 0 0 0-7.6 7.6c0 2.6 1.3 4.6 3.1 5.8v3a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-3c1.8-1.2 3.1-3.2 3.1-5.8A7.6 7.6 0 0 0 12 2.8z"/><circle cx="8.9" cy="11" r="1.7"/><circle cx="15.1" cy="11" r="1.7"/><path d="M10.4 20.2v-2.4M13.6 20.2v-2.4M12 13.6l-.9 1.6h1.8z"/></g></g></svg>
+    </a>
+  </section>
+
   <!-- ================= CONTACT ================= -->
   <!-- TODO: replace the email and profile links -->
   <section id="contact" class="contact glass" aria-labelledby="contact-title">
@@ -2215,6 +2237,6 @@ IF sy-subrc EQ 0.</pre></div>
 </div>
 
 <script src="assets/js/abap-modernizer.js?v=f109c6e7"></script>
-<script src="assets/js/app.js?v=ea2bb42e"></script>
+<script src="assets/js/app.js?v=e8b4e205"></script>
 </body>
 </html>
