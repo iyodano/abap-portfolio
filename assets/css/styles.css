@@ -126,7 +126,7 @@ section > .sec-head { display: flex; flex-direction: column; gap: 6px; margin-bo
 .card:hover::before { opacity: 1; }
 .card:active { transform: scale(.975); }
 .card:focus-visible { box-shadow: 0 0 0 2px var(--accent), 0 24px 50px -26px rgba(0, 0, 0, .7); }
-.card.is-source { visibility: hidden; }
+.card.is-source { opacity: 0; }   /* opacity, not visibility: the glass stays rendered, so it is back instantly on close */
 .card-top { display: flex; align-items: center; justify-content: space-between; }
 .tile { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; color: #cfe5ff;
   background: linear-gradient(150deg, rgba(114, 182, 255, .32), rgba(114, 182, 255, .08)); border: 1px solid rgba(160, 205, 255, .28); }
@@ -525,3 +525,32 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
   .mi-sub { font-size: 13.5px; }
 }
 @media (prefers-reduced-motion: reduce) { .more-item::details-content { transition: none; } }
+
+/* ---------- Closing a card: a soft glint as it lands back in the grid ---------- */
+.card.landing::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(110deg, transparent 32%, rgba(170, 215, 255, .14) 46%, rgba(255, 255, 255, .24) 50%, rgba(170, 215, 255, .14) 54%, transparent 68%) no-repeat;
+  background-size: 260% 100%; animation: card-glint .85s var(--ease) forwards; }
+@keyframes card-glint { from { background-position: 130% 0; opacity: 1; } 80% { opacity: 1; } to { background-position: -30% 0; opacity: 0; } }
+
+/* Touch screens keep :hover after a tap: no lifted card or sheen left behind once the sheet closes */
+@media (hover: none) {
+  .card:hover { transform: none; }
+  .card:hover::before { opacity: 0; }
+  .card:hover .plus { transform: none; color: var(--ink-dim); }
+}
+
+/* ---------- Phones: code wraps instead of being cut ----------
+   Each line is <span class="ln"> (+ gutter) + <span class="lc" style="--i:indent">. A long line continues
+   two characters further in than its own indentation, so the structure of the code stays readable. */
+@media (max-width: 640px) {
+  .code-block.lines { overflow-x: hidden; font-size: 12px; line-height: 1.6; }
+  .code-window .code-block.lines { font-size: 11.5px; padding: 8px 0 12px; }
+  .code-block.lines .ln { display: flex; align-items: flex-start; min-width: 0; padding-right: 10px; white-space: normal; }
+  .code-block.lines .g { flex: none; width: 2.8em; padding-right: .8em; margin-right: 0; }
+  .code-block.lines .lc { flex: 1; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere;
+    padding-left: calc((var(--i, 0) + 2) * 1ch); text-indent: calc((var(--i, 0) + 2) * -1ch); }
+  .code-block.lines .pad { display: inline-block; width: 2ch; overflow: hidden; vertical-align: top; white-space: pre; }
+  .code-panel { margin: 0 -12px; padding: 14px 12px; }
+  .code-window { border-radius: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .card.landing::after { animation: none; display: none; } }

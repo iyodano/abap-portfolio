@@ -127,7 +127,17 @@
   }
   const hlLine = line => (/^\*/.test(line) ? `<span class="c">${escHtml(line)}</span>` : hlSeg(line));
   const hl = code => code.split('\n').map(hlLine).join('\n');
-  $$('pre[data-hl]').forEach(p => { p.innerHTML = hl(p.textContent); });
+  // One line of code. --i is its indentation, so on phones a wrapped line keeps a hanging indent;
+  // the run of spaces that aligns an end-of-line comment is marked so it can shrink there.
+  const codeLine = (line, plain) => {
+    const html = (plain ? escHtml(line) : hlLine(line)).replace(/ {3,}(?=<span class="c">&quot;)/g, m => `<span class="pad">${m}</span>`);
+    return `<span class="lc" style="--i:${line.match(/^ */)[0].length}">${html}</span>`;
+  };
+  const renderLines = pre => {
+    pre.innerHTML = pre.textContent.replace(/\s+$/, '').split('\n').map(l => `<span class="ln">${codeLine(l)}</span>`).join('');
+    pre.classList.add('lines');
+  };
+  $$('pre[data-hl]').forEach(renderLines);
 
   /* ---------- Copy to clipboard ---------- */
   async function copyText(text, btn) {
@@ -194,9 +204,9 @@
         pre.innerHTML = raw.split('\n').map((line, idx) => {
           const n = idx + 1;
           const g = badge[n] ? `<span class="g b" data-b="${badge[n]}">${n}</span>` : `<span class="g">${n}</span>`;
-          const body = pre.dataset.lang && pre.dataset.lang !== 'abap' ? escHtml(line) : hlLine(line);
-          return `<span class="ln${marked.has(n) ? ' mark' : ''}">${g}${body}</span>`;
+          return `<span class="ln${marked.has(n) ? ' mark' : ''}">${g}${codeLine(line, pre.dataset.lang && pre.dataset.lang !== 'abap')}</span>`;
         }).join('');
+        pre.classList.add('lines');
         if (notes) $$('li[data-line]', notes).forEach(li => {
           li.tabIndex = 0;
           const lines = () => lineEls(pre, li.dataset.line);
@@ -309,7 +319,7 @@
     sKicker.textContent = kickerOf(card);
     sTile.innerHTML = card.querySelector('.tile').innerHTML;
     sBody.replaceChildren(card.querySelector('template.detail').content.cloneNode(true));
-    $$('pre[data-hl]', sBody).forEach(p => { p.innerHTML = hl(p.textContent); });
+    $$('pre[data-hl]', sBody).forEach(renderLines);
     edgeUpdaters.length = 0;
     $$('.code-panel', sBody).forEach(mountCodePanel);
     const panel = $(':scope > .code-panel', sBody);
@@ -324,6 +334,7 @@
     refreshers.length = 0;
     localizeAttrs(sBody);
     $$('[data-mount]', sBody).forEach(el => MOUNTS[el.dataset.mount] && MOUNTS[el.dataset.mount](el));
+    card.getAnimations().forEach(a => a.cancel());
     card.classList.add('is-source');
     if (!reduced) {
       const g = geometry(card);
@@ -357,13 +368,23 @@
     const g = geometry(card);
     const start = sheet.style.transform || 'translate(0px, 0px)';
     if (anim) anim.cancel();
+    // No dark panel left on top while the phone redraws the glass: the card is already back underneath
+    // and fades in, the sheet fades out as it lands on it, and a soft glint closes the move.
+    card.classList.remove('is-source');
+    card.animate([{ opacity: 0 }, { opacity: 0, offset: .3 }, { opacity: 1 }], { duration: 420, easing: 'ease-out' });
     anim = sheet.animate([
-      { transform: start, clipPath: 'inset(0px 0px 0px 0px round 30px)' },
-      { transform: `translate(${g.dx}px, ${g.dy}px)`, clipPath: `inset(0px ${g.r}px ${g.b}px 0px round 26px)` },
+      { transform: start, clipPath: 'inset(0px 0px 0px 0px round 30px)', opacity: 1 },
+      { opacity: 1, offset: .5 },
+      { transform: `translate(${g.dx}px, ${g.dy}px)`, clipPath: `inset(0px ${g.r}px ${g.b}px 0px round 26px)`, opacity: 0 },
     ], { duration: 420, easing: 'cubic-bezier(.3,.8,.2,1)' });
     sScroll.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' });
     scrim.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, fill: 'forwards' });
-    anim.onfinish = () => { if (pendingDone === done) done(); };
+    anim.onfinish = () => {
+      if (pendingDone !== done) return;
+      done();
+      card.classList.add('landing');
+      setTimeout(() => card.classList.remove('landing'), 900);
+    };
     card.focus({ preventScroll: true });
   }
 
