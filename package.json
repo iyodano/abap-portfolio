@@ -1,0 +1,11 @@
+{
+  "name": "abap-portfolio",
+  "private": true,
+  "description": "SAP ABAP & Employee Central Payroll portfolio. No dependencies: these scripts only need Node.js.",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "new": "node build.mjs new",
+    "test": "node tests/abap-modernizer.test.js"
+  }
+}
