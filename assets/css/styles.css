@@ -70,7 +70,7 @@ code, pre, textarea, .mono { font-family: var(--font-mono); }
 .nav { position: sticky; top: 0; z-index: 20; padding: 12px 16px 0; padding-top: max(12px, env(safe-area-inset-top)); }
 .nav-inner { max-width: 1120px; margin: 0 auto; border-radius: 999px; padding: 8px 8px 8px 10px; display: flex; align-items: center; gap: 12px; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
-.logo { width: 34px; height: 34px; flex: none; display: block; filter: drop-shadow(0 0 6px rgba(77, 141, 255, .55)); }
+.logo { width: 36px; height: 36px; flex: none; display: block; margin: -2px 0; }   /* round, with its own glow */
 .nav-links { margin-left: auto; display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
 .nav-links::-webkit-scrollbar { display: none; }
 .nav-links a { text-decoration: none; color: var(--ink-dim); font-size: 14px; padding: 7px 12px; border-radius: 999px; white-space: nowrap; transition: background .2s, color .2s; }
