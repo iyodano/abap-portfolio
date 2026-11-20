@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=5abffc44">
+<link rel="stylesheet" href="assets/css/styles.css?v=6b187003">
 </head>
 <body>
 <!--
@@ -73,8 +73,8 @@
       <a href="#tools" data-scroll="tools"><span lang="en">Tools</span><span lang="es">Herramientas</span></a>
       <a href="#contact" data-scroll="contact"><span lang="en">Contact</span><span lang="es">Contacto</span></a>
     </nav>
-    <!-- ABAP Quest: "!" for new visitors, "?" once they have started playing (set by app.js) -->
-    <a class="quest-badge" href="quest.html" aria-label="ABAP Quest" title="ABAP Quest: an RPG to learn modern ABAP" data-es-title="ABAP Quest: un RPG para aprender ABAP moderno"><span class="qb-mark" aria-hidden="true">!</span><span class="qb-label">ABAP Quest</span></a>
+    <!-- ABAP Quest: gold "!" for new visitors, gold "?" once they have started playing (app.js swaps the image) -->
+    <a class="quest-badge" href="quest.html" aria-label="ABAP Quest" title="ABAP Quest: an RPG to learn modern ABAP" data-es-title="ABAP Quest: un RPG para aprender ABAP moderno"><img class="qb-mark" src="assets/img/quest-available.png" alt="" height="30"><span class="qb-label">ABAP Quest</span></a>
     <div class="lang-switch" role="group" aria-label="Language" data-es-aria-label="Idioma">
       <button type="button" data-lang="en" aria-pressed="true" title="English">
         <svg class="flag" viewBox="0 0 60 30" aria-hidden="true"><clipPath id="flag-uk-s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="flag-uk-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#flag-uk-s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#flag-uk-t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>
@@ -2238,6 +2238,6 @@ IF sy-subrc EQ 0.</pre></div>
 </div>
 
 <script src="assets/js/abap-modernizer.js?v=f109c6e7"></script>
-<script src="assets/js/app.js?v=ac627352"></script>
+<script src="assets/js/app.js?v=85ee269d"></script>
 </body>
 </html>

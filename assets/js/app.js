@@ -262,7 +262,7 @@
     try { st = JSON.parse(localStorage.getItem('abapquest.portfolio.v1') || 'null'); } catch (e) { /* no storage */ }
     if (!st || !st.xp) return;
     const mark = $('.qb-mark');
-    if (mark) mark.textContent = '?';   // like a quest in progress
+    if (mark) mark.src = 'assets/img/quest-progress.png';   // "?": a quest in progress
     const el = $('[data-quest-progress]');
     if (!el) return;
     const level = st.level || 1;

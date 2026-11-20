@@ -582,13 +582,11 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
 
 /* ---------- ABAP Quest badge in the navigation bar ("!" new, "?" started) ---------- */
 .quest-badge { display: inline-flex; align-items: center; gap: 8px; flex: none; text-decoration: none; color: #f6dca0; font: 600 13.5px var(--font-body);
-  padding: 3px 12px 3px 3px; border-radius: 999px; background: rgba(244, 203, 110, .1); border: 1px solid rgba(244, 203, 110, .35); transition: background .2s, border-color .2s; }
+  padding: 3px 13px 3px 9px; border-radius: 999px; background: rgba(244, 203, 110, .1); border: 1px solid rgba(244, 203, 110, .35); transition: background .2s, border-color .2s; }
 .quest-badge:hover { background: rgba(244, 203, 110, .18); border-color: rgba(244, 203, 110, .6); }
-.qb-mark { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 700 17px/1 "Cinzel", Georgia, serif; color: #2a1a02;
-  background: radial-gradient(circle at 35% 30%, #fff2c4, #f4cb6e 45%, #d9982f);
-  box-shadow: 0 0 0 1px rgba(255, 226, 154, .6), 0 0 14px 2px rgba(244, 203, 110, .55); animation: qb-bob 2.6s ease-in-out infinite; }
-@keyframes qb-bob { 50% { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(255, 226, 154, .7), 0 0 20px 4px rgba(244, 203, 110, .7); } }
-@media (max-width: 640px) { .quest-badge { padding: 3px; gap: 0; } .quest-badge .qb-label { display: none; } }
+.qb-mark { height: 30px; width: auto; display: block; margin: -3px 0; animation: qb-bob 2.6s ease-in-out infinite; }
+@keyframes qb-bob { 50% { transform: translateY(-2px); filter: brightness(1.15); } }
+@media (max-width: 640px) { .quest-badge { padding: 2px 8px; gap: 0; background: none; border-color: transparent; } .quest-badge .qb-label { display: none; } }
 @media (prefers-reduced-motion: reduce) { .qb-mark { animation: none; } }
 
 /* ---------- ABAP Quest teaser (the game itself is quest.html) ---------- */
