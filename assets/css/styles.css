@@ -669,4 +669,10 @@ section .card.glass:hover { border-color: rgba(var(--sec), .45); }
   /* out of the way while a card is open or the keyboard is up */
   .locked .tabbar, body:has(textarea:focus, input:focus) .tabbar { opacity: 0; pointer-events: none; transform: translate(-50%, 24px); }
 }
+@media (max-width: 640px) {
+  /* the top bar slides away while reading down and comes back on the way up (app.js) */
+  .nav { transition: transform .35s var(--ease); }
+  .nav.nav-hidden { transform: translateY(calc(-100% - 16px)); }
+}
+@media (max-width: 640px) and (prefers-reduced-motion: reduce) { .nav { transition: none; } }
 @media (max-width: 370px) { .brand .name { font-size: 13.5px; } .nav-inner { gap: 8px; } .tabbar a { padding-left: 3px; padding-right: 3px; } }

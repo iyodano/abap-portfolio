@@ -284,6 +284,25 @@
     update();
   })();
 
+  /* ---------- Phones: the top bar hides while scrolling down and comes back on the way up ---------- */
+  (function autoHideNav() {
+    const nav = $('.nav');
+    if (!nav) return;
+    const phone = matchMedia('(max-width: 640px)');
+    let lastY = scrollY, hidden = false, raf = 0;
+    const set = h => { if (h !== hidden) { hidden = h; nav.classList.toggle('nav-hidden', h); } };
+    const onScroll = () => {
+      raf = 0;
+      const y = scrollY;
+      if (!phone.matches || y < 80 || document.documentElement.classList.contains('locked')) { set(false); lastY = y; return; }
+      if (Math.abs(y - lastY) < 8) return;   // ignore small jitter
+      set(y > lastY);
+      lastY = y;
+    };
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(onScroll); }, { passive: true });
+    phone.addEventListener('change', onScroll);
+  })();
+
   /* ---------- ABAP Quest teaser: progress saved by quest.html in this browser ---------- */
   (function questProgress() {
     let st = null;
