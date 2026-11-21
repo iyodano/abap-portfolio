@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=6b187003">
+<link rel="stylesheet" href="assets/css/styles.css?v=a67ab1f2">
 </head>
 <body>
 <!--
@@ -87,6 +87,15 @@
     </div>
   </div>
 </header>
+
+<!-- Phones only: the sections in a floating glass bar at the bottom (app.js lights up the section on screen) -->
+<nav class="tabbar glass" aria-label="Sections" data-es-aria-label="Secciones">
+  <a href="#profile" data-scroll="profile"><svg class="i"><use href="#i-user"/></svg><span lang="en">Profile</span><span lang="es">Perfil</span></a>
+  <a href="#projects" data-scroll="projects"><svg class="i"><use href="#i-layers"/></svg><span lang="en">Projects</span><span lang="es">Proyectos</span></a>
+  <a href="#docs" data-scroll="docs"><svg class="i"><use href="#i-map"/></svg><span lang="en">Docs</span><span lang="es">Docs</span></a>
+  <a href="#tools" data-scroll="tools"><svg class="i"><use href="#i-wand"/></svg><span lang="en">Tools</span><span lang="es">Herramientas</span></a>
+  <a href="#contact" data-scroll="contact"><svg class="i"><use href="#i-mail"/></svg><span lang="en">Contact</span><span lang="es">Contacto</span></a>
+</nav>
 
 <main>
   <!-- ================= HERO ================= -->
@@ -2238,6 +2247,6 @@ IF sy-subrc EQ 0.</pre></div>
 </div>
 
 <script src="assets/js/abap-modernizer.js?v=f109c6e7"></script>
-<script src="assets/js/app.js?v=85ee269d"></script>
+<script src="assets/js/app.js?v=ab8b6f94"></script>
 </body>
 </html>

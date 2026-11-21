@@ -628,10 +628,11 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
    Sections with a .sec-head are numbered in order (01, 02…). --sec is the section's colour (r, g, b);
    it tints the label, its line, the glow behind the title, the card icons and tags, and the card once opened. */
 main { counter-reset: sec; --sec: 114, 182, 255; }
-#profile  { --sec: 114, 182, 255; }   /* blue */
-#projects { --sec: 127, 227, 207; }   /* mint */
-#docs     { --sec: 183, 160, 255; }   /* violet */
-#tools    { --sec: 255, 166, 128; }   /* coral (the game is gold) */
+#profile,  .tabbar [href="#profile"]  { --sec: 114, 182, 255; }   /* blue */
+#projects, .tabbar [href="#projects"] { --sec: 127, 227, 207; }   /* mint */
+#docs,     .tabbar [href="#docs"]     { --sec: 183, 160, 255; }   /* violet */
+#tools,    .tabbar [href="#tools"]    { --sec: 255, 166, 128; }   /* coral (the game is gold) */
+.tabbar [href="#contact"] { --sec: 226, 232, 245; }
 section > .sec-head { position: relative; }
 section > .sec-head::before { content: ""; position: absolute; left: -120px; top: -90px; width: 560px; height: 280px; z-index: -1; pointer-events: none;
   background: radial-gradient(closest-side, rgba(var(--sec), .16), transparent); }
@@ -644,3 +645,28 @@ section .card.glass:hover { border-color: rgba(var(--sec), .45); }
 .sheet-head .kicker { color: rgb(var(--sec, 114, 182, 255)); }
 @media (max-width: 640px) { section > .sec-head::before { left: -60px; width: 400px; height: 240px; } }
 @media (hover: none) { section .card.glass:hover { border-color: var(--stroke); } }
+
+/* ---------- Phones: the sections live in a floating glass bar at the bottom ----------
+   The top bar keeps the logo, the name, the ABAP Quest mark and the languages. */
+.tabbar { display: none; }
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .nav-inner { padding: 6px 6px 6px 8px; gap: 10px; }
+  .brand { min-width: 0; }
+  .brand .name { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 15px; letter-spacing: -.015em; }
+  .nav-inner .quest-badge { margin-left: auto; }
+  body { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+  .tabbar { position: fixed; z-index: 30; left: 50%; bottom: calc(12px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+    width: min(calc(100% - 24px), 420px); display: flex; gap: 2px; padding: 6px; border-radius: 28px; transition: transform .35s var(--ease), opacity .25s; }
+  .tabbar.glass { background: linear-gradient(160deg, rgba(150, 190, 255, .22), rgba(120, 160, 255, .08) 62%), rgba(10, 24, 60, .82);
+    border-color: rgba(190, 215, 255, .22); box-shadow: 0 18px 40px -12px rgba(0, 0, 0, .7), inset 0 1px 0 rgba(255, 255, 255, .18); }
+  .tabbar a { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 5px 7px; border-radius: 22px;
+    text-decoration: none; color: #9fb1d4; font: 600 10.5px/1.1 var(--font-body); letter-spacing: -.01em; white-space: nowrap;
+    -webkit-tap-highlight-color: transparent; transition: background .25s, color .25s, box-shadow .25s; }
+  .tabbar a > span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+  .tabbar a .i { width: 21px; height: 21px; }
+  .tabbar a.on { color: rgb(var(--sec)); background: rgba(var(--sec), .16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 0 0 1px rgba(var(--sec), .25); }
+  /* out of the way while a card is open or the keyboard is up */
+  .locked .tabbar, body:has(textarea:focus, input:focus) .tabbar { opacity: 0; pointer-events: none; transform: translate(-50%, 24px); }
+}
+@media (max-width: 370px) { .brand .name { font-size: 13.5px; } .nav-inner { gap: 8px; } .tabbar a { padding-left: 3px; padding-right: 3px; } }

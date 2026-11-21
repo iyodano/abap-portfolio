@@ -256,6 +256,34 @@
     scrollTo({ top: a.dataset.scroll === 'home' ? 0 : y, behavior: reduced ? 'auto' : 'smooth' });
   }));
 
+  /* ---------- Phones: the bottom bar lights up the section on screen ---------- */
+  (function tabbar() {
+    const bar = $('.tabbar');
+    if (!bar) return;
+    const links = $$('a', bar);
+    const ids = ['home', 'profile', 'projects', 'docs', 'tools', 'quest', 'contact'];
+    const owner = { home: 'profile', quest: null };   // the intro counts as the profile; the game teaser lights nothing
+    let current;
+    const update = () => {
+      const line = innerHeight * 0.35;
+      let id = 'home';
+      ids.forEach(s => { const el = document.getElementById(s); if (el && el.getBoundingClientRect().top <= line) id = s; });
+      if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) id = 'contact';
+      const on = id in owner ? owner[id] : id;
+      if (on === current) return;
+      current = on;
+      links.forEach(l => {
+        const me = l.dataset.scroll === on;
+        l.classList.toggle('on', me);
+        if (me) l.setAttribute('aria-current', 'location'); else l.removeAttribute('aria-current');
+      });
+    };
+    let raf = 0;
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  })();
+
   /* ---------- ABAP Quest teaser: progress saved by quest.html in this browser ---------- */
   (function questProgress() {
     let st = null;
