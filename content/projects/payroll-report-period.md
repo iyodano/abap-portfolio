@@ -48,19 +48,23 @@ Cada fila muestra la organización, el convenio y la cuenta de cotización de su
 
 # Code
 
-EN: The fix: the reference date comes from the payroll period, and each infotype is read newest first.
-ES: La corrección: la fecha de referencia sale del periodo de nómina, y cada infotipo se lee del más reciente al más antiguo.
+EN: The fix: the reference date comes from the payroll period, taken from the payroll calendar, and each infotype is read newest first.
+ES: La corrección: la fecha de referencia sale del periodo de nómina, según el calendario de nómina, y cada infotipo se lee del más reciente al más antiguo.
 
 ## The fix in code | La corrección en código
 
 ```abap
-" Reference date = last day of the payroll period (FPPER), not the payment date
-DATA(lv_first_day) = CONV d( |{ <lv_fpper> }01| ).
-CALL FUNCTION 'LAST_DAY_OF_MONTHS'
-  EXPORTING  day_in            = lv_first_day
-  IMPORTING  last_day_of_month = lv_ref_date
-  EXCEPTIONS day_in_no_date    = 1
-             OTHERS            = 2.
+" Reference date = last day of the payroll period (FPPER), not the payment date.
+" The period's dates come from the payroll calendar (T549Q), so weekly or
+" four-weekly payroll areas work too, not only monthly ones
+DATA(lv_pabrj) = CONV pabrj( <lv_fpper>(4) ).
+DATA(lv_pabrp) = CONV pabrp( <lv_fpper>+4(2) ).
+SELECT SINGLE t549q~endda
+  FROM t549a INNER JOIN t549q ON t549q~permo = t549a~permo
+  WHERE t549a~abkrs = @<lv_abkrs>
+    AND t549q~pabrj = @lv_pabrj
+    AND t549q~pabrp = @lv_pabrp
+  INTO @lv_ref_date.
 IF sy-subrc <> 0.
   lv_ref_date = <lv_paydt>.                  " fallback: the previous behaviour
 ENDIF.

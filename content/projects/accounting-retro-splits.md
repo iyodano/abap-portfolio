@@ -36,7 +36,7 @@ The report matches the standard for normal, retroactive and split periods.
 
 ## Lesson {lesson half}
 
-Partition is not recalculation, and the standard is the only source of truth. In in-period view the standard shows full recalculated values, with the real differences in /551 and /552, so first find out which view each user expects.
+Partition is not recalculation, and the standard is the only source of truth. The payroll result keeps no difference per wage type: only the difference in the amount paid out, in /551 and /552. The difference per wage type has to be calculated, so first find out which view each user expects.
 
 # Español
 
@@ -59,7 +59,7 @@ El informe cuadra con el estándar en periodos normales, retroactivos y partidos
 
 ## Lección {lesson half}
 
-Una partición no es un recálculo, y el estándar es la única fuente de verdad. En la vista en-periodo el estándar muestra los valores recalculados completos, con las diferencias reales en /551 y /552, así que primero averigua qué vista espera cada usuario.
+Una partición no es un recálculo, y el estándar es la única fuente de verdad. El resultado de nómina no guarda la diferencia de cada concepto: solo la del importe a pagar, en /551 y /552. La diferencia por concepto hay que calcularla, así que primero averigua qué vista espera cada usuario.
 
 # Code
 

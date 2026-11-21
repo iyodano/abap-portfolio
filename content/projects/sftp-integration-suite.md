@@ -52,7 +52,7 @@ With a one-way service, “OK” in SAP only means the message reached SAP Integ
 
 Encode the xstring directly (`cl_http_utility=>encode_x_base64`) so the file arrives byte for byte, line endings included.
 
-## Next improvement {improve half}
+## Next step {improve half}
 
 Mark records as sent only when the receiver confirms, not when the proxy call succeeds. And move the BAdI logic into its own class, so the BAdI only calls it and the logic can be unit-tested.
 
@@ -92,7 +92,7 @@ Con un servicio one-way, el «OK» de SAP solo significa que el mensaje llegó a
 
 Codifica directamente el xstring (`cl_http_utility=>encode_x_base64`) para que el fichero llegue idéntico byte a byte, saltos de línea incluidos.
 
-## Próxima mejora {improve half}
+## Siguiente paso {improve half}
 
 Marcar los registros como enviados solo cuando el receptor confirme, no cuando la llamada al proxy vaya bien. Y sacar la lógica de la BAdI a una clase propia, para que la BAdI solo llame y la lógica se pueda probar con tests unitarios.
 
@@ -174,9 +174,9 @@ ENDMETHOD.
 
 ```abap
 METHOD run.
-  " Normal run: everything pending. Resend: the rows of a file already sent
+  " Normal run: everything pending. Resend: the rows of one file already sent
   IF p_resend = abap_true.  //1
-    SELECT * FROM zhr_abs_log WHERE status = 'S' AND file_name IN @s_file  //1
+    SELECT * FROM zhr_abs_log WHERE status = 'S' AND file_name = @p_file  //1
       INTO TABLE @DATA(lt_send).  //1
   ELSE.
     SELECT * FROM zhr_abs_log WHERE status = 'N' INTO TABLE @lt_send.
@@ -190,7 +190,7 @@ METHOD run.
     NEXT csv = csv && |{ r-docnr };{ r-pernr };{ r-awart };{ r-begda };{ r-endda };{ r-hours };{ r-operation }{ lv_nl }| ).
 
   " One file per day, with a name the receiver can predict
-  DATA(lv_file) = COND string( WHEN p_resend = abap_true THEN s_file-low  //2
+  DATA(lv_file) = COND string( WHEN p_resend = abap_true THEN p_file  //2
                                ELSE |ABS_{ sy-datum }.csv| ).  //2
   save_copy_on_server( iv_name = lv_file iv_content = lv_csv ).    " OPEN DATASET
 
@@ -218,12 +218,12 @@ METHOD run.
 ENDMETHOD.
 ```
 
-1. EN: Resend mode: any file already sent can be rebuilt from the log in minutes.
-   ES: Modo reenvío: cualquier fichero ya enviado se reconstruye desde el log en minutos.
+1. EN: Resend mode: any file already sent can be rebuilt from the log in minutes. One file per run, with a parameter and not a range, so rows from two files never end up in one.
+   ES: Modo reenvío: cualquier fichero ya enviado se reconstruye desde el log en minutos. Un fichero por ejecución, con un parámetro y no un rango, para que nunca acaben filas de dos ficheros en uno.
 2. EN: One file per day with a predictable name, agreed with the receiver.
    ES: Un fichero al día con un nombre predecible, pactado con el receptor.
-3. EN: Base64 of the xstring, not of the string: line endings and special characters arrive exactly as they left.
-   ES: Base64 del xstring, no del string: los saltos de línea y los caracteres especiales llegan tal como salieron.
+3. EN: Base64 of the xstring, not of the string: line endings and special characters arrive exactly as they left. The WSDL declares this field as a plain string and the iFlow decodes it; with base64Binary, the proxy would take the xstring and encode it itself.
+   ES: Base64 del xstring, no del string: los saltos de línea y los caracteres especiales llegan tal como salieron. El WSDL declara este campo como string y el iFlow lo decodifica; con base64Binary, el proxy recibiría el xstring y lo codificaría él.
 4. EN: Rows are marked by their own key. Marking by document number overwrote which file each earlier change had travelled in.
    ES: Las filas se marcan por su propia clave. Marcarlas por número de documento machacaba en qué fichero había viajado cada cambio anterior.
 5. EN: A one-way proxy call is only sent on COMMIT WORK, in the same unit of work as the “sent” marks: both happen, or neither does.

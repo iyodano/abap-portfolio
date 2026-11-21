@@ -102,7 +102,8 @@ METHOD build_output.
 
     LOOP AT lt_results INTO DATA(ls_result).
       LOOP AT ls_result-nat-garnt INTO DATA(ls_garn) WHERE gmcid = ls_case-gmcid.
-        " Each amount once: only the line that belongs to this result's period
+        " Each amount once: only the line that belongs to this result's period.
+        " Monthly payroll: the period is the line's start month (YYYYMM)
         CHECK ls_garn-begda(6) = ls_result-evp-inper.  //4
         lv_withheld = lv_withheld + ls_garn-gmamt.
 
@@ -132,8 +133,8 @@ ENDMETHOD.
    ES: El área de nómina sale del IT0001. El informe del que partí la tenía fija en el código.
 3. EN: Archived periods count too, so old garnishments still add up.
    ES: Los periodos archivados también cuentan, así que los embargos antiguos siguen cuadrando.
-4. EN: Each amount counted once: only the garnishment line that belongs to the result’s own period.
-   ES: Cada importe se cuenta una vez: solo la línea de embargo que pertenece al periodo del propio resultado.
+4. EN: Each amount counted once: only the garnishment line that belongs to the result’s own period. This relies on monthly payroll, where the period number is the month; with weekly or other periods, compare with the period’s dates instead.
+   ES: Cada importe se cuenta una vez: solo la línea de embargo que pertenece al periodo del propio resultado. Esto se apoya en una nómina mensual, donde el número de periodo es el mes; con periodos semanales u otros, compara con las fechas del periodo.
 5. EN: The per-period detail is built only when it is asked for, so the header stays fast.
    ES: El detalle por periodo solo se genera cuando se pide, así que la cabecera sigue siendo rápida.
 

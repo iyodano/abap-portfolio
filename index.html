@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- TODO: your name in both titles (English text, Spanish in data-es) -->
 <title data-es="Daniel Cárdenas Roca · SAP ABAP y Employee Central Payroll">Daniel Cárdenas Roca · SAP ABAP & Employee Central Payroll</title>
 <meta name="description" content="SAP ABAP developer working on SAP SuccessFactors Employee Central Payroll: EC to ECP replication, payroll reporting and integrations through SAP Integration Suite.">
 <link rel="icon" href="assets/img/favicon.ico" sizes="16x16 32x32 48x48">
@@ -21,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=0bf3fe3c">
+<link rel="stylesheet" href="assets/css/styles.css?v=8f57947b">
 </head>
 <body>
 <!--
@@ -156,10 +155,9 @@
             <div class="lesson"><h4>Lesson</h4><p>In a migration, import order is everything. The “Migrating to ECP in six steps” note in Docs is how I would plan the whole project today.</p></div>
             <div>
               <h4>Experience</h4>
-              <!-- TODO: replace the placeholders in brackets -->
               <ul class="timeline">
-                <li><b>2027 – today · SAP ABAP Developer (HCM / ECP) · Diokles</b>To be determined... Wish me luck</li>
-                <li><b>2025 – 2027 · SAP ABAP Developer (HCM / ECP) · Minsait</b>Development and support on Employee Central Payroll: EC → ECP replication, custom infotypes, payroll reporting and integrations through SAP Integration Suite.</li>
+                <li><b>From 2027 · SAP ABAP Developer (HCM / ECP) · Diokles</b>Next role, starting in 2027.</li>
+                <li><b>2025 – today · SAP ABAP Developer (HCM / ECP) · Minsait</b>Development and support on Employee Central Payroll: EC → ECP replication, custom infotypes, payroll reporting and integrations through SAP Integration Suite.</li>
                 <li><b>2023 – 2025 · SAP ABAP Developer · NTT Data</b>Development and support on ABAP for several modules.</li>
                 <li><b>Education · Web app development</b>SAP - Positioning the autonomous enterprise certification.</li>
               </ul>
@@ -169,7 +167,7 @@
             <div>
               <h4>En resumen</h4>
               <p>Parte técnica de la nómina en Employee Central Payroll: la replicación desde Employee Central, infotipos a medida, informes de nómina sobre el clúster de resultados e interfaces de salida hacia bancos y sistemas de terceros.</p>
-              <p>Acción en pleno arranque de un ECP, migración del código a medida del sistema SAP HCM anterior. Trabajo en evolutivos y soporte, desde una BAdI de la replicación hasta un fichero de transferencias SEPA.</p>
+              <p>Me incorporé a mi equipo actual en pleno arranque de un ECP, migrando el código a medida del sistema SAP HCM anterior. Desde entonces trabajo en evolutivos y soporte, desde una BAdI de la replicación hasta un fichero de transferencias SEPA.</p>
             </div>
             <div>
               <h4>Primer proyecto: un arranque de ECP</h4>
@@ -179,12 +177,11 @@
             <div class="lesson"><h4>Lección</h4><p>En una migración, el orden de importación lo es todo. La nota «Migrar a ECP en seis pasos», en Documentación, es cómo plantearía hoy el proyecto completo.</p></div>
             <div>
               <h4>Experiencia</h4>
-              <!-- TODO: sustituye los textos entre corchetes -->
               <ul class="timeline">
-                <li><b>2027 – hoy · Desarrollador SAP ABAP (HCM / ECP) · Diokles</b>Por confirmarse...</li>
-                <li><b>2025 – 2027 · Desarrollador SAP ABAP (HCM / ECP) · Minsait</b>Desarrollo y soporte sobre Employee Central Payroll: replicación EC → ECP, infotipos a medida, informes de nómina e integraciones con SAP Integration Suite.</li>
+                <li><b>Desde 2027 · Desarrollador SAP ABAP (HCM / ECP) · Diokles</b>Próxima etapa, a partir de 2027.</li>
+                <li><b>2025 – hoy · Desarrollador SAP ABAP (HCM / ECP) · Minsait</b>Desarrollo y soporte sobre Employee Central Payroll: replicación EC → ECP, infotipos a medida, informes de nómina e integraciones con SAP Integration Suite.</li>
                 <li><b>2023 – 2025 · Desarrollador SAP ABAP · NTT Data</b>Desarrollo ABAP en diferentes módulos.</li>
-                <li><b>Formación · Desarrollo de aplicaciones Web</b>SAP - Positioning the autonomous enterprise.</li>
+                <li><b>Formación · Desarrollo de aplicaciones Web</b>Certificación SAP - Positioning the autonomous enterprise.</li>
               </ul>
             </div>
           </div>
@@ -280,7 +277,7 @@
             <div><h4>Context</h4><p>The business needed seven organisational attributes that live in Employee Central (general management, division, department, area, sub-area, group and pay scale) inside ECP, to use them in payroll reporting. The specification was a short email.</p></div>
             <div><h4>What I did</h4><ul>
               <li>Created infotype 9001 with PM01: structure, own data elements and screens. I proposed the time constraint and wrote down the open decisions (field lengths, empty values, how SuccessFactors writes) for the functional team.</li>
-              <li>Put the logic in the common replication BAdI (<code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>), split into one private method per infotype, so an early <code>RETURN</code> in one cannot cut the other.</li>
+              <li>Put the logic in the common replication BAdI (<code>HRSFEC_B_CE_PROCESS_EMPLOYEE</code>, method <code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>), split into one private method per infotype, so an early <code>RETURN</code> in one cannot cut the other.</li>
               <li>Wrote the infotype through the replication's own infotype framework (<code>IF_HRPA_MASTERDATA_BL</code>): no staging table, no extra job and no <code>COMMIT</code> of my own. Errors reach the employee's replication log through the BIB message handler.</li>
               <li>Made it idempotent: replicating the same employee twice creates nothing, and a future-dated change in EC delimits the current record.</li>
               <li>Applied the cut-off date (1 January) in code for this infotype only, because the BIB transfer start date is global and would also affect payroll infotypes.</li>
@@ -293,7 +290,7 @@
             <div><h4>Contexto</h4><p>Negocio necesitaba en ECP siete atributos organizativos que viven en Employee Central (dirección general, dirección, departamento, área, subárea, grupo y escala) para explotarlos en informes de nómina. La especificación era un correo de pocas líneas.</p></div>
             <div><h4>Qué hice</h4><ul>
               <li>Creé el infotipo 9001 con PM01: estructura, elementos de datos propios y pantallas. Propuse la restricción temporal y dejé por escrito las decisiones abiertas (longitudes, valores vacíos, cómo escribe SuccessFactors) para el equipo funcional.</li>
-              <li>Puse la lógica en la BAdI común de la replicación (<code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>), separada en un método privado por infotipo, para que un <code>RETURN</code> temprano en uno no corte el otro.</li>
+              <li>Puse la lógica en la BAdI común de la replicación (<code>HRSFEC_B_CE_PROCESS_EMPLOYEE</code>, método <code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>), separada en un método privado por infotipo, para que un <code>RETURN</code> temprano en uno no corte el otro.</li>
               <li>Grabé el infotipo a través del propio framework de infotipos de la replicación (<code>IF_HRPA_MASTERDATA_BL</code>): sin tabla intermedia, sin job adicional y sin <code>COMMIT</code> propio. Los errores llegan al log de replicación del empleado mediante el message handler del BIB.</li>
               <li>Lo hice idempotente: replicar dos veces el mismo empleado no crea nada, y un cambio con fecha futura en EC delimita el registro vigente.</li>
               <li>Apliqué la fecha de corte (1 de enero) en código y solo para este infotipo, porque la fecha de inicio de transferencia del BIB es global y afectaría también a los infotipos de nómina.</li>
@@ -329,8 +326,13 @@
 
   " Pay grade read by name from the compensation value list
   READ TABLE it_comp_values INTO DATA(ls_grade) WITH KEY name = mc_pay_grade.
-  MODIFY lt_new FROM VALUE p9001( pay_grade = ls_grade-value )
-         TRANSPORTING pay_grade WHERE pernr = iv_pernr.
+  IF sy-subrc = 0.
+    LOOP AT lt_new ASSIGNING &lt;ls_new&gt;.
+      &lt;ls_new&gt;-pay_grade = ls_grade-value.
+    ENDLOOP.
+  ELSE.
+    warn_no_pay_grade( io_message_handler ).   " in the log, not silently empty
+  ENDIF.
 
   DATA(lt_current) = read_pa9001( iv_pernr ).
 
@@ -352,10 +354,10 @@ ENDMETHOD.</pre>
           </div>
           <ol class="code-notes" data-for="0">
             <li data-line="10-13"><span lang="en">Cut-off in code, for IT9001 only. The BIB transfer start date would have applied it to every infotype, payroll ones included.</span><span lang="es">Fecha de corte en código y solo para el IT9001. La fecha de inicio de transferencia del BIB la habría aplicado a todos los infotipos, también a los de nómina.</span></li>
-            <li data-line="16-18"><span lang="en">The pay grade is looked up by name, not by position: if a later SAP release ships it as its own field, the mapping does not break.</span><span lang="es">El pay grade se busca por nombre, no por posición: si una release posterior de SAP lo trae como campo propio, el mapeo no se rompe.</span></li>
-            <li data-line="24-26"><span lang="en">Idempotent by design: the replication can run as often as it needs to.</span><span lang="es">Idempotente por diseño: la replicación puede ejecutarse tantas veces como haga falta.</span></li>
-            <li data-line="30-31"><span lang="en">No staging table and no job: the record is written in the same unit of work as the standard infotypes, and a failure shows up in the employee’s replication log.</span><span lang="es">Sin tabla intermedia ni job: el registro se graba en la misma unidad de trabajo que los infotipos estándar y, si falla, el error aparece en el log de replicación del empleado.</span></li>
-            <li data-line="34"><span lang="en">One commit per employee, and it belongs to the BIB. A COMMIT here would split the unit of work.</span><span lang="es">Un commit por empleado, y es del BIB. Un COMMIT aquí partiría la unidad de trabajo.</span></li>
+            <li data-line="16-23"><span lang="en">The pay grade is looked up by name, not by position: if a later SAP release ships it as its own field, the mapping does not break. If EC sends none, a warning goes to the replication log instead of an empty field nobody notices.</span><span lang="es">El pay grade se busca por nombre, no por posición: si una release posterior de SAP lo trae como campo propio, el mapeo no se rompe. Si EC no lo envía, queda un aviso en el log de replicación en lugar de un campo vacío que nadie ve.</span></li>
+            <li data-line="29-31"><span lang="en">Idempotent by design: the replication can run as often as it needs to.</span><span lang="es">Idempotente por diseño: la replicación puede ejecutarse tantas veces como haga falta.</span></li>
+            <li data-line="35-36"><span lang="en">No staging table and no job: the record is written in the same unit of work as the standard infotypes, and a failure shows up in the employee’s replication log.</span><span lang="es">Sin tabla intermedia ni job: el registro se graba en la misma unidad de trabajo que los infotipos estándar y, si falla, el error aparece en el log de replicación del empleado.</span></li>
+            <li data-line="39"><span lang="en">One commit per employee, and it belongs to the BIB. A COMMIT here would split the unit of work.</span><span lang="es">Un commit por empleado, y es del BIB. Un COMMIT aquí partiría la unidad de trabajo.</span></li>
           </ol>
         </div>
           <div lang="en">
@@ -381,7 +383,7 @@ ENDMETHOD.</pre>
             <div><h4>Context</h4><p>The client manages salaries in Employee Central. Infotype 0008 is what actually pays people, so data coming from EC should not land there blindly.</p></div>
             <div><h4>What I did</h4><ul>
               <li>In the replication BAdI, took the latest job and compensation information and prepared the data in a staging table: twelve pay components, 12 or 14 payments depending on the employment type, monthly salary and working time from the FTE.</li>
-              <li>Segmented the validity dates so records never overlap or leave gaps, including when a new salary starts in the middle of an existing record.</li>
+              <li>Segmented the validity dates so records never overlap or leave gaps, including when a new salary starts in the middle of an existing record or before all of them.</li>
               <li>Built a report that derives the collective agreement data (feature TARIF), compares with the current IT0008 and proposes what to create or change, in an ALV with traffic lights and a test mode.</li>
               <li>On save, each employee is locked, updated and committed or rolled back as a whole.</li>
               <li>Kept the logic in its own method of the common BAdI class: the IT0008-specific BAdI never ran, because that infotype is not in the BIB field mapping.</li>
@@ -392,7 +394,7 @@ ENDMETHOD.</pre>
             <div><h4>Contexto</h4><p>El cliente gestiona los salarios en Employee Central. El infotipo 0008 es el que paga a la gente, así que lo que viene de EC no debería entrar ahí a ciegas.</p></div>
             <div><h4>Qué hice</h4><ul>
               <li>En la BAdI de replicación tomé la última información de puesto y de compensación y preparé los datos en una tabla intermedia: doce componentes salariales, 12 o 14 pagas según el tipo de empleo, salario mensual y jornada a partir del FTE.</li>
-              <li>Segmenté las fechas de validez para que los registros nunca se solapen ni dejen huecos, también cuando un salario nuevo empieza a mitad de un registro existente.</li>
+              <li>Segmenté las fechas de validez para que los registros nunca se solapen ni dejen huecos, también cuando un salario nuevo empieza a mitad de un registro existente o antes que todos.</li>
               <li>Creé un informe que deriva los datos de convenio (característica TARIF), compara con el IT0008 vigente y propone qué crear o modificar, en un ALV con semáforos y modo test.</li>
               <li>Al grabar, cada empleado se bloquea, se actualiza y se confirma o se deshace entero.</li>
               <li>Dejé la lógica en su propio método de la clase de la BAdI común: la BAdI específica del IT0008 nunca se ejecutaba, porque ese infotipo no está en el mapeo de campos del BIB.</li>
@@ -404,8 +406,8 @@ ENDMETHOD.</pre>
             <h4><svg class="i"><use href="#i-code"/></svg><span lang="en">The code that matters</span><span lang="es">El código que importa</span></h4>
             <small><span lang="en">Simplified, anonymised excerpt</span><span lang="es">Extracto simplificado y anonimizado</span></small>
           </div>
-          <p lang="en">Two halves of the same control: the replication only stages the salary, and a report decides what reaches infotype 0008, one employee at a time.</p>
-          <p lang="es">Dos mitades del mismo control: la replicación solo prepara el salario, y un informe decide qué llega al infotipo 0008, empleado a empleado.</p>
+          <p lang="en">Two halves of the same control: the replication only stages the salary, and a report decides what reaches infotype 0008, one employee at a time. The third tab is how I would cover the date cut with ABAP Unit.</p>
+          <p lang="es">Dos mitades del mismo control: la replicación solo prepara el salario, y un informe decide qué llega al infotipo 0008, empleado a empleado. La tercera pestaña es cómo cubriría el corte de fechas con ABAP Unit.</p>
           <div class="code-window">
             <div class="code-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><div class="code-tabs" role="tablist"></div><button type="button" class="btn small code-copy"><svg class="i"><use href="#i-copy"/></svg><span class="btn-label"><span lang="en">Copy</span><span lang="es">Copiar</span></span></button></div>
             <figure class="code-file" data-tab-en="Replication · staging" data-tab-es="Replicación · preparación">
@@ -431,25 +433,21 @@ ENDMETHOD.</pre>
   ENDLOOP.
   ls_stage-monthly = is_comp-annual_salary / ls_stage-npay.
 
-  " Validity cut: records never overlap and never leave a gap
-  SELECT SINGLE @abap_true FROM zhr_it0008_stage
-    WHERE pernr = @iv_pernr AND begda = @ls_stage-begda
-    INTO @DATA(lv_same_start).
-  IF lv_same_start = abap_true.
-    UPDATE zhr_it0008_stage FROM @ls_stage.        " same start date: newer data wins
-  ELSE.
-    " The new salary starts inside an existing record:
-    " that one ends the day before, the new one inherits its end
-    SELECT SINGLE * FROM zhr_it0008_stage
-      WHERE pernr = @iv_pernr AND begda &lt; @ls_stage-begda AND endda &gt;= @ls_stage-begda
-      INTO @DATA(ls_open).
-    IF sy-subrc = 0.
-      ls_stage-endda = ls_open-endda.
-      ls_open-endda  = ls_stage-begda - 1.
-      UPDATE zhr_it0008_stage FROM @ls_open.
-    ENDIF.
-    INSERT zhr_it0008_stage FROM @ls_stage.
+  " Validity cut: records never overlap and never leave a gap.
+  " The new record ends the day before the next one starts, if there is one
+  SELECT MIN( begda ) FROM zhr_it0008_stage
+    WHERE pernr = @iv_pernr AND begda &gt; @ls_stage-begda
+    INTO @DATA(lv_next_start).
+  IF lv_next_start IS NOT INITIAL.
+    ls_stage-endda = lv_next_start - 1.
   ENDIF.
+
+  " The record it starts inside, if any, ends the day before
+  DATA(lv_day_before) = CONV endda( ls_stage-begda - 1 ).
+  UPDATE zhr_it0008_stage SET endda = @lv_day_before
+    WHERE pernr = @iv_pernr AND begda &lt; @ls_stage-begda AND endda &gt;= @ls_stage-begda.
+
+  MODIFY zhr_it0008_stage FROM @ls_stage.          " same start date: newer data wins
   " Staging only: nothing reaches IT0008 until the report saves it
 ENDMETHOD.</pre>
             </figure>
@@ -489,6 +487,7 @@ ENDMETHOD.</pre>
   " The employee is saved whole, or not at all
   IF ls_return-type CA 'EA'.
     ROLLBACK WORK.
+    CALL FUNCTION 'HR_PSBUFFER_INITIALIZE'.
   ELSE.
     COMMIT WORK AND WAIT.
   ENDIF.
@@ -499,31 +498,128 @@ ENDMETHOD.</pre>
                        text  = ls_return-message ).
 ENDMETHOD.</pre>
             </figure>
+            <figure class="code-file" data-tab-en="ABAP Unit · how I'd test it" data-tab-es="ABAP Unit · cómo lo probaría">
+              <figcaption class="code-obj">ZCL_HR_EC_REPL_COMMON → test class LTC_VALIDITY_CUT</figcaption>
+              <pre class="code-block" data-code>CLASS ltc_validity_cut DEFINITION DEFERRED.
+CLASS zcl_hr_ec_repl_common DEFINITION LOCAL FRIENDS ltc_validity_cut.
+
+CLASS ltc_validity_cut DEFINITION FINAL FOR TESTING
+  DURATION SHORT RISK LEVEL HARMLESS.
+  PRIVATE SECTION.
+    TYPES: BEGIN OF ty_period,
+             begda TYPE begda,
+             endda TYPE endda,
+           END OF ty_period,
+           tt_periods TYPE STANDARD TABLE OF ty_period WITH EMPTY KEY.
+    CONSTANTS mc_pernr TYPE pernr_d VALUE '00001234'.
+    CLASS-DATA go_env TYPE REF TO if_osql_test_environment.
+
+    CLASS-METHODS class_setup.
+    CLASS-METHODS class_teardown.
+    METHODS setup.
+    METHODS same_start_newer_wins  FOR TESTING.
+    METHODS mid_record_closes_open FOR TESTING.
+    METHODS before_all_no_overlap  FOR TESTING.
+    METHODS given  IMPORTING it_periods TYPE tt_periods.
+    METHODS stage  IMPORTING iv_begda   TYPE begda.
+    METHODS expect IMPORTING it_periods TYPE tt_periods.
+ENDCLASS.
+
+CLASS ltc_validity_cut IMPLEMENTATION.
+  METHOD class_setup.
+    " The staging table is replaced by a test double: no real data is touched
+    go_env = cl_osql_test_environment=&gt;create(
+               i_dependency_list = VALUE #( ( 'ZHR_IT0008_STAGE' ) ) ).
+  ENDMETHOD.
+
+  METHOD class_teardown.
+    go_env-&gt;destroy( ).
+  ENDMETHOD.
+
+  METHOD setup.
+    go_env-&gt;clear_doubles( ).
+  ENDMETHOD.
+
+  METHOD same_start_newer_wins.
+    given( VALUE #( ( begda = '20250101' endda = '20251231' )
+                    ( begda = '20260101' endda = '99991231' ) ) ).
+    stage( '20250101' ).
+    expect( VALUE #( ( begda = '20250101' endda = '20251231' )
+                     ( begda = '20260101' endda = '99991231' ) ) ).
+  ENDMETHOD.
+
+  METHOD mid_record_closes_open.
+    given( VALUE #( ( begda = '20250101' endda = '99991231' ) ) ).
+    stage( '20250701' ).
+    expect( VALUE #( ( begda = '20250101' endda = '20250630' )
+                     ( begda = '20250701' endda = '99991231' ) ) ).
+  ENDMETHOD.
+
+  METHOD before_all_no_overlap.
+    given( VALUE #( ( begda = '20250701' endda = '99991231' ) ) ).
+    stage( '20250101' ).
+    expect( VALUE #( ( begda = '20250101' endda = '20250630' )
+                     ( begda = '20250701' endda = '99991231' ) ) ).
+  ENDMETHOD.
+
+  METHOD given.
+    DATA lt_rows TYPE STANDARD TABLE OF zhr_it0008_stage WITH EMPTY KEY.
+    lt_rows = VALUE #( FOR p IN it_periods
+                       ( pernr = mc_pernr begda = p-begda endda = p-endda ) ).
+    go_env-&gt;insert_test_data( lt_rows ).
+  ENDMETHOD.
+
+  METHOD stage.
+    " Only the start date matters for the cut
+    NEW zcl_hr_ec_repl_common( )-&gt;stage_it0008(
+      iv_pernr          = mc_pernr
+      is_comp           = VALUE #( start_date = iv_begda annual_salary = 28000 )
+      is_job            = VALUE #( employment_type = '01' fte = 1 )
+      it_pay_components = VALUE #( ) ).
+  ENDMETHOD.
+
+  METHOD expect.
+    DATA lt_actual TYPE tt_periods.
+    SELECT begda, endda FROM zhr_it0008_stage
+      WHERE pernr = @mc_pernr
+      ORDER BY begda
+      INTO TABLE @lt_actual.
+    cl_abap_unit_assert=&gt;assert_equals( act = lt_actual exp = it_periods ).
+  ENDMETHOD.
+ENDCLASS.</pre>
+            </figure>
           </div>
           <ol class="code-notes" data-for="0">
             <li data-line="8-9"><span lang="en">Payments and working time come from the job information, not from the compensation.</span><span lang="es">Las pagas y la jornada salen de la información del puesto, no de la de compensación.</span></li>
             <li data-line="13"><span lang="en">Pay components arrive as text from EC: normalised before mapping, so stray spaces or lower case still match.</span><span lang="es">Los componentes salariales llegan de EC como texto: se normalizan antes de mapear, así que un espacio de más o una minúscula siguen encajando.</span></li>
-            <li data-line="27"><span lang="en">Same start date: the latest replication wins, and no duplicate row is created.</span><span lang="es">Misma fecha de inicio: gana la última replicación y no se crea una fila duplicada.</span></li>
-            <li data-line="35-37"><span lang="en">A salary that starts mid-record closes the open record the day before and inherits its end date: no overlaps, no gaps.</span><span lang="es">Un salario que empieza a mitad de un registro cierra el registro abierto el día anterior y hereda su fecha fin: sin solapes ni huecos.</span></li>
-            <li data-line="41"><span lang="en">No COMMIT here either: the staging rows are saved with the rest of the replication.</span><span lang="es">Aquí tampoco hay COMMIT: las filas intermedias se graban con el resto de la replicación.</span></li>
+            <li data-line="27-29"><span lang="en">A record never runs past the next one: it ends the day before the next start date. A salary dated before all the others ends where the first one begins.</span><span lang="es">Un registro nunca invade el siguiente: termina el día antes de su fecha de inicio. Un salario con fecha anterior a todos termina donde empieza el primero.</span></li>
+            <li data-line="33-34"><span lang="en">A salary that starts mid-record closes the open record the day before: no overlaps, no gaps.</span><span lang="es">Un salario que empieza a mitad de un registro cierra el registro abierto el día anterior: sin solapes ni huecos.</span></li>
+            <li data-line="36"><span lang="en">Same start date: the latest replication wins, and no duplicate row is created.</span><span lang="es">Misma fecha de inicio: gana la última replicación y no se crea una fila duplicada.</span></li>
+            <li data-line="37"><span lang="en">No COMMIT here either: the staging rows are saved with the rest of the replication.</span><span lang="es">Aquí tampoco hay COMMIT: las filas intermedias se graban con el resto de la replicación.</span></li>
           </ol>
           <ol class="code-notes" data-for="1">
             <li data-line="6-8"><span lang="en">Lock first, the same way PA30 does.</span><span lang="es">Primero el bloqueo, igual que hace PA30.</span></li>
             <li data-line="16,24"><span lang="en">COP copies the current record and delimits it, exactly like creating a new salary in PA30.</span><span lang="es">COP copia el registro vigente y lo delimita, igual que crear un salario nuevo en PA30.</span></li>
-            <li data-line="25,33-37"><span lang="en">NOCOMMIT plus one decision at the end: every record of the employee is saved, or none is.</span><span lang="es">NOCOMMIT y una sola decisión al final: se graban todos los registros del empleado o ninguno.</span></li>
+            <li data-line="25,33-34,36-38"><span lang="en">NOCOMMIT plus one decision at the end: every record of the employee is saved, or none is.</span><span lang="es">NOCOMMIT y una sola decisión al final: se graban todos los registros del empleado o ninguno.</span></li>
+            <li data-line="35"><span lang="en">After a rollback, the infotype buffer is reset, so the next employee never sees records that were never saved.</span><span lang="es">Tras un rollback se vacía el buffer de infotipos, para que el siguiente empleado nunca vea registros que no llegaron a grabarse.</span></li>
+          </ol>
+          <ol class="code-notes" data-for="2">
+            <li data-line="29-30,38"><span lang="en">The OSQL test environment swaps the staging table for a double, so the test runs on any system without touching real data.</span><span lang="es">El entorno de test de Open SQL cambia la tabla intermedia por un doble, así que el test se ejecuta en cualquier sistema sin tocar datos reales.</span></li>
+            <li data-line="45-46"><span lang="en">Same start date with a later record: the replaced record keeps ending the day before the next one.</span><span lang="es">Misma fecha de inicio con un registro posterior: el registro sustituido sigue terminando el día antes del siguiente.</span></li>
+            <li data-line="59-60"><span lang="en">The edge case: a salary dated before all the others ends where the first one begins, instead of running to 31.12.9999 on top of it.</span><span lang="es">El caso límite: un salario con fecha anterior a todos termina donde empieza el primero, en lugar de llegar hasta el 31.12.9999 por encima de él.</span></li>
           </ol>
         </div>
           <div lang="en">
             <div class="callouts">
             <div class="result"><h4>Result</h4><p>Salary changes from Employee Central reach payroll validated, reviewed and traceable.</p></div>
-            <div class="improve"><h4>Next improvement</h4><p>The comparison checks working time and the collective agreement. It should also compare the amounts, so a pure salary change is never reported as “no change”. And it should read in bulk, not inside the loop.</p></div>
+            <div class="improve"><h4>Next step</h4><p>Read the current IT0008 records for all selected employees in one go, instead of one employee at a time inside the loop.</p></div>
             </div>
             <div class="lesson"><h4>Lesson</h4><p>In payroll, control is as important as automation.</p></div>
           </div>
           <div lang="es">
             <div class="callouts">
             <div class="result"><h4>Resultado</h4><p>Los cambios de salario de Employee Central llegan a nómina validados, revisados y con trazabilidad.</p></div>
-            <div class="improve"><h4>Próxima mejora</h4><p>La comparación revisa la jornada y el convenio. También debería comparar los importes, para que un cambio solo de salario nunca salga como «sin cambios». Y debería leer en bloque, no dentro del bucle.</p></div>
+            <div class="improve"><h4>Siguiente paso</h4><p>Leer los IT0008 vigentes de todos los empleados seleccionados de una vez, en lugar de empleado a empleado dentro del bucle.</p></div>
             </div>
             <div class="lesson"><h4>Lección</h4><p>En nómina, el control importa tanto como la automatización.</p></div>
           </div>
@@ -603,8 +699,7 @@ ENDMETHOD.</pre>
     INTO @DATA(lv_last_run).
 
   SELECT * FROM pa2001
-    WHERE begda &lt;= @sy-datum AND endda &gt;= @sy-datum
-      AND aedtm &gt;= @lv_last_run
+    WHERE aedtm &gt;= @lv_last_run
     INTO TABLE @DATA(lt_pa2001).
 
   " lt_accidents comes from the accident step (code = ID document + start date),
@@ -645,8 +740,12 @@ ENDMETHOD.</pre>
     APPEND ls_leave TO ls_request-work_leaves.
   ENDLOOP.
 
+  " Synchronous call: when it returns, the receiver has the data
+  DATA ls_response TYPE zohs_work_leaves_response.
   TRY.
-      NEW zco_ohs_work_leaves( logical_port_name = 'ZOHS_WORK_LEAVES' )-&gt;send( output = ls_request ).
+      NEW zco_ohs_work_leaves( logical_port_name = 'ZOHS_WORK_LEAVES' )-&gt;send(
+        EXPORTING output = ls_request
+        IMPORTING input  = ls_response ).
       " The control date only moves after a successful call
       UPDATE zhr_ohs_control SET last_run = @sy-datum WHERE process = 'WORK_LEAVES'.
     CATCH cx_ai_system_fault cx_ai_application_fault INTO DATA(lx_fault).
@@ -656,25 +755,26 @@ ENDFUNCTION.</pre>
             </figure>
           </div>
           <ol class="code-notes" data-for="0">
-            <li data-line="12"><span lang="en">Delta by the infotype’s change date against the last successful run. The initial load is the same code run from an old date.</span><span lang="es">Delta por la fecha de modificación del infotipo frente a la última ejecución correcta. La carga inicial es el mismo código lanzado desde una fecha antigua.</span></li>
-            <li data-line="27-28"><span lang="en">Open-ended dates (31.12.9999) are sent empty, as the receiver expects.</span><span lang="es">Las fechas abiertas (31.12.9999) se envían vacías, como espera el receptor.</span></li>
-            <li data-line="34,38"><span lang="en">Unknown absence types travel as OTHER, so a new type in SAP never breaks the message.</span><span lang="es">Los tipos de absentismo desconocidos viajan como OTHER, así que un tipo nuevo en SAP nunca rompe el mensaje.</span></li>
-            <li data-line="32"><span lang="en">The empty value that wasn’t: with this field empty for accidents, not a single sick leave reached the receiver. A placeholder agreed with them fixed it.</span><span lang="es">El vacío que no lo era: con este campo vacío en los accidentes no llegaba ni una baja al receptor. Lo arregló un valor de relleno pactado con ellos.</span></li>
-            <li data-line="16,43-45"><span lang="en">One employee can have several accidents, so the link table needs a non-unique key.</span><span lang="es">Un empleado puede tener varios accidentes, así que la tabla del enlace necesita una clave no única.</span></li>
-            <li data-line="56,58"><span lang="en">If the call fails, the control date stays where it was and the next run sends the same changes again.</span><span lang="es">Si la llamada falla, la fecha de control no se mueve y la siguiente ejecución vuelve a enviar los mismos cambios.</span></li>
+            <li data-line="11"><span lang="en">Delta by the infotype’s change date against the last successful run, whatever the dates of the absence: a leave closed yesterday or one starting next month travels too. The initial load is the same code run from an old date.</span><span lang="es">Delta por la fecha de modificación del infotipo frente a la última ejecución correcta, sean cuales sean las fechas del absentismo: una baja cerrada ayer o una que empieza el mes que viene también viajan. La carga inicial es el mismo código lanzado desde una fecha antigua.</span></li>
+            <li data-line="26-27"><span lang="en">Open-ended dates (31.12.9999) are sent empty, as the receiver expects.</span><span lang="es">Las fechas abiertas (31.12.9999) se envían vacías, como espera el receptor.</span></li>
+            <li data-line="33,37"><span lang="en">Unknown absence types travel as OTHER, so a new type in SAP never breaks the message.</span><span lang="es">Los tipos de absentismo desconocidos viajan como OTHER, así que un tipo nuevo en SAP nunca rompe el mensaje.</span></li>
+            <li data-line="31"><span lang="en">The empty value that wasn’t: with this field empty for accidents, not a single sick leave reached the receiver. A placeholder agreed with them fixed it.</span><span lang="es">El vacío que no lo era: con este campo vacío en los accidentes no llegaba ni una baja al receptor. Lo arregló un valor de relleno pactado con ellos.</span></li>
+            <li data-line="15,42-44"><span lang="en">One employee can have several accidents, so the link table needs a non-unique key.</span><span lang="es">Un empleado puede tener varios accidentes, así que la tabla del enlace necesita una clave no única.</span></li>
+            <li data-line="55-57"><span lang="en">A synchronous proxy: request and response in the same call, and business errors from the receiver arrive as cx_ai_application_fault.</span><span lang="es">Un proxy síncrono: petición y respuesta en la misma llamada, y los errores de negocio del receptor llegan como cx_ai_application_fault.</span></li>
+            <li data-line="59,61"><span lang="en">If the call fails, the control date stays where it was and the next run sends the same changes again.</span><span lang="es">Si la llamada falla, la fecha de control no se mueve y la siguiente ejecución vuelve a enviar los mismos cambios.</span></li>
           </ol>
         </div>
           <div lang="en">
             <div class="callouts">
             <div class="result"><h4>Result</h4><p>One initial load, then only changes, without losing or duplicating records.</p></div>
-            <div class="improve"><h4>Next improvement</h4><p>Move the function modules into a class, read in bulk instead of inside loops, and make the delta detect deletions.</p></div>
+            <div class="improve"><h4>Next step</h4><p>Move the function modules into a class and read in bulk instead of inside loops. And catch deleted absences, which a change-date delta cannot see, with a change log written on save, like the one in the SFTP interfaces.</p></div>
             </div>
             <div class="lesson"><h4>Lesson</h4><p>Empty values are part of the contract. The WSDL said the contingency type was optional; in practice, an empty one made a whole block of records disappear in the receiver. Agree on empty values with the people on the other side, not with the WSDL.</p></div>
           </div>
           <div lang="es">
             <div class="callouts">
             <div class="result"><h4>Resultado</h4><p>Una carga inicial y después solo cambios, sin perder ni duplicar registros.</p></div>
-            <div class="improve"><h4>Próxima mejora</h4><p>Pasar los módulos de funciones a una clase, leer en bloque en lugar de dentro de bucles y que el delta detecte los borrados.</p></div>
+            <div class="improve"><h4>Siguiente paso</h4><p>Pasar los módulos de funciones a una clase y leer en bloque en lugar de dentro de bucles. Y detectar los absentismos borrados, que un delta por fecha de modificación no puede ver, con un log de cambios escrito al grabar, como el de las interfaces SFTP.</p></div>
             </div>
             <div class="lesson"><h4>Lección</h4><p>Los valores vacíos son parte del contrato. El WSDL decía que el tipo de contingencia era opcional; en la práctica, uno vacío hacía desaparecer un bloque entero de registros en el receptor. Los vacíos se pactan con quien está al otro lado, no con el WSDL.</p></div>
           </div>
@@ -790,9 +890,9 @@ ENDMETHOD.</pre>
             <figure class="code-file" data-tab-en="Job · send" data-tab-es="Job · envío">
               <figcaption class="code-obj">ZHR_ABSENCE_EXPORT → LCL_EXPORT-&gt;RUN</figcaption>
               <pre class="code-block" data-code>METHOD run.
-  " Normal run: everything pending. Resend: the rows of a file already sent
+  " Normal run: everything pending. Resend: the rows of one file already sent
   IF p_resend = abap_true.
-    SELECT * FROM zhr_abs_log WHERE status = 'S' AND file_name IN @s_file
+    SELECT * FROM zhr_abs_log WHERE status = 'S' AND file_name = @p_file
       INTO TABLE @DATA(lt_send).
   ELSE.
     SELECT * FROM zhr_abs_log WHERE status = 'N' INTO TABLE @lt_send.
@@ -806,7 +906,7 @@ ENDMETHOD.</pre>
     NEXT csv = csv &amp;&amp; |{ r-docnr };{ r-pernr };{ r-awart };{ r-begda };{ r-endda };{ r-hours };{ r-operation }{ lv_nl }| ).
 
   " One file per day, with a name the receiver can predict
-  DATA(lv_file) = COND string( WHEN p_resend = abap_true THEN s_file-low
+  DATA(lv_file) = COND string( WHEN p_resend = abap_true THEN p_file
                                ELSE |ABS_{ sy-datum }.csv| ).
   save_copy_on_server( iv_name = lv_file iv_content = lv_csv ).    " OPEN DATASET
 
@@ -878,9 +978,9 @@ ENDMETHOD.</pre>
             <li data-line="41-44"><span lang="en">An insert deleted before it leaves never travels at all.</span><span lang="es">Un alta que se borra antes de salir no llega a viajar.</span></li>
           </ol>
           <ol class="code-notes" data-for="1">
-            <li data-line="3-5"><span lang="en">Resend mode: any file already sent can be rebuilt from the log in minutes.</span><span lang="es">Modo reenvío: cualquier fichero ya enviado se reconstruye desde el log en minutos.</span></li>
+            <li data-line="3-5"><span lang="en">Resend mode: any file already sent can be rebuilt from the log in minutes. One file per run, with a parameter and not a range, so rows from two files never end up in one.</span><span lang="es">Modo reenvío: cualquier fichero ya enviado se reconstruye desde el log en minutos. Un fichero por ejecución, con un parámetro y no un rango, para que nunca acaben filas de dos ficheros en uno.</span></li>
             <li data-line="18-19"><span lang="en">One file per day with a predictable name, agreed with the receiver.</span><span lang="es">Un fichero al día con un nombre predecible, pactado con el receptor.</span></li>
-            <li data-line="23"><span lang="en">Base64 of the xstring, not of the string: line endings and special characters arrive exactly as they left.</span><span lang="es">Base64 del xstring, no del string: los saltos de línea y los caracteres especiales llegan tal como salieron.</span></li>
+            <li data-line="23"><span lang="en">Base64 of the xstring, not of the string: line endings and special characters arrive exactly as they left. The WSDL declares this field as a plain string and the iFlow decodes it; with base64Binary, the proxy would take the xstring and encode it itself.</span><span lang="es">Base64 del xstring, no del string: los saltos de línea y los caracteres especiales llegan tal como salieron. El WSDL declara este campo como string y el iFlow lo decodifica; con base64Binary, el proxy recibiría el xstring y lo codificaría él.</span></li>
             <li data-line="33-34"><span lang="en">Rows are marked by their own key. Marking by document number overwrote which file each earlier change had travelled in.</span><span lang="es">Las filas se marcan por su propia clave. Marcarlas por número de documento machacaba en qué fichero había viajado cada cambio anterior.</span></li>
             <li data-line="36"><span lang="en">A one-way proxy call is only sent on COMMIT WORK, in the same unit of work as the “sent” marks: both happen, or neither does.</span><span lang="es">Una llamada a un proxy one-way solo sale con el COMMIT WORK, en la misma unidad de trabajo que las marcas de «enviado»: o pasan las dos cosas o ninguna.</span></li>
             <li data-line="40-41"><span lang="en">If the proxy fails, nothing is marked and the rows travel in the next run. The error goes to SLG1.</span><span lang="es">Si el proxy falla, no se marca nada y las filas viajan en la siguiente ejecución. El error queda en SLG1.</span></li>
@@ -897,7 +997,7 @@ ENDMETHOD.</pre>
             <div class="callouts">
             <div class="lesson"><h4>Lessons</h4><p>With a one-way service, “OK” in SAP only means the message reached SAP Integration Suite. The real check is the CPI message monitor and SRT_UTIL.</p>
             <p>Encode the xstring directly (<code>cl_http_utility=&gt;encode_x_base64</code>) so the file arrives byte for byte, line endings included.</p></div>
-            <div class="improve"><h4>Next improvement</h4><p>Mark records as sent only when the receiver confirms, not when the proxy call succeeds. And move the BAdI logic into its own class, so the BAdI only calls it and the logic can be unit-tested.</p></div>
+            <div class="improve"><h4>Next step</h4><p>Mark records as sent only when the receiver confirms, not when the proxy call succeeds. And move the BAdI logic into its own class, so the BAdI only calls it and the logic can be unit-tested.</p></div>
             </div>
           </div>
           <div lang="es">
@@ -905,7 +1005,7 @@ ENDMETHOD.</pre>
             <div class="callouts">
             <div class="lesson"><h4>Lecciones</h4><p>Con un servicio one-way, el «OK» de SAP solo significa que el mensaje llegó a SAP Integration Suite. La comprobación real está en el monitor de mensajes de CPI y en SRT_UTIL.</p>
             <p>Codifica directamente el xstring (<code>cl_http_utility=&gt;encode_x_base64</code>) para que el fichero llegue idéntico byte a byte, saltos de línea incluidos.</p></div>
-            <div class="improve"><h4>Próxima mejora</h4><p>Marcar los registros como enviados solo cuando el receptor confirme, no cuando la llamada al proxy vaya bien. Y sacar la lógica de la BAdI a una clase propia, para que la BAdI solo llame y la lógica se pueda probar con tests unitarios.</p></div>
+            <div class="improve"><h4>Siguiente paso</h4><p>Marcar los registros como enviados solo cuando el receptor confirme, no cuando la llamada al proxy vaya bien. Y sacar la lógica de la BAdI a una clase propia, para que la BAdI solo llame y la lógica se pueda probar con tests unitarios.</p></div>
             </div>
           </div>
         </template>
@@ -994,6 +1094,7 @@ LOOP AT gt_mapping INTO DATA(ls_map).
 
     WHEN c_origin_cru.                       " cluster + routine: the origin I added
       CLEAR lt_wagetypes.
+      " gt_results: current results only (srtza = 'A'), so a recalculated month counts once
       LOOP AT gt_results ASSIGNING FIELD-SYMBOL(&lt;ls_result&gt;).
         LOOP AT &lt;ls_result&gt;-inter-rt INTO DATA(ls_rt).
           IF ls_map-lgart IS NOT INITIAL.
@@ -1031,8 +1132,8 @@ LOOP AT gt_mapping INTO DATA(ls_map).
   ENDCASE.
 
   " The output row was created at runtime from this same table (RTTS):
-  " one component per column, named after its ORDER
-  lv_column = ls_map-orden.
+  " one component per column, named C + its ORDER (C010, C020…)
+  DATA(lv_column) = |C{ ls_map-orden }|.
   ASSIGN COMPONENT lv_column OF STRUCTURE &lt;ls_row&gt; TO FIELD-SYMBOL(&lt;lv_cell&gt;).
   IF sy-subrc = 0.
     TRY.
@@ -1089,9 +1190,9 @@ ENDMETHOD.</pre>
             <li data-line="13-15"><span lang="en">RUT: the routine is a method name stored in the table. About eighty methods share one signature, so any of them fits any column.</span><span lang="es">RUT: la rutina es un nombre de método guardado en la tabla. Unos ochenta métodos comparten firma, así que cualquiera encaja en cualquier columna.</span></li>
             <li data-line="16-17"><span lang="en">A wrong routine name empties one column instead of dumping the whole report.</span><span lang="es">Un nombre de rutina erróneo deja vacía una columna en lugar de hacer un dump de todo el informe.</span></li>
             <li data-line="20"><span lang="en">CRU, the new origin: wage types from the payroll results, maths in a routine.</span><span lang="es">CRU, el origen nuevo: conceptos de los resultados de nómina, cálculo en una rutina.</span></li>
-            <li data-line="27,34"><span lang="en">Wage types chosen by number or by processing class value, so a new wage type with the right class is picked up without touching the table.</span><span lang="es">Conceptos elegidos por número o por valor de clase de tratamiento, así que un concepto nuevo con la clase correcta entra sin tocar la tabla.</span></li>
-            <li data-line="45-50"><span lang="en">The routine receives the wage types, the months with payroll calculated and the values of the columns it depends on.</span><span lang="es">La rutina recibe los conceptos, los meses con nómina calculada y los valores de las columnas de las que depende.</span></li>
-            <li data-line="61"><span lang="en">The output structure is built at runtime from the same table (RTTS), one component per column.</span><span lang="es">La estructura de salida se construye en tiempo de ejecución a partir de la misma tabla (RTTS), un componente por columna.</span></li>
+            <li data-line="28,35"><span lang="en">Wage types chosen by number or by processing class value, so a new wage type with the right class is picked up without touching the table.</span><span lang="es">Conceptos elegidos por número o por valor de clase de tratamiento, así que un concepto nuevo con la clase correcta entra sin tocar la tabla.</span></li>
+            <li data-line="46-51"><span lang="en">The routine receives the wage types, the months with payroll calculated and the values of the columns it depends on.</span><span lang="es">La rutina recibe los conceptos, los meses con nómina calculada y los valores de las columnas de las que depende.</span></li>
+            <li data-line="61-62"><span lang="en">The output structure is built at runtime from the same table (RTTS), one component per column. Its name is C plus the order, because a component name cannot start with a digit.</span><span lang="es">La estructura de salida se construye en tiempo de ejecución a partir de la misma tabla (RTTS), un componente por columna. Se llama C más el orden, porque el nombre de un componente no puede empezar por un número.</span></li>
           </ol>
           <ol class="code-notes" data-for="2">
             <li data-line="7-10"><span lang="en">Dependencies arrive in the order written in the table (“120-130”): the routine never reads the output row itself.</span><span lang="es">Las dependencias llegan en el orden escrito en la tabla («120-130»): la rutina nunca lee la fila de salida por su cuenta.</span></li>
@@ -1102,14 +1203,14 @@ ENDMETHOD.</pre>
           <div lang="en">
             <div class="callouts">
             <div class="result"><h4>Result</h4><p>The client runs one report for its annual register, and the framework grows by adding rows and routines, not by rewriting the engine.</p></div>
-            <div class="improve"><h4>Next improvement</h4><p>The engine still lives in FORM routines around the class. Next step: move it into a class with a unit test per origin.</p></div>
+            <div class="improve"><h4>Next step</h4><p>The engine still lives in FORM routines around the class: move it into a class of its own, with a unit test per origin.</p></div>
             </div>
             <div class="lesson"><h4>Lesson</h4><p>What works in dialog does not necessarily work in mass. The annual salary calculator kept static state between employees: invisible in PA30, wrong from the second employee in a report. Before touching a class shared with PA30 and payroll, I checked its where-used list and compared the report with PA30 for several employees in a row.</p></div>
           </div>
           <div lang="es">
             <div class="callouts">
             <div class="result"><h4>Resultado</h4><p>El cliente ejecuta un solo informe para su registro anual, y el framework crece añadiendo filas y rutinas, no reescribiendo el motor.</p></div>
-            <div class="improve"><h4>Próxima mejora</h4><p>El motor sigue viviendo en FORMs alrededor de la clase. Siguiente paso: pasarlo a una clase con un test unitario por origen.</p></div>
+            <div class="improve"><h4>Siguiente paso</h4><p>El motor sigue viviendo en FORMs alrededor de la clase: pasarlo a una clase propia, con un test unitario por origen.</p></div>
             </div>
             <div class="lesson"><h4>Lección</h4><p>Lo que funciona en diálogo no tiene por qué funcionar en masivo. La calculadora de salario anual guardaba estado estático entre empleados: invisible en PA30, incorrecto a partir del segundo empleado en un informe. Antes de tocar una clase compartida con PA30 y con la nómina, revisé su lista de utilización y comparé el informe con PA30 para varios empleados seguidos.</p></div>
           </div>
@@ -1186,7 +1287,8 @@ ENDMETHOD.</pre>
 
     LOOP AT lt_results INTO DATA(ls_result).
       LOOP AT ls_result-nat-garnt INTO DATA(ls_garn) WHERE gmcid = ls_case-gmcid.
-        " Each amount once: only the line that belongs to this result's period
+        " Each amount once: only the line that belongs to this result's period.
+        " Monthly payroll: the period is the line's start month (YYYYMM)
         CHECK ls_garn-begda(6) = ls_result-evp-inper.
         lv_withheld = lv_withheld + ls_garn-gmamt.
 
@@ -1241,8 +1343,8 @@ ENDMETHOD.</pre>
             <li data-line="7"><span lang="en">Up to the end of the garnishment or the cut-off date, whichever comes first.</span><span lang="es">Hasta el fin del embargo o la fecha de corte, lo que llegue antes.</span></li>
             <li data-line="10-12"><span lang="en">The payroll area comes from IT0001. The report I started from had it hard-coded.</span><span lang="es">El área de nómina sale del IT0001. El informe del que partí la tenía fija en el código.</span></li>
             <li data-line="23"><span lang="en">Archived periods count too, so old garnishments still add up.</span><span lang="es">Los periodos archivados también cuentan, así que los embargos antiguos siguen cuadrando.</span></li>
-            <li data-line="31"><span lang="en">Each amount counted once: only the garnishment line that belongs to the result’s own period.</span><span lang="es">Cada importe se cuenta una vez: solo la línea de embargo que pertenece al periodo del propio resultado.</span></li>
-            <li data-line="34"><span lang="en">The per-period detail is built only when it is asked for, so the header stays fast.</span><span lang="es">El detalle por periodo solo se genera cuando se pide, así que la cabecera sigue siendo rápida.</span></li>
+            <li data-line="32"><span lang="en">Each amount counted once: only the garnishment line that belongs to the result’s own period. This relies on monthly payroll, where the period number is the month; with weekly or other periods, compare with the period’s dates instead.</span><span lang="es">Cada importe se cuenta una vez: solo la línea de embargo que pertenece al periodo del propio resultado. Esto se apoya en una nómina mensual, donde el número de periodo es el mes; con periodos semanales u otros, compara con las fechas del periodo.</span></li>
+            <li data-line="35"><span lang="en">The per-period detail is built only when it is asked for, so the header stays fast.</span><span lang="es">El detalle por periodo solo se genera cuando se pide, así que la cabecera sigue siendo rápida.</span></li>
           </ol>
           <ol class="code-notes" data-for="1">
             <li data-line="5-7"><span lang="en">The garnishment ID opens its own detail in a popup ALV. It is only a hotspot when the detail was requested.</span><span lang="es">El identificador del embargo abre su detalle en un ALV emergente. Solo es un hotspot cuando se ha pedido el detalle.</span></li>
@@ -1279,7 +1381,7 @@ ENDMETHOD.</pre>
               <li>Split the report: one FI document per one-time vendor, each with two lines, the employee’s vendor account and the one-time vendor with its withholding tax.</li>
               <li>A unique reference per document (base plus counter) so it never hits the duplicate check.</li>
               <li>Two passes: <code>BAPI_ACC_DOCUMENT_CHECK</code> for every document first and, only if all pass, post and commit. If one fails, it is logged and the report goes back flagged as an error.</li>
-              <li>Tax ID validated per country (Spain, EU and the rest) with <code>TAX_NUMBER_CHECK</code>, and the EU VAT number passed through <code>EXTENSION1</code>.</li>
+              <li>Tax ID validated with each country's own rules (<code>TAX_NUMBER_CHECK</code>) and, for EU vendors, the VAT number checked with <code>EU_TAX_NUMBER_CHECK</code> and passed through <code>EXTENSION1</code>.</li>
               <li>Every document linked to its Concur report, so the standard never posts it twice.</li>
             </ul></div>
           </div>
@@ -1294,7 +1396,7 @@ ENDMETHOD.</pre>
               <li>Partir el informe: un documento FI por acreedor CPD, cada uno con dos posiciones, el acreedor del empleado y el acreedor CPD con sus retenciones.</li>
               <li>Una referencia única por documento (base más contador) para no chocar con el control de duplicados.</li>
               <li>Dos pasadas: primero <code>BAPI_ACC_DOCUMENT_CHECK</code> para todos los documentos y, solo si pasan todos, contabilizar y hacer commit. Si uno falla, queda en el log y el informe vuelve marcado como error.</li>
-              <li>NIF validado por país (España, UE y resto) con <code>TAX_NUMBER_CHECK</code>, y el NIF comunitario pasado por <code>EXTENSION1</code>.</li>
+              <li>NIF validado con las reglas de su país (<code>TAX_NUMBER_CHECK</code>) y, en proveedores de la UE, el NIF-IVA comprobado con <code>EU_TAX_NUMBER_CHECK</code> y pasado por <code>EXTENSION1</code>.</li>
               <li>Cada documento enlazado con su informe de Concur, para que el estándar nunca lo contabilice dos veces.</li>
             </ul></div>
           </div>
@@ -1303,8 +1405,8 @@ ENDMETHOD.</pre>
             <h4><svg class="i"><use href="#i-code"/></svg><span lang="en">The code that matters</span><span lang="es">El código que importa</span></h4>
             <small><span lang="en">Simplified, anonymised excerpt</span><span lang="es">Extracto simplificado y anonimizado</span></small>
           </div>
-          <p lang="en">The split and the two passes, inside the enhancement that receives the expense documents before the standard posts them. And the per-country check that decides which field the tax ID goes in.</p>
-          <p lang="es">La partición y las dos pasadas, dentro de la ampliación que recibe los documentos de gastos antes de que el estándar los contabilice. Y la comprobación por país que decide en qué campo va el NIF.</p>
+          <p lang="en">The split and the two passes, inside the enhancement that receives the expense documents before the standard posts them. And the tax ID check: the national tax ID with its country's rules and, in the EU, the VAT number too.</p>
+          <p lang="es">La partición y las dos pasadas, dentro de la ampliación que recibe los documentos de gastos antes de que el estándar los contabilice. Y la comprobación del NIF: el nacional con las reglas de su país y, en la UE, también el NIF-IVA.</p>
           <div class="code-window">
             <div class="code-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><div class="code-tabs" role="tablist"></div><button type="button" class="btn small code-copy"><svg class="i"><use href="#i-copy"/></svg><span class="btn-label"><span lang="en">Copy</span><span lang="es">Copiar</span></span></button></div>
             <figure class="code-file" data-tab-en="Split + two passes" data-tab-es="Partición + dos pasadas">
@@ -1351,36 +1453,49 @@ LOOP AT lt_docs INTO ls_doc.
               accountwt      = ls_doc-wtax
               extension1     = ls_doc-ext
               return         = lt_return.
-  CALL FUNCTION 'BAPI_TRANSACTION_COMMIT' EXPORTING wait = abap_true.
+  IF line_exists( lt_return[ type = 'E' ] ) OR line_exists( lt_return[ type = 'A' ] ).
+    CALL FUNCTION 'BAPI_TRANSACTION_ROLLBACK'.
+    log_errors( lt_return ).            " rare after pass 1: a lock or a number range
+    EXIT.                               " documents already posted stay linked
+  ENDIF.
   link_to_report( lv_obj_key ).         " BELNR / GJAHR stored with the report
+  CALL FUNCTION 'BAPI_TRANSACTION_COMMIT' EXPORTING wait = abap_true.
 ENDLOOP.
 
 CLEAR ct_acc_documents.                 " the standard must not post them again</pre>
             </figure>
-            <figure class="code-file" data-tab-en="Tax ID by country" data-tab-es="NIF por país">
+            <figure class="code-file" data-tab-en="Tax ID check" data-tab-es="Comprobación del NIF">
               <figcaption class="code-obj">… → CHECK_TAX_ID</figcaption>
               <pre class="code-block" data-code>METHOD check_tax_id.
-  " Spain: national tax ID. EU countries (T005-XEGLD): VAT number. Elsewhere: tax number 5.
-  SELECT SINGLE xegld FROM t005 WHERE land1 = @is_vendor-country INTO @DATA(lv_eu).
-
+  " Every vendor: national tax ID (tax number 1), with its country's rules.
+  " EU vendors (T005-XEGLD) also carry a VAT number (STCEG), with its own check.
   DATA lv_tax1 TYPE stcd1.
-  DATA lv_tax3 TYPE stcd3.
-  DATA lv_tax5 TYPE stcd5.
-  IF is_vendor-country = 'ES'.
-    lv_tax1 = is_vendor-tax_id.
-  ELSEIF lv_eu = abap_true.
-    lv_tax3 = is_vendor-tax_id.
-  ELSE.
-    lv_tax5 = is_vendor-tax_id.
-  ENDIF.
+  DATA lv_vat  TYPE stceg.
+  lv_tax1 = is_vendor-tax_id.
+  lv_vat  = is_vendor-vat_id.
 
   CALL FUNCTION 'TAX_NUMBER_CHECK'
     EXPORTING  country    = is_vendor-country
                tax_code_1 = lv_tax1
-               tax_code_3 = lv_tax3
-               tax_code_5 = lv_tax5
     EXCEPTIONS OTHERS     = 1.
-  rv_valid = xsdbool( sy-subrc = 0 ).
+  IF sy-subrc &lt;&gt; 0.
+    rv_valid = abap_false.
+    RETURN.
+  ENDIF.
+
+  SELECT SINGLE xegld FROM t005 WHERE land1 = @is_vendor-country INTO @DATA(lv_eu).
+  IF lv_eu = abap_true AND lv_vat IS NOT INITIAL.
+    CALL FUNCTION 'EU_TAX_NUMBER_CHECK'
+      EXPORTING  country       = is_vendor-country
+                 eu_tax_number = lv_vat
+      EXCEPTIONS OTHERS        = 1.
+    IF sy-subrc &lt;&gt; 0.
+      rv_valid = abap_false.
+      RETURN.
+    ENDIF.
+  ENDIF.
+
+  rv_valid = abap_true.
 ENDMETHOD.</pre>
             </figure>
           </div>
@@ -1389,24 +1504,25 @@ ENDMETHOD.</pre>
             <li data-line="5"><span lang="en">Base reference plus a counter, so the duplicate check never blocks the second document.</span><span lang="es">Referencia base más contador, para que el control de duplicados nunca bloquee el segundo documento.</span></li>
             <li data-line="6-9"><span lang="en">Two lines per document, balanced: the employee’s vendor account against the one-time vendor.</span><span lang="es">Dos posiciones por documento, cuadradas: el acreedor del empleado frente al acreedor CPD.</span></li>
             <li data-line="26-28"><span lang="en">Pass 1 checks everything and posts nothing. One error and the whole report goes back, flagged.</span><span lang="es">La pasada 1 lo comprueba todo y no contabiliza nada. Un error y el informe entero vuelve, marcado.</span></li>
-            <li data-line="44,47"><span lang="en">Pass 2 posts and links every document to its Concur report, so the standard never posts it twice.</span><span lang="es">La pasada 2 contabiliza y enlaza cada documento con su informe de Concur, para que el estándar nunca lo contabilice dos veces.</span></li>
-            <li data-line="43"><span lang="en">Honest note: the commit is per document. A single commit at the end would make pass 2 fully atomic.</span><span lang="es">Nota sincera: el commit es por documento. Un único commit al final haría la pasada 2 totalmente atómica.</span></li>
+            <li data-line="48,52"><span lang="en">Pass 2 posts and links every document to its Concur report, so the standard never posts it twice.</span><span lang="es">La pasada 2 contabiliza y enlaza cada documento con su informe de Concur, para que el estándar nunca lo contabilice dos veces.</span></li>
+            <li data-line="43-47"><span lang="en">The post result is checked too. After pass 1 a failure is rare (a lock, a number range), but if one happens, that document is rolled back and logged, and the ones already posted keep their link, so they are never posted twice.</span><span lang="es">También se comprueba el resultado de la contabilización. Tras la pasada 1 un fallo es raro (un bloqueo, un rango de números), pero si ocurre, ese documento se deshace y queda en el log, y los ya contabilizados conservan su enlace, así que nunca se contabilizan dos veces.</span></li>
+            <li data-line="49"><span lang="en">One commit per document, with its link in the same unit of work: no document is ever saved without its link to the report.</span><span lang="es">Un commit por documento, con su enlace en la misma unidad de trabajo: ningún documento se guarda sin su enlace al informe.</span></li>
           </ol>
           <ol class="code-notes" data-for="1">
-            <li data-line="3,8-14"><span lang="en">Each country’s tax ID goes in the field its check rules expect.</span><span lang="es">El NIF de cada país va en el campo que esperan sus reglas de comprobación.</span></li>
-            <li data-line="16"><span lang="en">The country-specific rules are SAP’s own: the code only decides which field to fill.</span><span lang="es">Las reglas de cada país son las del propio SAP: el código solo decide qué campo rellenar.</span></li>
+            <li data-line="9-12"><span lang="en">The national tax ID goes in tax number 1, the same field the split fills in the one-time vendor block, and SAP's own rules for that country check it.</span><span lang="es">El NIF nacional va en el número de identificación fiscal 1, el mismo campo que rellena la partición en el bloque CPD, y lo comprueban las reglas del propio SAP para ese país.</span></li>
+            <li data-line="18-23"><span lang="en">The EU VAT number is a different field (STCEG) with its own check. It reaches the document through EXTENSION1 and a business transaction event (RWBAPI01).</span><span lang="es">El NIF-IVA comunitario es otro campo (STCEG) con su propia comprobación. Llega al documento por EXTENSION1 y un evento de BTE (RWBAPI01).</span></li>
           </ol>
         </div>
           <div lang="en">
             <div class="callouts">
             <div class="lesson"><h4>How I tell it</h4><p>“I’m a payroll developer, but I got the FI side of Concur. The key was to split each report into one document per vendor and check them all before posting any: either the whole report goes in, or nothing does.”</p></div>
-            <div class="improve"><h4>What I would improve</h4><p>One commit at the end instead of one per document; match vendors by tax ID instead of by position; and move the duplicated check and post blocks into one method.</p></div>
+            <div class="improve"><h4>Next step</h4><p>Move the check and post calls, which repeat the same parameters in both passes, into one method, and cover the tax ID rules with a unit test per country.</p></div>
             </div>
           </div>
           <div lang="es">
             <div class="callouts">
             <div class="lesson"><h4>Cómo lo cuento</h4><p>«Soy desarrollador de nómina, pero me tocó la parte FI de Concur. La clave fue partir cada informe en un documento por proveedor y comprobarlos todos antes de contabilizar ninguno: o entra el informe entero, o no entra nada.»</p></div>
-            <div class="improve"><h4>Qué mejoraría</h4><p>Un solo commit al final en lugar de uno por documento; emparejar los proveedores por NIF y no por posición; y llevar los bloques duplicados de comprobación y contabilización a un único método.</p></div>
+            <div class="improve"><h4>Siguiente paso</h4><p>Llevar las llamadas de comprobación y contabilización, que repiten los mismos parámetros en las dos pasadas, a un único método, y cubrir las reglas de NIF con un test unitario por país.</p></div>
             </div>
           </div>
         </template>
@@ -1511,13 +1627,13 @@ ENDMETHOD.</pre>
           <div lang="en">
             <div class="callouts">
             <div class="result"><h4>Result</h4><p>The report matches the standard for normal, retroactive and split periods.</p></div>
-            <div class="lesson"><h4>Lesson</h4><p>Partition is not recalculation, and the standard is the only source of truth. In in-period view the standard shows full recalculated values, with the real differences in /551 and /552, so first find out which view each user expects.</p></div>
+            <div class="lesson"><h4>Lesson</h4><p>Partition is not recalculation, and the standard is the only source of truth. The payroll result keeps no difference per wage type: only the difference in the amount paid out, in /551 and /552. The difference per wage type has to be calculated, so first find out which view each user expects.</p></div>
             </div>
           </div>
           <div lang="es">
             <div class="callouts">
             <div class="result"><h4>Resultado</h4><p>El informe cuadra con el estándar en periodos normales, retroactivos y partidos.</p></div>
-            <div class="lesson"><h4>Lección</h4><p>Una partición no es un recálculo, y el estándar es la única fuente de verdad. En la vista en-periodo el estándar muestra los valores recalculados completos, con las diferencias reales en /551 y /552, así que primero averigua qué vista espera cada usuario.</p></div>
+            <div class="lesson"><h4>Lección</h4><p>Una partición no es un recálculo, y el estándar es la única fuente de verdad. El resultado de nómina no guarda la diferencia de cada concepto: solo la del importe a pagar, en /551 y /552. La diferencia por concepto hay que calcularla, así que primero averigua qué vista espera cada usuario.</p></div>
             </div>
           </div>
         </template>
@@ -1567,18 +1683,22 @@ ENDMETHOD.</pre>
                 <h4><svg class="i"><use href="#i-code"/></svg><span lang="en">The code that matters</span><span lang="es">El código que importa</span></h4>
                 <small><span lang="en">Simplified, anonymised excerpt</span><span lang="es">Extracto simplificado y anonimizado</span></small>
               </div>
-              <p lang="en">The fix: the reference date comes from the payroll period, and each infotype is read newest first.</p>
-              <p lang="es">La corrección: la fecha de referencia sale del periodo de nómina, y cada infotipo se lee del más reciente al más antiguo.</p>
+              <p lang="en">The fix: the reference date comes from the payroll period, taken from the payroll calendar, and each infotype is read newest first.</p>
+              <p lang="es">La corrección: la fecha de referencia sale del periodo de nómina, según el calendario de nómina, y cada infotipo se lee del más reciente al más antiguo.</p>
               <div class="code-window">
                 <div class="code-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><div class="code-tabs" role="tablist"></div><button type="button" class="btn small code-copy"><svg class="i"><use href="#i-copy"/></svg><span class="btn-label"><span lang="en">Copy</span><span lang="es">Copiar</span></span></button></div>
                 <figure class="code-file" data-tab-en="The fix in code" data-tab-es="La corrección en código">
-                  <pre class="code-block" data-code>" Reference date = last day of the payroll period (FPPER), not the payment date
-DATA(lv_first_day) = CONV d( |{ &lt;lv_fpper&gt; }01| ).
-CALL FUNCTION 'LAST_DAY_OF_MONTHS'
-  EXPORTING  day_in            = lv_first_day
-  IMPORTING  last_day_of_month = lv_ref_date
-  EXCEPTIONS day_in_no_date    = 1
-             OTHERS            = 2.
+                  <pre class="code-block" data-code>" Reference date = last day of the payroll period (FPPER), not the payment date.
+" The period's dates come from the payroll calendar (T549Q), so weekly or
+" four-weekly payroll areas work too, not only monthly ones
+DATA(lv_pabrj) = CONV pabrj( &lt;lv_fpper&gt;(4) ).
+DATA(lv_pabrp) = CONV pabrp( &lt;lv_fpper&gt;+4(2) ).
+SELECT SINGLE t549q~endda
+  FROM t549a INNER JOIN t549q ON t549q~permo = t549a~permo
+  WHERE t549a~abkrs = @&lt;lv_abkrs&gt;
+    AND t549q~pabrj = @lv_pabrj
+    AND t549q~pabrp = @lv_pabrp
+  INTO @lv_ref_date.
 IF sy-subrc &lt;&gt; 0.
   lv_ref_date = &lt;lv_paydt&gt;.                  " fallback: the previous behaviour
 ENDIF.
@@ -1616,7 +1736,7 @@ ENDLOOP.</pre>
                   <li>Worked out who returned the 403. PCC tabs are UI5 apps that live in ECP, and some of their SICF services were inactive (for example <code>hrpy_pcc_mc_1</code> for My Teams). Activating them fixed the tabs.</li>
                   <li>Traced the dump to a prototype BAdI implementation that was still active and was also overwriting the working-time percentage in IT0008. Proposed deactivating and deleting it.</li>
                   <li>The PCC audit trail lives in ECP, not in SuccessFactors: added a link to it on the SuccessFactors home page for the payroll team.</li>
-                  <li>Flagged the retirement of HTTP Basic Authentication for SuccessFactors APIs, so connections move to OAuth before they break.</li>
+                  <li>Flagged ahead of time that SuccessFactors was retiring HTTP Basic Authentication for its APIs (it ended on 20 November 2026), so the connections could move to OAuth before they broke.</li>
                 </ul></div>
               </div>
               <div lang="es">
@@ -1625,7 +1745,7 @@ ENDLOOP.</pre>
                   <li>Averigüé quién devolvía el 403. Las pestañas del PCC son aplicaciones UI5 que viven en ECP, y algunos de sus servicios SICF estaban inactivos (por ejemplo <code>hrpy_pcc_mc_1</code>, el de «Mis equipos»). Al activarlos, las pestañas funcionaron.</li>
                   <li>Llegué al origen del dump: una implementación de BAdI de prototipo que seguía activa y que además pisaba el porcentaje de jornada del IT0008. Propuse desactivarla y borrarla.</li>
                   <li>El audit trail del PCC vive en ECP, no en SuccessFactors: añadí un enlace en la página de inicio de SuccessFactors para el equipo de nómina.</li>
-                  <li>Avisé de la retirada de la autenticación HTTP Basic en las APIs de SuccessFactors, para pasar las conexiones a OAuth antes de que fallen.</li>
+                  <li>Avisé con tiempo de que SuccessFactors iba a retirar la autenticación HTTP Basic en sus APIs (se retiró el 20 de noviembre de 2026), para pasar las conexiones a OAuth antes de que fallaran.</li>
                 </ul></div>
               </div>
               <div lang="en">
@@ -1646,8 +1766,8 @@ ENDLOOP.</pre>
               <div lang="en">
                 <div><h4>Context</h4><p>Payroll needed to flag some transfers as urgent (severance pay, advances) and set the payment category in the SEPA XML, without changing the payment method in IT0009.</p></div>
                 <div><h4>What I did</h4><ul>
-                  <li>A custom table, maintained by payroll per employee and payment date, with an urgent flag and a category (SALA, ANTI, FINI, INDEM).</li>
-                  <li>An exit class for the DMEE tree that fills <code>InstrPrty</code> (HIGH), <code>SvcLvl</code> (URGP or SEPA), <code>CtgyPurp</code> and the remittance text.</li>
+                  <li>A custom table, maintained by payroll per employee and payment date, with an urgent flag and an internal category (salary, advance, settlement, severance) that maps to the ISO 20022 code the bank expects, such as SALA.</li>
+                  <li>A DMEE exit for the payment tree that fills <code>InstrPrty</code> (HIGH), <code>SvcLvl</code> (URGP or SEPA), <code>CtgyPurp</code> and the remittance text.</li>
                   <li>No entry in the table means standard behaviour: the code only writes when there is something to change.</li>
                   <li>Buffered reads, records marked as processed once used, and processed entries locked against edits.</li>
                 </ul></div>
@@ -1655,8 +1775,8 @@ ENDLOOP.</pre>
               <div lang="es">
                 <div><h4>Contexto</h4><p>Nómina necesitaba marcar algunas transferencias como urgentes (finiquitos, anticipos) e informar la categoría del pago en el XML SEPA, sin cambiar la vía de pago del IT0009.</p></div>
                 <div><h4>Qué hice</h4><ul>
-                  <li>Una tabla a medida, mantenida por nómina por empleado y fecha de pago, con una marca de urgencia y una categoría (SALA, ANTI, FINI, INDEM).</li>
-                  <li>Una clase de salida para el árbol DMEE que informa <code>InstrPrty</code> (HIGH), <code>SvcLvl</code> (URGP o SEPA), <code>CtgyPurp</code> y el texto del concepto.</li>
+                  <li>Una tabla a medida, mantenida por nómina por empleado y fecha de pago, con una marca de urgencia y una categoría interna (nómina, anticipo, finiquito, indemnización) que se traduce al código ISO 20022 que espera el banco, como SALA.</li>
+                  <li>Un exit de DMEE para el árbol de pagos que informa <code>InstrPrty</code> (HIGH), <code>SvcLvl</code> (URGP o SEPA), <code>CtgyPurp</code> y el texto del concepto.</li>
                   <li>Sin entrada en la tabla, comportamiento estándar: el código solo escribe cuando hay algo que cambiar.</li>
                   <li>Lecturas con buffer, registros marcados como procesados una vez usados y entradas procesadas bloqueadas para que no se editen.</li>
                 </ul></div>
@@ -1729,28 +1849,28 @@ ENDLOOP.</pre>
               <li>The ECP replication program, RP_HRSFEC_PTP_EE_REPLICATION (transaction HRSFEC_PTP_EE_REPL), usually scheduled as a job, calls the Compound Employee API in Employee Central.</li>
               <li>Employee Central returns the employees changed since the last run.</li>
               <li>The Business Integration Builder applies the field and value mappings, runs the replication BAdIs and writes the infotypes.</li>
-              <li>Each employee's result goes to the application log (SLG1, object HRSFEC, subobject EMPLOYEE_PTP) and back to Employee Central.</li>
+              <li>Each employee's result goes to the application log (SLG1, object HRSFEC, subobject EMPLOYEE, external ID = the employee's ID in EC) and back to Employee Central. Subobject EMPLOYEE_PTP holds the technical log of each run: the query sent to EC and the confirmation back.</li>
               <li>In Employee Central, the Data Replication Monitor shows the status per employee.</li>
             </ol>
             <div class="callouts">
-              <div class="lesson"><h4>Where custom logic goes</h4><p>Logic that needs the whole employee goes in the common BAdI, <code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>. Infotype-specific BAdIs, such as the one for IT0008, only run when that infotype is in the BIB field mapping: check it with an external breakpoint before building on it.</p></div>
+              <div class="lesson"><h4>Where custom logic goes</h4><p>Logic that needs the whole employee goes in the common BAdI: <code>HRSFEC_B_CE_PROCESS_EMPLOYEE</code>, method <code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>, in enhancement spot <code>HRSFEC_CE_MASTER_DATA_REPL</code>. Infotype-specific BAdIs, such as the one for IT0008, only run when that infotype is in the BIB field mapping: check it with an external breakpoint before building on it.</p></div>
               <div class="improve"><h4>Never inside the BIB</h4><p>No <code>COMMIT WORK</code>, no <code>HR_INFOTYPE_OPERATION</code> on the same employee. The replication has its own unit of work and locks: write through <code>IF_HRPA_MASTERDATA_BL</code> and let it commit.</p></div>
             </div>
-            <div class="result"><h4>To debug one employee</h4><p>Run the replication for a single Person ID and compare with the SFAPI Audit Log in Employee Central: there you see exactly what was sent.</p></div>
+            <div class="result"><h4>To debug one employee</h4><p>Run the replication for a single Person ID and compare with the SFAPI Audit Log in Employee Central: there you see exactly what was sent. To step through it, set an external breakpoint in <code>CL_HRSFEC_EE_MDR_MAIN</code>, method <code>PROCESS_EMPLOYEE</code>, or in your own BAdI implementation.</p></div>
           </div>
           <div lang="es">
             <ol class="steps">
               <li>El programa de replicación de ECP, RP_HRSFEC_PTP_EE_REPLICATION (transacción HRSFEC_PTP_EE_REPL), normalmente planificado en un job, llama a la Compound Employee API de Employee Central.</li>
               <li>Employee Central devuelve los empleados modificados desde la última ejecución.</li>
               <li>El Business Integration Builder aplica los mapeos de campos y valores, ejecuta las BAdIs de replicación y graba los infotipos.</li>
-              <li>El resultado de cada empleado va al log de aplicación (SLG1, objeto HRSFEC, subobjeto EMPLOYEE_PTP) y de vuelta a Employee Central.</li>
+              <li>El resultado de cada empleado va al log de aplicación (SLG1, objeto HRSFEC, subobjeto EMPLOYEE, ID externo = el ID del empleado en EC) y de vuelta a Employee Central. El subobjeto EMPLOYEE_PTP guarda el log técnico de cada ejecución: la consulta enviada a EC y la confirmación de vuelta.</li>
               <li>En Employee Central, el Data Replication Monitor muestra el estado de cada empleado.</li>
             </ol>
             <div class="callouts">
-              <div class="lesson"><h4>Dónde va la lógica a medida</h4><p>La lógica que necesita el empleado completo va en la BAdI común, <code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>. Las BAdIs específicas de infotipo, como la del IT0008, solo se ejecutan cuando ese infotipo está en el mapeo de campos del BIB: compruébalo con un breakpoint externo antes de construir sobre ellas.</p></div>
+              <div class="lesson"><h4>Dónde va la lógica a medida</h4><p>La lógica que necesita el empleado completo va en la BAdI común: <code>HRSFEC_B_CE_PROCESS_EMPLOYEE</code>, método <code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>, en el punto de ampliación <code>HRSFEC_CE_MASTER_DATA_REPL</code>. Las BAdIs específicas de infotipo, como la del IT0008, solo se ejecutan cuando ese infotipo está en el mapeo de campos del BIB: compruébalo con un breakpoint externo antes de construir sobre ellas.</p></div>
               <div class="improve"><h4>Nunca dentro del BIB</h4><p>Ni <code>COMMIT WORK</code> ni <code>HR_INFOTYPE_OPERATION</code> sobre el mismo empleado. La replicación tiene su propia unidad de trabajo y sus bloqueos: graba a través de <code>IF_HRPA_MASTERDATA_BL</code> y deja que confirme ella.</p></div>
             </div>
-            <div class="result"><h4>Para depurar un empleado</h4><p>Lanza la replicación para un único Person ID y compara con el SFAPI Audit Log de Employee Central: ahí ves exactamente lo que se ha enviado.</p></div>
+            <div class="result"><h4>Para depurar un empleado</h4><p>Lanza la replicación para un único Person ID y compara con el SFAPI Audit Log de Employee Central: ahí ves exactamente lo que se ha enviado. Para seguirla paso a paso, pon un breakpoint externo en <code>CL_HRSFEC_EE_MDR_MAIN</code>, método <code>PROCESS_EMPLOYEE</code>, o en tu propia implementación de la BAdI.</p></div>
           </div>
         </template>
       </article>
@@ -1768,6 +1888,7 @@ ENDLOOP.</pre>
             <tr><td>HRSFEC_PTP_ABSE_REPL</td><td><span lang="en">Time Off absence replication</span><span lang="es">Replicación de ausencias de Time Off</span></td></tr>
             <tr><td>HRSFEC_PTP_ATTE_REPL</td><td><span lang="en">Time Sheet replication</span><span lang="es">Replicación de Time Sheet</span></td></tr>
             <tr><td>HRSFEC_PTP_LMOD</td><td><span lang="en">Date of the last replication run</span><span lang="es">Fecha de la última ejecución de la replicación</span></td></tr>
+            <tr><td>HRSFEC_SPOT_EEMDR_CE</td><td><span lang="en">Enhancement spot of the employee replication, with its BAdIs</span><span lang="es">Punto de ampliación de la replicación de empleados, con sus BAdIs</span></td></tr>
             <tr><td>ODTF_REPL_CC</td><td><span lang="en">Cost center replication (program, run from SE38)</span><span lang="es">Replicación de centros de coste (programa, desde SE38)</span></td></tr>
             <tr><td>SLG1</td><td><span lang="en">Application log of the replication</span><span lang="es">Log de aplicación de la replicación</span></td></tr>
             <tr><td>PA20 / PA30</td><td><span lang="en">Display and maintain infotypes</span><span lang="es">Ver y mantener infotipos</span></td></tr>
@@ -1824,8 +1945,10 @@ ENDLOOP.</pre>
         <div class="tags"><span class="tag">IF_HRPA_MASTERDATA_BL</span><span class="tag">BAdI</span></div>
         <template class="detail">
           <div lang="en">
-            <p>Inside the common replication BAdI the employee is already locked and the BIB commits at the end. Writing through its infotype framework keeps everything in one unit of work: the custom infotype is saved or fails together with the standard ones.</p>
+            <p>Inside the common replication BAdI the employee is already locked and the BIB commits at the end. Writing through its infotype framework keeps everything in one unit of work: the custom infotype is saved or fails together with the standard ones. Use the <code>IF_HRPA_MASTERDATA_BL</code> instance and the message handler the replication passes in. An instance of your own, from the factory, would make the flush and the commit yours, and it would no longer be one unit of work.</p>
 <pre class="code-block" data-hl>METHOD process_it9001.
+  " io_hrpa_masterdata_bl and io_message_handler: the instances the
+  " replication passes to the BAdI, handed down unchanged
   DATA lo_container TYPE REF TO if_hrpa_infty_container.
   DATA lo_data      TYPE REF TO if_hrpa_infty_container_data.
   DATA lv_ok        TYPE boole_d.
@@ -1866,8 +1989,10 @@ ENDMETHOD.</pre>
             </div>
           </div>
           <div lang="es">
-            <p>Dentro de la BAdI común de la replicación, el empleado ya está bloqueado y el BIB hace el commit al final. Grabar a través de su framework de infotipos lo mantiene todo en una unidad de trabajo: el infotipo a medida se graba o falla junto con los estándar.</p>
+            <p>Dentro de la BAdI común de la replicación, el empleado ya está bloqueado y el BIB hace el commit al final. Grabar a través de su framework de infotipos lo mantiene todo en una unidad de trabajo: el infotipo a medida se graba o falla junto con los estándar. Usa la instancia de <code>IF_HRPA_MASTERDATA_BL</code> y el message handler que te pasa la replicación. Con una instancia propia, creada con la factoría, el flush y el commit pasarían a ser tuyos, y ya no sería una sola unidad de trabajo.</p>
 <pre class="code-block" data-hl>METHOD process_it9001.
+  " io_hrpa_masterdata_bl e io_message_handler: las instancias que la
+  " replicación pasa a la BAdI, recibidas tal cual
   DATA lo_container TYPE REF TO if_hrpa_infty_container.
   DATA lo_data      TYPE REF TO if_hrpa_infty_container_data.
   DATA lv_ok        TYPE boole_d.
@@ -1913,12 +2038,12 @@ ENDMETHOD.</pre>
       <article class="card glass" tabindex="0" role="button" aria-haspopup="dialog" data-id="doc-latest-payroll-result" data-kicker="ABAP snippet" data-kicker-es="Snippet ABAP">
         <div class="card-top"><span class="tile"><svg class="i"><use href="#i-code"/></svg></span><span class="plus"><svg class="i"><use href="#i-plus"/></svg></span></div>
         <h3><span lang="en">Reading the latest payroll result</span><span lang="es">Leer el último resultado de nómina</span></h3>
-        <p lang="en">Payroll directory, latest current result and the total of one wage type, in modern ABAP.</p>
-        <p lang="es">Directorio de nómina, último resultado vigente y suma de un concepto, en ABAP moderno.</p>
+        <p lang="en">Payroll directory, the current results of the latest period and the total of one wage type, in modern ABAP.</p>
+        <p lang="es">Directorio de nómina, resultados actuales del último periodo y suma de un concepto, en ABAP moderno.</p>
         <div class="tags"><span class="tag">CU_READ_RGDIR</span><span class="tag">REDUCE</span></div>
         <template class="detail">
           <div lang="en">
-            <p>Reads the employee's payroll directory, takes the latest current result and adds up wage type /101 (total gross).</p>
+            <p>Reads the employee's payroll directory, keeps the current results of the latest regular period and adds up wage type /101 (total gross). Off-cycle runs are left out, and if the period has more than one current result, all of them are added.</p>
 <pre class="code-block" data-hl>DATA lt_rgdir  TYPE STANDARD TABLE OF pc261 WITH EMPTY KEY.
 DATA lv_molga  TYPE molga.
 DATA ls_result TYPE pay99_result.
@@ -1941,33 +2066,41 @@ SELECT SINGLE relid FROM t500l
   WHERE molga = @lv_molga
   INTO @DATA(lv_relid).
 
-" Current results (srtza = 'A'), most recent first
+" Current results of regular runs only: no old versions (srtza = 'A')
+" and no off-cycle runs (payty initial)
+DELETE lt_rgdir WHERE srtza &lt;&gt; 'A' OR payty IS NOT INITIAL.
+IF lt_rgdir IS INITIAL.
+  RETURN.
+ENDIF.
 SORT lt_rgdir BY fpend DESCENDING.
-ASSIGN lt_rgdir[ srtza = 'A' ] TO FIELD-SYMBOL(&lt;ls_rgdir&gt;).
-IF sy-subrc &lt;&gt; 0.
-  RETURN.
-ENDIF.
+DATA(lv_fpper) = lt_rgdir[ 1 ]-fpper.
 
-CALL FUNCTION 'PYXX_READ_PAYROLL_RESULT'
-  EXPORTING
-    clusterid      = lv_relid
-    employeenumber = iv_pernr
-    sequencenumber = &lt;ls_rgdir&gt;-seqnr
-  CHANGING
-    payroll_result = ls_result
-  EXCEPTIONS
-    OTHERS         = 1.
-IF sy-subrc &lt;&gt; 0.
-  RETURN.
-ENDIF.
+" The latest period can have more than one current result, for example
+" after a change of payroll area mid-month: read and add them all
+DATA lv_gross TYPE maxbt.
+LOOP AT lt_rgdir INTO DATA(ls_rgdir) WHERE fpper = lv_fpper.
+  CLEAR ls_result.
+  CALL FUNCTION 'PYXX_READ_PAYROLL_RESULT'
+    EXPORTING
+      clusterid      = lv_relid
+      employeenumber = iv_pernr
+      sequencenumber = ls_rgdir-seqnr
+    CHANGING
+      payroll_result = ls_result
+    EXCEPTIONS
+      OTHERS         = 1.
+  IF sy-subrc &lt;&gt; 0.
+    RETURN.
+  ENDIF.
 
-DATA(lv_gross) = REDUCE maxbt( INIT s = CONV maxbt( 0 )
-                               FOR ls_rt IN ls_result-inter-rt
-                               WHERE ( lgart = '/101' )
-                               NEXT s = s + ls_rt-betrg ).</pre>
+  lv_gross = lv_gross + REDUCE maxbt( INIT s = CONV maxbt( 0 )
+                                      FOR ls_rt IN ls_result-inter-rt
+                                      WHERE ( lgart = '/101' )
+                                      NEXT s = s + ls_rt-betrg ).
+ENDLOOP.</pre>
           </div>
           <div lang="es">
-            <p>Lee el directorio de resultados del empleado, se queda con el último resultado actual y suma el concepto /101 (devengos totales).</p>
+            <p>Lee el directorio de resultados del empleado, se queda con los resultados actuales del último periodo regular y suma el concepto /101 (devengos totales). Las nóminas fuera de ciclo se quedan fuera y, si el periodo tiene más de un resultado actual, se suman todos.</p>
 <pre class="code-block" data-hl>DATA lt_rgdir  TYPE STANDARD TABLE OF pc261 WITH EMPTY KEY.
 DATA lv_molga  TYPE molga.
 DATA ls_result TYPE pay99_result.
@@ -1990,30 +2123,71 @@ SELECT SINGLE relid FROM t500l
   WHERE molga = @lv_molga
   INTO @DATA(lv_relid).
 
-" Resultados actuales (srtza = 'A'), el más reciente primero
+" Solo resultados actuales de nóminas regulares: sin versiones antiguas
+" (srtza = 'A') ni nóminas fuera de ciclo (payty inicial)
+DELETE lt_rgdir WHERE srtza &lt;&gt; 'A' OR payty IS NOT INITIAL.
+IF lt_rgdir IS INITIAL.
+  RETURN.
+ENDIF.
 SORT lt_rgdir BY fpend DESCENDING.
-ASSIGN lt_rgdir[ srtza = 'A' ] TO FIELD-SYMBOL(&lt;ls_rgdir&gt;).
-IF sy-subrc &lt;&gt; 0.
-  RETURN.
-ENDIF.
+DATA(lv_fpper) = lt_rgdir[ 1 ]-fpper.
 
-CALL FUNCTION 'PYXX_READ_PAYROLL_RESULT'
-  EXPORTING
-    clusterid      = lv_relid
-    employeenumber = iv_pernr
-    sequencenumber = &lt;ls_rgdir&gt;-seqnr
-  CHANGING
-    payroll_result = ls_result
-  EXCEPTIONS
-    OTHERS         = 1.
-IF sy-subrc &lt;&gt; 0.
-  RETURN.
-ENDIF.
+" El último periodo puede tener más de un resultado actual, por ejemplo
+" tras un cambio de área de nómina a mitad de mes: se leen y se suman todos
+DATA lv_bruto TYPE maxbt.
+LOOP AT lt_rgdir INTO DATA(ls_rgdir) WHERE fpper = lv_fpper.
+  CLEAR ls_result.
+  CALL FUNCTION 'PYXX_READ_PAYROLL_RESULT'
+    EXPORTING
+      clusterid      = lv_relid
+      employeenumber = iv_pernr
+      sequencenumber = ls_rgdir-seqnr
+    CHANGING
+      payroll_result = ls_result
+    EXCEPTIONS
+      OTHERS         = 1.
+  IF sy-subrc &lt;&gt; 0.
+    RETURN.
+  ENDIF.
 
-DATA(lv_bruto) = REDUCE maxbt( INIT s = CONV maxbt( 0 )
-                               FOR ls_rt IN ls_result-inter-rt
-                               WHERE ( lgart = '/101' )
-                               NEXT s = s + ls_rt-betrg ).</pre>
+  lv_bruto = lv_bruto + REDUCE maxbt( INIT s = CONV maxbt( 0 )
+                                      FOR ls_rt IN ls_result-inter-rt
+                                      WHERE ( lgart = '/101' )
+                                      NEXT s = s + ls_rt-betrg ).
+ENDLOOP.</pre>
+          </div>
+        </template>
+      </article>
+
+      <article class="card glass span2" tabindex="0" role="button" aria-haspopup="dialog" data-id="doc-hcm-to-abap-cloud" data-kicker="Docs · Study notes" data-kicker-es="Documentación · Notas de estudio">
+        <div class="card-top"><span class="tile"><svg class="i"><use href="#i-layers"/></svg></span><span class="plus"><svg class="i"><use href="#i-plus"/></svg></span></div>
+        <h3><span lang="en">From a classic HCM report to ABAP Cloud</span><span lang="es">De un report HCM clásico a ABAP Cloud</span></h3>
+        <p lang="en">My study notes: what a classic HR report relies on, why ABAP Cloud does not allow it and what takes its place.</p>
+        <p lang="es">Mis notas de estudio: en qué se apoya un report de HR clásico, por qué ABAP Cloud no lo permite y qué ocupa su lugar.</p>
+        <div class="front-flow" aria-hidden="true"><span>PNP · WRITE</span><i>→</i><span><span lang="en">Released CDS</span><span lang="es">CDS liberadas</span></span><i>→</i><span>RAP</span><i>→</i><span>Fiori elements</span></div>
+        <div class="tags"><span class="tag">ABAP Cloud</span><span class="tag">Clean core</span><span class="tag">RAP</span></div>
+        <template class="detail">
+          <div lang="en">
+            <p>ABAP Cloud only lets you use objects that SAP has released for it. A classic HR report uses almost nothing released, so it is not converted line by line: it is rebuilt.</p>
+            <ol class="steps">
+              <li><b>SELECT on PA0001, PA0002…</b> Reading SAP tables directly is not allowed. Instead: a released CDS view, if SAP offers one for that data. Until it does, in private cloud or on-premise, a wrapper class in classic ABAP that is released for cloud development.</li>
+              <li><b>Logical database PNP or PNPCE.</b> GET PERNR and selection screens do not exist in ABAP Cloud. Instead: your own selection with ABAP SQL, with the validity dates in the WHERE clause, and the filters coming from the app.</li>
+              <li><b>RP_PROVIDE_FROM_LAST and the other HR macros.</b> They come from HR includes and the TRMAC table, which cloud code cannot use. Instead: read the record valid on the key date with a condition on BEGDA and ENDDA.</li>
+              <li><b>WRITE, or an ALV with CL_SALV_TABLE.</b> There is no SAP GUI output: no lists and no dynpros. Instead: a CDS view with UI annotations, exposed with RAP and shown in a Fiori elements app.</li>
+              <li><b>CALL TRANSACTION and batch input.</b> They drive screens. Instead: a released API, such as a RAP business object called with EML.</li>
+            </ol>
+            <div class="lesson"><h4>What I take from it</h4><p>Keep reading, logic and output apart from the start, even in classic ABAP. A report built that way moves to ABAP Cloud piece by piece; one written around GET PERNR and WRITE has to start over.</p></div>
+          </div>
+          <div lang="es">
+            <p>ABAP Cloud solo deja usar objetos que SAP ha liberado para ello. Un report de HR clásico no usa casi nada liberado, así que no se convierte línea a línea: se rehace.</p>
+            <ol class="steps">
+              <li><b>SELECT sobre PA0001, PA0002…</b> No se puede leer directamente de las tablas de SAP. En su lugar: una vista CDS liberada, si SAP ofrece una para esos datos. Mientras no la haya, en private cloud u on-premise, una clase envoltorio en ABAP clásico liberada para el desarrollo cloud.</li>
+              <li><b>Base de datos lógica PNP o PNPCE.</b> GET PERNR y las pantallas de selección no existen en ABAP Cloud. En su lugar: una selección propia con ABAP SQL, con las fechas de validez en el WHERE y los filtros llegando desde la aplicación.</li>
+              <li><b>RP_PROVIDE_FROM_LAST y el resto de macros de HR.</b> Salen de includes de HR y de la tabla TRMAC, que el código cloud no puede usar. En su lugar: leer el registro vigente a la fecha clave con una condición sobre BEGDA y ENDDA.</li>
+              <li><b>WRITE, o un ALV con CL_SALV_TABLE.</b> No hay salida en SAP GUI: ni listas ni dynpros. En su lugar: una vista CDS con anotaciones de UI, expuesta con RAP y mostrada en una aplicación Fiori elements.</li>
+              <li><b>CALL TRANSACTION y batch input.</b> Manejan pantallas. En su lugar: una API liberada, como un business object de RAP llamado con EML.</li>
+            </ol>
+            <div class="lesson"><h4>Lo que me llevo</h4><p>Separar lectura, lógica y salida desde el principio, incluso en ABAP clásico. Un report hecho así pasa a ABAP Cloud pieza a pieza; uno escrito alrededor de GET PERNR y WRITE tiene que empezar de cero.</p></div>
           </div>
         </template>
       </article>
@@ -2029,7 +2203,7 @@ DATA(lv_bruto) = REDUCE maxbt( INIT s = CONV maxbt( 0 )
             <ol class="steps">
               <li><b>Payroll Control Center tabs.</b> They are UI5 apps that live in ECP. Check that their SICF services are active (My Teams is <code>hrpy_pcc_mc_1</code>) and their OData services in <code>/IWFND/MAINT_SERVICE</code>. If a tab then loads blank, recalculate the UI5 app index.</li>
               <li><b>Replication confirmation.</b> A COE_GENERAL_FORBIDDEN error when the replication writes its status back to EC usually means the API user is missing role-based permissions: Data Replication Monitor, the Foundation OData API, inactive employees and some Job Information fields. Check its target population too.</li>
-              <li><b>Authentication method.</b> SuccessFactors is retiring HTTP Basic Authentication for its APIs. If HRSFEC_PTP_CONFIG or an SM59 destination still uses user and password, move it to OAuth with certificates.</li>
+              <li><b>Authentication method.</b> Since 20 November 2026, SuccessFactors APIs no longer accept HTTP Basic Authentication. If HRSFEC_PTP_CONFIG or an SM59 destination still uses user and password, it no longer connects: move it to OAuth with certificates.</li>
               <li><b>Audit trail.</b> The PCC audit trail is stored in ECP, not in SuccessFactors. Link it from the SuccessFactors home page; for a full download there is the report PYC_SUPPORT_DL_AUDIT_TRAIL.</li>
             </ol>
           </div>
@@ -2037,7 +2211,7 @@ DATA(lv_bruto) = REDUCE maxbt( INIT s = CONV maxbt( 0 )
             <ol class="steps">
               <li><b>Pestañas del Payroll Control Center.</b> Son aplicaciones UI5 que viven en ECP. Comprueba que sus servicios SICF están activos («Mis equipos» es <code>hrpy_pcc_mc_1</code>) y sus servicios OData en <code>/IWFND/MAINT_SERVICE</code>. Si después una pestaña sale en blanco, recalcula el índice de aplicaciones UI5.</li>
               <li><b>Confirmación de la replicación.</b> Un error COE_GENERAL_FORBIDDEN cuando la replicación devuelve su estado a EC suele indicar que al usuario API le faltan permisos RBP: Data Replication Monitor, la Foundation OData API, empleados inactivos y algunos campos de Job Information. Revisa también su población objetivo.</li>
-              <li><b>Método de autenticación.</b> SuccessFactors está retirando la autenticación HTTP Basic en sus APIs. Si HRSFEC_PTP_CONFIG o un destino de SM59 siguen con usuario y contraseña, pásalos a OAuth con certificados.</li>
+              <li><b>Método de autenticación.</b> Desde el 20 de noviembre de 2026, las APIs de SuccessFactors ya no aceptan la autenticación HTTP Basic. Si HRSFEC_PTP_CONFIG o un destino de SM59 siguen con usuario y contraseña, ya no conectan: pásalos a OAuth con certificados.</li>
               <li><b>Audit trail.</b> El audit trail del PCC se guarda en ECP, no en SuccessFactors. Enlázalo desde la página de inicio de SuccessFactors; para descargarlo completo está el report PYC_SUPPORT_DL_AUDIT_TRAIL.</li>
             </ol>
           </div>
@@ -2054,7 +2228,7 @@ DATA(lv_bruto) = REDUCE maxbt( INIT s = CONV maxbt( 0 )
           <div lang="en">
             <p>Employee Central Payroll is the same SAP payroll engine, running in SAP's cloud and fed by Employee Central. The calculation logic you trust stays; how it is delivered and connected changes.</p>
             <ol class="steps">
-              <li><b>Fit-gap.</b> What fits in ECP and what does not: very complex time evaluation, heavily customised self-services, public sector. This is where you decide between ECP and keeping HCM in a private cloud.</li>
+              <li><b>Fit-gap.</b> What fits in ECP as it is and what needs a closer look: very complex time evaluation, heavily customised self-services, and country or public-sector specifics that depend on the localisation. This is where you decide between ECP and keeping HCM in a private cloud.</li>
               <li><b>Custom code inventory.</b> Developments, enhancements and modifications, crossed with real usage statistics so dead code is not migrated. Modifications are redesigned as enhancements.</li>
               <li><b>Data model and replication.</b> Employee Central becomes the master: map EC fields to infotypes (custom ones too), picklist values and personnel numbers.</li>
               <li><b>Customizing and code, in order.</b> Schemas, rules, wage types and developments, respecting their dependencies.</li>
@@ -2066,7 +2240,7 @@ DATA(lv_bruto) = REDUCE maxbt( INIT s = CONV maxbt( 0 )
           <div lang="es">
             <p>Employee Central Payroll es el mismo motor de nómina de SAP, en la nube de SAP y alimentado por Employee Central. La lógica de cálculo de siempre se mantiene; cambia cómo se entrega y cómo se conecta.</p>
             <ol class="steps">
-              <li><b>Fit-gap.</b> Qué encaja en ECP y qué no: evaluación de tiempos muy compleja, autoservicios muy personalizados, sector público. Aquí se decide entre ECP o mantener HCM en una nube privada.</li>
+              <li><b>Fit-gap.</b> Qué encaja en ECP tal cual y qué hay que mirar con lupa: evaluación de tiempos muy compleja, autoservicios muy personalizados y particularidades de país o de sector público que dependen de la localización. Aquí se decide entre ECP o mantener HCM en una nube privada.</li>
               <li><b>Inventario de código a medida.</b> Desarrollos, ampliaciones y modificaciones del estándar, cruzados con estadísticas de uso reales para no migrar código muerto. Las modificaciones se rediseñan como ampliaciones.</li>
               <li><b>Modelo de datos y replicación.</b> Employee Central pasa a ser el maestro: mapear campos de EC a infotipos (también los a medida), valores de picklist y números de personal.</li>
               <li><b>Customizing y código, en orden.</b> Esquemas, reglas, conceptos y desarrollos, respetando sus dependencias.</li>
@@ -2078,7 +2252,7 @@ DATA(lv_bruto) = REDUCE maxbt( INIT s = CONV maxbt( 0 )
         </template>
       </article>
 
-      <article class="card glass" tabindex="0" role="button" aria-haspopup="dialog" data-id="doc-lessons" data-kicker="Docs · Field notes" data-kicker-es="Documentación · Notas de campo">
+      <article class="card glass span2" tabindex="0" role="button" aria-haspopup="dialog" data-id="doc-lessons" data-kicker="Docs · Field notes" data-kicker-es="Documentación · Notas de campo">
         <div class="card-top"><span class="tile"><svg class="i"><use href="#i-bulb"/></svg></span><span class="plus"><svg class="i"><use href="#i-plus"/></svg></span></div>
         <h3><span lang="en">Lessons from the field</span><span lang="es">Lecciones aprendidas</span></h3>
         <p lang="en">Ten things I learned the hard way, each one from a real incident.</p>
@@ -2136,10 +2310,10 @@ DATA(lv_bruto) = REDUCE maxbt( INIT s = CONV maxbt( 0 )
           <div class="tags"><span class="tag">7.40</span><span class="tag">7.50</span><span class="tag">7.54+</span><span class="tag"><span lang="en">30+ rules</span><span lang="es">30+ reglas</span></span></div>
         </div>
         <div class="mini" aria-hidden="true">
-          <div><span class="lbl"><span lang="en">Before</span><span lang="es">Antes</span></span><pre data-hl>READ TABLE lt_p0001 INTO ls_p0001 WITH KEY pernr = lv_pernr.
-IF sy-subrc EQ 0.</pre></div>
-          <div><span class="lbl"><span lang="en">After</span><span lang="es">Después</span></span><pre class="after" data-hl>IF line_exists( lt_p0001[ pernr = lv_pernr ] ).
-  DATA(ls_p0001) = lt_p0001[ pernr = lv_pernr ].</pre></div>
+          <div><span class="lbl"><span lang="en">Before</span><span lang="es">Antes</span></span><pre data-hl>SELECT SINGLE ename FROM pa0001 INTO lv_ename
+  WHERE pernr = lv_pernr.</pre></div>
+          <div><span class="lbl"><span lang="en">After</span><span lang="es">Después</span></span><pre class="after" data-hl>SELECT SINGLE ename FROM pa0001
+  WHERE pernr = @lv_pernr INTO @lv_ename.</pre></div>
         </div>
         <template class="detail">
           <div class="conv" data-mount="converter">
@@ -2194,8 +2368,8 @@ IF sy-subrc EQ 0.</pre></div>
               <button type="button" class="btn" data-eot><span lang="en">End of time</span><span lang="es">Fin de los tiempos</span></button>
             </div>
             <div class="date-out" aria-live="polite"></div>
-            <p class="disclaimer" lang="en">Employee Central works in UTC. In ECP, BEGDA and ENDDA are DATS dates without a time zone, and 9999-12-31 is 99991231.</p>
-            <p class="disclaimer" lang="es">Employee Central trabaja en UTC. En ECP, BEGDA y ENDDA son fechas DATS sin zona horaria, y 9999-12-31 equivale a 99991231.</p>
+            <p class="disclaimer" lang="en">The Employee Central OData v2 APIs send dates as /Date(…)/: milliseconds since 1 January 1970, in UTC. In ECP, BEGDA and ENDDA are DATS dates without a time zone, and 9999-12-31 is 99991231.</p>
+            <p class="disclaimer" lang="es">Las APIs OData v2 de Employee Central envían las fechas como /Date(…)/: milisegundos desde el 1 de enero de 1970, en UTC. En ECP, BEGDA y ENDDA son fechas DATS sin zona horaria, y 9999-12-31 equivale a 99991231.</p>
           </div>
         </template>
       </article>
@@ -2220,7 +2394,6 @@ IF sy-subrc EQ 0.</pre></div>
   </section>
 
   <!-- ================= CONTACT ================= -->
-  <!-- TODO: replace the email and profile links -->
   <section id="contact" class="contact glass" aria-labelledby="contact-title">
     <div>
       <p class="eyebrow"><span lang="en">Contact</span><span lang="es">Contacto</span></p>
@@ -2246,7 +2419,7 @@ IF sy-subrc EQ 0.</pre></div>
   </div>
 </div>
 
-<script src="assets/js/abap-modernizer.js?v=f109c6e7"></script>
+<script src="assets/js/abap-modernizer.js?v=aaff02b1"></script>
 <script src="assets/js/app.js?v=7f0c634d"></script>
 </body>
 </html>

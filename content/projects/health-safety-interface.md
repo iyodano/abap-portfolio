@@ -49,9 +49,9 @@ Infotypes 0000–2001 -> Control table -> Delta selection and mapping -> SOAP pr
 
 One initial load, then only changes, without losing or duplicating records.
 
-## Next improvement {improve half}
+## Next step {improve half}
 
-Move the function modules into a class, read in bulk instead of inside loops, and make the delta detect deletions.
+Move the function modules into a class and read in bulk instead of inside loops. And catch deleted absences, which a change-date delta cannot see, with a change log written on save, like the one in the SFTP interfaces.
 
 ## Lesson {lesson}
 
@@ -92,9 +92,9 @@ Infotipos 0000–2001 -> Tabla de control -> Selección delta y mapeo -> Proxy S
 
 Una carga inicial y después solo cambios, sin perder ni duplicar registros.
 
-## Próxima mejora {improve half}
+## Siguiente paso {improve half}
 
-Pasar los módulos de funciones a una clase, leer en bloque en lugar de dentro de bucles y que el delta detecte los borrados.
+Pasar los módulos de funciones a una clase y leer en bloque en lugar de dentro de bucles. Y detectar los absentismos borrados, que un delta por fecha de modificación no puede ver, con un log de cambios escrito al grabar, como el de las interfaces SFTP.
 
 ## Lección {lesson}
 
@@ -120,8 +120,7 @@ FUNCTION z_hr_ohs_send_work_leaves.
     INTO @DATA(lv_last_run).
 
   SELECT * FROM pa2001
-    WHERE begda <= @sy-datum AND endda >= @sy-datum
-      AND aedtm >= @lv_last_run  //1
+    WHERE aedtm >= @lv_last_run  //1
     INTO TABLE @DATA(lt_pa2001).
 
   " lt_accidents comes from the accident step (code = ID document + start date),
@@ -162,18 +161,22 @@ FUNCTION z_hr_ohs_send_work_leaves.
     APPEND ls_leave TO ls_request-work_leaves.
   ENDLOOP.
 
+  " Synchronous call: when it returns, the receiver has the data
+  DATA ls_response TYPE zohs_work_leaves_response.
   TRY.
-      NEW zco_ohs_work_leaves( logical_port_name = 'ZOHS_WORK_LEAVES' )->send( output = ls_request ).
+      NEW zco_ohs_work_leaves( logical_port_name = 'ZOHS_WORK_LEAVES' )->send(  //6
+        EXPORTING output = ls_request  //6
+        IMPORTING input  = ls_response ).  //6
       " The control date only moves after a successful call
-      UPDATE zhr_ohs_control SET last_run = @sy-datum WHERE process = 'WORK_LEAVES'.  //6
+      UPDATE zhr_ohs_control SET last_run = @sy-datum WHERE process = 'WORK_LEAVES'.  //7
     CATCH cx_ai_system_fault cx_ai_application_fault INTO DATA(lx_fault).
-      ev_error = lx_fault->get_text( ).   " date untouched: the next run retries  //6
+      ev_error = lx_fault->get_text( ).   " date untouched: the next run retries  //7
   ENDTRY.
 ENDFUNCTION.
 ```
 
-1. EN: Delta by the infotype’s change date against the last successful run. The initial load is the same code run from an old date.
-   ES: Delta por la fecha de modificación del infotipo frente a la última ejecución correcta. La carga inicial es el mismo código lanzado desde una fecha antigua.
+1. EN: Delta by the infotype’s change date against the last successful run, whatever the dates of the absence: a leave closed yesterday or one starting next month travels too. The initial load is the same code run from an old date.
+   ES: Delta por la fecha de modificación del infotipo frente a la última ejecución correcta, sean cuales sean las fechas del absentismo: una baja cerrada ayer o una que empieza el mes que viene también viajan. La carga inicial es el mismo código lanzado desde una fecha antigua.
 2. EN: Open-ended dates (31.12.9999) are sent empty, as the receiver expects.
    ES: Las fechas abiertas (31.12.9999) se envían vacías, como espera el receptor.
 3. EN: Unknown absence types travel as OTHER, so a new type in SAP never breaks the message.
@@ -182,5 +185,7 @@ ENDFUNCTION.
    ES: El vacío que no lo era: con este campo vacío en los accidentes no llegaba ni una baja al receptor. Lo arregló un valor de relleno pactado con ellos.
 5. EN: One employee can have several accidents, so the link table needs a non-unique key.
    ES: Un empleado puede tener varios accidentes, así que la tabla del enlace necesita una clave no única.
-6. EN: If the call fails, the control date stays where it was and the next run sends the same changes again.
+6. EN: A synchronous proxy: request and response in the same call, and business errors from the receiver arrive as cx_ai_application_fault.
+   ES: Un proxy síncrono: petición y respuesta en la misma llamada, y los errores de negocio del receptor llegan como cx_ai_application_fault.
+7. EN: If the call fails, the control date stays where it was and the next run sends the same changes again.
    ES: Si la llamada falla, la fecha de control no se mueve y la siguiente ejecución vuelve a enviar los mismos cambios.

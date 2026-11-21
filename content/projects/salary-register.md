@@ -43,9 +43,9 @@ Spanish companies must keep a salary register by gender and job group, in the fo
 
 The client runs one report for its annual register, and the framework grows by adding rows and routines, not by rewriting the engine.
 
-## Next improvement {improve half}
+## Next step {improve half}
 
-The engine still lives in FORM routines around the class. Next step: move it into a class with a unit test per origin.
+The engine still lives in FORM routines around the class: move it into a class of its own, with a unit test per origin.
 
 ## Lesson {lesson}
 
@@ -79,9 +79,9 @@ Las empresas españolas deben llevar un registro retributivo por sexo y grupo pr
 
 El cliente ejecuta un solo informe para su registro anual, y el framework crece añadiendo filas y rutinas, no reescribiendo el motor.
 
-## Próxima mejora {improve half}
+## Siguiente paso {improve half}
 
-El motor sigue viviendo en FORMs alrededor de la clase. Siguiente paso: pasarlo a una clase con un test unitario por origen.
+El motor sigue viviendo en FORMs alrededor de la clase: pasarlo a una clase propia, con un test unitario por origen.
 
 ## Lección {lesson}
 
@@ -142,6 +142,7 @@ LOOP AT gt_mapping INTO DATA(ls_map).
 
     WHEN c_origin_cru.                       " cluster + routine: the origin I added  //3
       CLEAR lt_wagetypes.
+      " gt_results: current results only (srtza = 'A'), so a recalculated month counts once
       LOOP AT gt_results ASSIGNING FIELD-SYMBOL(<ls_result>).
         LOOP AT <ls_result>-inter-rt INTO DATA(ls_rt).
           IF ls_map-lgart IS NOT INITIAL.
@@ -179,8 +180,8 @@ LOOP AT gt_mapping INTO DATA(ls_map).
   ENDCASE.
 
   " The output row was created at runtime from this same table (RTTS):
-  " one component per column, named after its ORDER
-  lv_column = ls_map-orden.
+  " one component per column, named C + its ORDER (C010, C020…)
+  DATA(lv_column) = |C{ ls_map-orden }|.  //6
   ASSIGN COMPONENT lv_column OF STRUCTURE <ls_row> TO FIELD-SYMBOL(<lv_cell>).  //6
   IF sy-subrc = 0.
     TRY.
@@ -202,8 +203,8 @@ ENDLOOP.
    ES: Conceptos elegidos por número o por valor de clase de tratamiento, así que un concepto nuevo con la clase correcta entra sin tocar la tabla.
 5. EN: The routine receives the wage types, the months with payroll calculated and the values of the columns it depends on.
    ES: La rutina recibe los conceptos, los meses con nómina calculada y los valores de las columnas de las que depende.
-6. EN: The output structure is built at runtime from the same table (RTTS), one component per column.
-   ES: La estructura de salida se construye en tiempo de ejecución a partir de la misma tabla (RTTS), un componente por columna.
+6. EN: The output structure is built at runtime from the same table (RTTS), one component per column. Its name is C plus the order, because a component name cannot start with a digit.
+   ES: La estructura de salida se construye en tiempo de ejecución a partir de la misma tabla (RTTS), un componente por columna. Se llama C más el orden, porque el nombre de un componente no puede empezar por un número.
 
 ## Routine · IT0014/15 % | Rutina · % IT0014/15
 

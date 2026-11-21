@@ -145,6 +145,7 @@ section > .sec-head { display: flex; flex-direction: column; gap: 6px; margin-bo
 .mini { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; align-content: center; }
 .mini > div { min-width: 0; }
 .mini pre { margin: 0; padding: 12px 14px; border-radius: 16px; font-size: 12.5px; line-height: 1.6; overflow: hidden; white-space: pre; background: rgba(2, 8, 22, .55); border: 1px solid rgba(255, 255, 255, .08); }
+.mini pre .ln { display: block; }
 .mini .lbl { font: 600 11px var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 4px; display: block; }
 .mini .after { border-color: rgba(127, 227, 207, .3); }
 

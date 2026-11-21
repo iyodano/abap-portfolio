@@ -29,16 +29,16 @@ tags:
 - Split the report: one FI document per one-time vendor, each with two lines, the employee’s vendor account and the one-time vendor with its withholding tax.
 - A unique reference per document (base plus counter) so it never hits the duplicate check.
 - Two passes: `BAPI_ACC_DOCUMENT_CHECK` for every document first and, only if all pass, post and commit. If one fails, it is logged and the report goes back flagged as an error.
-- Tax ID validated per country (Spain, EU and the rest) with `TAX_NUMBER_CHECK`, and the EU VAT number passed through `EXTENSION1`.
+- Tax ID validated with each country's own rules (`TAX_NUMBER_CHECK`) and, for EU vendors, the VAT number checked with `EU_TAX_NUMBER_CHECK` and passed through `EXTENSION1`.
 - Every document linked to its Concur report, so the standard never posts it twice.
 
 ## How I tell it {lesson half}
 
 “I’m a payroll developer, but I got the FI side of Concur. The key was to split each report into one document per vendor and check them all before posting any: either the whole report goes in, or nothing does.”
 
-## What I would improve {improve half}
+## Next step {improve half}
 
-One commit at the end instead of one per document; match vendors by tax ID instead of by position; and move the duplicated check and post blocks into one method.
+Move the check and post calls, which repeat the same parameters in both passes, into one method, and cover the tax ID rules with a unit test per country.
 
 # Español
 
@@ -56,21 +56,21 @@ One commit at the end instead of one per document; match vendors by tax ID inste
 - Partir el informe: un documento FI por acreedor CPD, cada uno con dos posiciones, el acreedor del empleado y el acreedor CPD con sus retenciones.
 - Una referencia única por documento (base más contador) para no chocar con el control de duplicados.
 - Dos pasadas: primero `BAPI_ACC_DOCUMENT_CHECK` para todos los documentos y, solo si pasan todos, contabilizar y hacer commit. Si uno falla, queda en el log y el informe vuelve marcado como error.
-- NIF validado por país (España, UE y resto) con `TAX_NUMBER_CHECK`, y el NIF comunitario pasado por `EXTENSION1`.
+- NIF validado con las reglas de su país (`TAX_NUMBER_CHECK`) y, en proveedores de la UE, el NIF-IVA comprobado con `EU_TAX_NUMBER_CHECK` y pasado por `EXTENSION1`.
 - Cada documento enlazado con su informe de Concur, para que el estándar nunca lo contabilice dos veces.
 
 ## Cómo lo cuento {lesson half}
 
 «Soy desarrollador de nómina, pero me tocó la parte FI de Concur. La clave fue partir cada informe en un documento por proveedor y comprobarlos todos antes de contabilizar ninguno: o entra el informe entero, o no entra nada.»
 
-## Qué mejoraría {improve half}
+## Siguiente paso {improve half}
 
-Un solo commit al final en lugar de uno por documento; emparejar los proveedores por NIF y no por posición; y llevar los bloques duplicados de comprobación y contabilización a un único método.
+Llevar las llamadas de comprobación y contabilización, que repiten los mismos parámetros en las dos pasadas, a un único método, y cubrir las reglas de NIF con un test unitario por país.
 
 # Code
 
-EN: The split and the two passes, inside the enhancement that receives the expense documents before the standard posts them. And the per-country check that decides which field the tax ID goes in.
-ES: La partición y las dos pasadas, dentro de la ampliación que recibe los documentos de gastos antes de que el estándar los contabilice. Y la comprobación por país que decide en qué campo va el NIF.
+EN: The split and the two passes, inside the enhancement that receives the expense documents before the standard posts them. And the tax ID check: the national tax ID with its country's rules and, in the EU, the VAT number too.
+ES: La partición y las dos pasadas, dentro de la ampliación que recibe los documentos de gastos antes de que el estándar los contabilice. Y la comprobación del NIF: el nacional con las reglas de su país y, en la UE, también el NIF-IVA.
 
 ## Split + two passes | Partición + dos pasadas
 
@@ -119,8 +119,13 @@ LOOP AT lt_docs INTO ls_doc.
               accountwt      = ls_doc-wtax
               extension1     = ls_doc-ext
               return         = lt_return.
-  CALL FUNCTION 'BAPI_TRANSACTION_COMMIT' EXPORTING wait = abap_true.  //6
+  IF line_exists( lt_return[ type = 'E' ] ) OR line_exists( lt_return[ type = 'A' ] ).  //6
+    CALL FUNCTION 'BAPI_TRANSACTION_ROLLBACK'.  //6
+    log_errors( lt_return ).            " rare after pass 1: a lock or a number range  //6
+    EXIT.                               " documents already posted stay linked  //6
+  ENDIF.  //6
   link_to_report( lv_obj_key ).         " BELNR / GJAHR stored with the report  //5
+  CALL FUNCTION 'BAPI_TRANSACTION_COMMIT' EXPORTING wait = abap_true.  //7
 ENDLOOP.
 
 CLEAR ct_acc_documents.                 " the standard must not post them again  //5
@@ -136,40 +141,50 @@ CLEAR ct_acc_documents.                 " the standard must not post them again 
    ES: La pasada 1 lo comprueba todo y no contabiliza nada. Un error y el informe entero vuelve, marcado.
 5. EN: Pass 2 posts and links every document to its Concur report, so the standard never posts it twice.
    ES: La pasada 2 contabiliza y enlaza cada documento con su informe de Concur, para que el estándar nunca lo contabilice dos veces.
-6. EN: Honest note: the commit is per document. A single commit at the end would make pass 2 fully atomic.
-   ES: Nota sincera: el commit es por documento. Un único commit al final haría la pasada 2 totalmente atómica.
+6. EN: The post result is checked too. After pass 1 a failure is rare (a lock, a number range), but if one happens, that document is rolled back and logged, and the ones already posted keep their link, so they are never posted twice.
+   ES: También se comprueba el resultado de la contabilización. Tras la pasada 1 un fallo es raro (un bloqueo, un rango de números), pero si ocurre, ese documento se deshace y queda en el log, y los ya contabilizados conservan su enlace, así que nunca se contabilizan dos veces.
+7. EN: One commit per document, with its link in the same unit of work: no document is ever saved without its link to the report.
+   ES: Un commit por documento, con su enlace en la misma unidad de trabajo: ningún documento se guarda sin su enlace al informe.
 
-## Tax ID by country | NIF por país
+## Tax ID check | Comprobación del NIF
 
 `… → CHECK_TAX_ID`
 
 ```abap
 METHOD check_tax_id.
-  " Spain: national tax ID. EU countries (T005-XEGLD): VAT number. Elsewhere: tax number 5.
-  SELECT SINGLE xegld FROM t005 WHERE land1 = @is_vendor-country INTO @DATA(lv_eu).  //1
-
+  " Every vendor: national tax ID (tax number 1), with its country's rules.
+  " EU vendors (T005-XEGLD) also carry a VAT number (STCEG), with its own check.
   DATA lv_tax1 TYPE stcd1.
-  DATA lv_tax3 TYPE stcd3.
-  DATA lv_tax5 TYPE stcd5.
-  IF is_vendor-country = 'ES'.  //1
-    lv_tax1 = is_vendor-tax_id.  //1
-  ELSEIF lv_eu = abap_true.  //1
-    lv_tax3 = is_vendor-tax_id.  //1
-  ELSE.  //1
-    lv_tax5 = is_vendor-tax_id.  //1
-  ENDIF.  //1
+  DATA lv_vat  TYPE stceg.
+  lv_tax1 = is_vendor-tax_id.
+  lv_vat  = is_vendor-vat_id.
 
-  CALL FUNCTION 'TAX_NUMBER_CHECK'  //2
-    EXPORTING  country    = is_vendor-country
-               tax_code_1 = lv_tax1
-               tax_code_3 = lv_tax3
-               tax_code_5 = lv_tax5
-    EXCEPTIONS OTHERS     = 1.
-  rv_valid = xsdbool( sy-subrc = 0 ).
+  CALL FUNCTION 'TAX_NUMBER_CHECK'  //1
+    EXPORTING  country    = is_vendor-country  //1
+               tax_code_1 = lv_tax1  //1
+    EXCEPTIONS OTHERS     = 1.  //1
+  IF sy-subrc <> 0.
+    rv_valid = abap_false.
+    RETURN.
+  ENDIF.
+
+  SELECT SINGLE xegld FROM t005 WHERE land1 = @is_vendor-country INTO @DATA(lv_eu).  //2
+  IF lv_eu = abap_true AND lv_vat IS NOT INITIAL.  //2
+    CALL FUNCTION 'EU_TAX_NUMBER_CHECK'  //2
+      EXPORTING  country       = is_vendor-country  //2
+                 eu_tax_number = lv_vat  //2
+      EXCEPTIONS OTHERS        = 1.  //2
+    IF sy-subrc <> 0.
+      rv_valid = abap_false.
+      RETURN.
+    ENDIF.
+  ENDIF.
+
+  rv_valid = abap_true.
 ENDMETHOD.
 ```
 
-1. EN: Each country’s tax ID goes in the field its check rules expect.
-   ES: El NIF de cada país va en el campo que esperan sus reglas de comprobación.
-2. EN: The country-specific rules are SAP’s own: the code only decides which field to fill.
-   ES: Las reglas de cada país son las del propio SAP: el código solo decide qué campo rellenar.
+1. EN: The national tax ID goes in tax number 1, the same field the split fills in the one-time vendor block, and SAP's own rules for that country check it.
+   ES: El NIF nacional va en el número de identificación fiscal 1, el mismo campo que rellena la partición en el bloque CPD, y lo comprueban las reglas del propio SAP para ese país.
+2. EN: The EU VAT number is a different field (STCEG) with its own check. It reaches the document through EXTENSION1 and a business transaction event (RWBAPI01).
+   ES: El NIF-IVA comunitario es otro campo (STCEG) con su propia comprobación. Llega al documento por EXTENSION1 y un evento de BTE (RWBAPI01).

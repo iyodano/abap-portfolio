@@ -251,6 +251,7 @@
   const NOTES = {
     'inline': ['info', 'Inline declarations', 'DATA( ) and FIELD-SYMBOL( ) at first use. Only applied when the resulting type is identical to the declared one; the old declaration is removed.'],
     'read-exists': ['info', 'READ TABLE + sy-subrc → line_exists( )', 'The check becomes line_exists( ) and the read a table expression. line_exists( ) does not set sy-tabix.'],
+    'read-exists-into': ['info', 'READ TABLE INTO + sy-subrc → line_exists( ) + table expression', 'Easier to read, but the table is searched twice: once by line_exists( ) and once by the expression. Inside a loop over a large standard table, keep READ TABLE or use ASSIGN itab[ … ] TO FIELD-SYMBOL( ) and check sy-subrc.'],
     'read-optional': ['warn', 'READ TABLE → VALUE #( itab[ … ] OPTIONAL )', 'If the line is not found, the target becomes initial (READ TABLE left it unchanged) and sy-subrc is not set. Check the code that follows.'],
     'read-assign': ['info', 'READ TABLE … ASSIGNING → ASSIGN itab[ … ]', 'ASSIGN with a table expression sets sy-subrc as before and raises no exception when the line is missing.'],
     'read-binary': ['warn', 'BINARY SEARCH left unchanged', 'A table expression on a standard table searches linearly. To keep the performance, declare a SORTED secondary key and use itab[ KEY key COMPONENTS … ].'],
@@ -293,6 +294,7 @@
   const NOTES_ES = {
     'inline': ['info', 'Declaraciones inline', 'DATA( ) y FIELD-SYMBOL( ) en el primer uso. Solo se aplica cuando el tipo resultante es idéntico al declarado; la declaración previa se elimina.'],
     'read-exists': ['info', 'READ TABLE + sy-subrc → line_exists( )', 'La comprobación pasa a line_exists( ) y la lectura a una expresión de tabla. line_exists( ) no informa sy-tabix.'],
+    'read-exists-into': ['info', 'READ TABLE INTO + sy-subrc → line_exists( ) + expresión de tabla', 'Se lee mejor, pero la tabla se busca dos veces: una en line_exists( ) y otra en la expresión. Dentro de un bucle sobre una tabla estándar grande, deja el READ TABLE o usa ASSIGN itab[ … ] TO FIELD-SYMBOL( ) y comprueba sy-subrc.'],
     'read-optional': ['warn', 'READ TABLE → VALUE #( itab[ … ] OPTIONAL )', 'Si la línea no existe, el destino queda inicial (READ TABLE lo dejaba como estaba) y no se informa sy-subrc. Revisa el código que venga después.'],
     'read-assign': ['info', 'READ TABLE … ASSIGNING → ASSIGN itab[ … ]', 'ASSIGN con expresión de tabla informa sy-subrc igual que antes y no lanza excepción si no encuentra la línea.'],
     'read-binary': ['warn', 'BINARY SEARCH: se deja como está', 'Una expresión de tabla sobre una tabla estándar busca de forma lineal. Para no perder rendimiento, declara una clave secundaria SORTED y usa itab[ KEY clave COMPONENTS … ].'],
@@ -550,7 +552,7 @@
       if (okIf) ctx.set(i, [`IF line_exists( ${expr} ).`, `  ${tgt} = ${expr}.`]);
       else ctx.set(i, [`CHECK line_exists( ${expr} ).`, `${tgt} = ${expr}.`]);
       ctx.del(i + 1, i);
-      ctx.note('read-exists', it.line);
+      ctx.note('read-exists-into', it.line);
       return true;
     }
     if (koIf || p.preInline) { ctx.note('read-subrc', it.line); return true; }

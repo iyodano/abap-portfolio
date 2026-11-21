@@ -25,7 +25,7 @@ The business needed seven organisational attributes that live in Employee Centra
 ## What I did
 
 - Created infotype 9001 with PM01: structure, own data elements and screens. I proposed the time constraint and wrote down the open decisions (field lengths, empty values, how SuccessFactors writes) for the functional team.
-- Put the logic in the common replication BAdI (`PROCESS_EMPLOYEE_COMMON_ADDIN`), split into one private method per infotype, so an early `RETURN` in one cannot cut the other.
+- Put the logic in the common replication BAdI (`HRSFEC_B_CE_PROCESS_EMPLOYEE`, method `PROCESS_EMPLOYEE_COMMON_ADDIN`), split into one private method per infotype, so an early `RETURN` in one cannot cut the other.
 - Wrote the infotype through the replication's own infotype framework (`IF_HRPA_MASTERDATA_BL`): no staging table, no extra job and no `COMMIT` of my own. Errors reach the employee's replication log through the BIB message handler.
 - Made it idempotent: replicating the same employee twice creates nothing, and a future-dated change in EC delimits the current record.
 - Applied the cut-off date (1 January) in code for this infotype only, because the BIB transfer start date is global and would also affect payroll infotypes.
@@ -55,7 +55,7 @@ Negocio necesitaba en ECP siete atributos organizativos que viven en Employee Ce
 ## Qué hice
 
 - Creé el infotipo 9001 con PM01: estructura, elementos de datos propios y pantallas. Propuse la restricción temporal y dejé por escrito las decisiones abiertas (longitudes, valores vacíos, cómo escribe SuccessFactors) para el equipo funcional.
-- Puse la lógica en la BAdI común de la replicación (`PROCESS_EMPLOYEE_COMMON_ADDIN`), separada en un método privado por infotipo, para que un `RETURN` temprano en uno no corte el otro.
+- Puse la lógica en la BAdI común de la replicación (`HRSFEC_B_CE_PROCESS_EMPLOYEE`, método `PROCESS_EMPLOYEE_COMMON_ADDIN`), separada en un método privado por infotipo, para que un `RETURN` temprano en uno no corte el otro.
 - Grabé el infotipo a través del propio framework de infotipos de la replicación (`IF_HRPA_MASTERDATA_BL`): sin tabla intermedia, sin job adicional y sin `COMMIT` propio. Los errores llegan al log de replicación del empleado mediante el message handler del BIB.
 - Lo hice idempotente: replicar dos veces el mismo empleado no crea nada, y un cambio con fecha futura en EC delimita el registro vigente.
 - Apliqué la fecha de corte (1 de enero) en código y solo para este infotipo, porque la fecha de inicio de transferencia del BIB es global y afectaría también a los infotipos de nómina.
@@ -100,8 +100,13 @@ METHOD process_it9001.
 
   " Pay grade read by name from the compensation value list
   READ TABLE it_comp_values INTO DATA(ls_grade) WITH KEY name = mc_pay_grade.  //2
-  MODIFY lt_new FROM VALUE p9001( pay_grade = ls_grade-value )  //2
-         TRANSPORTING pay_grade WHERE pernr = iv_pernr.  //2
+  IF sy-subrc = 0.  //2
+    LOOP AT lt_new ASSIGNING <ls_new>.  //2
+      <ls_new>-pay_grade = ls_grade-value.  //2
+    ENDLOOP.  //2
+  ELSE.  //2
+    warn_no_pay_grade( io_message_handler ).   " in the log, not silently empty  //2
+  ENDIF.  //2
 
   DATA(lt_current) = read_pa9001( iv_pernr ).
 
@@ -123,8 +128,8 @@ ENDMETHOD.
 
 1. EN: Cut-off in code, for IT9001 only. The BIB transfer start date would have applied it to every infotype, payroll ones included.
    ES: Fecha de corte en código y solo para el IT9001. La fecha de inicio de transferencia del BIB la habría aplicado a todos los infotipos, también a los de nómina.
-2. EN: The pay grade is looked up by name, not by position: if a later SAP release ships it as its own field, the mapping does not break.
-   ES: El pay grade se busca por nombre, no por posición: si una release posterior de SAP lo trae como campo propio, el mapeo no se rompe.
+2. EN: The pay grade is looked up by name, not by position: if a later SAP release ships it as its own field, the mapping does not break. If EC sends none, a warning goes to the replication log instead of an empty field nobody notices.
+   ES: El pay grade se busca por nombre, no por posición: si una release posterior de SAP lo trae como campo propio, el mapeo no se rompe. Si EC no lo envía, queda un aviso en el log de replicación en lugar de un campo vacío que nadie ve.
 3. EN: Idempotent by design: the replication can run as often as it needs to.
    ES: Idempotente por diseño: la replicación puede ejecutarse tantas veces como haga falta.
 4. EN: No staging table and no job: the record is written in the same unit of work as the standard infotypes, and a failure shows up in the employee’s replication log.

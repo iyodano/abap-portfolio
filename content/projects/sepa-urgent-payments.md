@@ -19,8 +19,8 @@ Payroll needed to flag some transfers as urgent (severance pay, advances) and se
 
 ## What I did
 
-- A custom table, maintained by payroll per employee and payment date, with an urgent flag and a category (SALA, ANTI, FINI, INDEM).
-- An exit class for the DMEE tree that fills `InstrPrty` (HIGH), `SvcLvl` (URGP or SEPA), `CtgyPurp` and the remittance text.
+- A custom table, maintained by payroll per employee and payment date, with an urgent flag and an internal category (salary, advance, settlement, severance) that maps to the ISO 20022 code the bank expects, such as SALA.
+- A DMEE exit for the payment tree that fills `InstrPrty` (HIGH), `SvcLvl` (URGP or SEPA), `CtgyPurp` and the remittance text.
 - No entry in the table means standard behaviour: the code only writes when there is something to change.
 - Buffered reads, records marked as processed once used, and processed entries locked against edits.
 
@@ -40,8 +40,8 @@ Nómina necesitaba marcar algunas transferencias como urgentes (finiquitos, anti
 
 ## Qué hice
 
-- Una tabla a medida, mantenida por nómina por empleado y fecha de pago, con una marca de urgencia y una categoría (SALA, ANTI, FINI, INDEM).
-- Una clase de salida para el árbol DMEE que informa `InstrPrty` (HIGH), `SvcLvl` (URGP o SEPA), `CtgyPurp` y el texto del concepto.
+- Una tabla a medida, mantenida por nómina por empleado y fecha de pago, con una marca de urgencia y una categoría interna (nómina, anticipo, finiquito, indemnización) que se traduce al código ISO 20022 que espera el banco, como SALA.
+- Un exit de DMEE para el árbol de pagos que informa `InstrPrty` (HIGH), `SvcLvl` (URGP o SEPA), `CtgyPurp` y el texto del concepto.
 - Sin entrada en la tabla, comportamiento estándar: el código solo escribe cuando hay algo que cambiar.
 - Lecturas con buffer, registros marcados como procesados una vez usados y entradas procesadas bloqueadas para que no se editen.
 
