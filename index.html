@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=dee62f00">
+<link rel="stylesheet" href="assets/css/styles.css?v=33d91e9d">
 </head>
 <body>
 <!--
@@ -133,7 +133,7 @@
       </a>
       <button class="path p-new" type="button" data-stories aria-haspopup="dialog">
         <span class="p-ic"><svg class="i"><use href="#i-bulb"/></svg></span>
-        <span class="p-tx"><b><span lang="en">I don't know SAP</span><span lang="es">No sé de SAP</span></b><span lang="en">What I do, explained in 30 seconds</span><span lang="es">Qué hago, explicado en 30 segundos</span></span>
+        <span class="p-tx"><b><span lang="en">I don't know SAP</span><span lang="es">No sé de SAP</span></b><span lang="en">SAP and what I do, in 1 minute</span><span lang="es">Qué es SAP y qué hago, en 1 minuto</span></span>
         <svg class="i p-go" aria-hidden="true"><use href="#i-chev-r"/></svg>
       </button>
       <a class="path p-quest" href="quest">
@@ -141,6 +141,7 @@
         <span class="p-tx"><b><span lang="en">I want to play</span><span lang="es">Quiero jugar</span></b><span lang="en">ABAP Quest: 8 bosses, 97 challenges</span><span lang="es">ABAP Quest: 8 jefes y 97 retos</span></span>
         <svg class="i p-go" aria-hidden="true"><use href="#i-chev-r"/></svg>
       </a>
+      <a class="path-tool" href="#converter"><svg class="i"><use href="#i-wand"/></svg><span class="pt-long"><span lang="en">Classic → modern ABAP converter</span><span lang="es">Conversor ABAP clásico → moderno</span></span><span class="pt-short"><span lang="en">Modernize your ABAP code</span><span lang="es">Moderniza tu código ABAP</span></span><svg class="i p-go"><use href="#i-chev-r"/></svg></a>
     </div>
     <ul class="hero-stats">
       <li><b>2022</b><span lang="en">started in SAP</span><span lang="es">empecé en SAP</span></li>
@@ -2468,27 +2469,51 @@ ENDLOOP.</pre>
      pressed, or on the first visit through a link with ?ig (the Instagram bio: https://danroca.com/?ig).
      Slide 3 lists the first three project cards; data-ms is how long a slide stays before moving on. -->
 <template id="stories-tpl">
-  <div class="stories" role="dialog" aria-modal="true" aria-label="What I do, in 30 seconds" data-es-aria-label="Qué hago, en 30 segundos" hidden>
+  <div class="stories" role="dialog" aria-modal="true" aria-label="SAP and what I do, in under a minute" data-es-aria-label="SAP y lo que hago, en menos de un minuto" hidden>
     <div class="st-card" tabindex="-1">
-      <div class="st-bars" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+      <div class="st-bars" aria-hidden="true"></div>
       <div class="st-head">
         <img src="assets/img/logo.png" alt="" width="32" height="32">
         <p><b>danroca.com</b><span lang="en">SAP ABAP · Payroll on ECP</span><span lang="es">SAP ABAP · Nómina en ECP</span></p>
         <button type="button" class="st-close" data-st-close><span lang="en">Skip</span><span lang="es">Saltar</span><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
       </div>
+      <!-- One <section> per slide (the progress bars follow the count); data-ms = time on screen. Written for people who know
+           nothing about SAP; the first slide has a shortcut for those who do. -->
       <div class="st-slides" aria-live="polite">
-        <section class="st-slide s-hello" data-ms="5500">
+        <section class="st-slide s-hello" data-ms="6000">
           <img class="st-big-logo" src="assets/img/logo.png" alt="" width="84" height="84">
           <h2><span lang="en">Hi, I'm Dan 👋</span><span lang="es">Hola, soy Dan 👋</span></h2>
           <p><span lang="en">I write SAP code for the least visible and most delicate part of any company: <b>payroll</b>.</span><span lang="es">Programo en SAP la parte menos visible y más delicada de una empresa: <b>la nómina</b>.</span></p>
+          <a class="st-skip" href="#projects" data-st-go="projects"><span lang="en">Already know SAP? Straight to my projects</span><span lang="es">¿Ya sabes de SAP? Directo a mis proyectos</span><svg class="i" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
         </section>
-        <section class="st-slide s-chain" data-ms="8000">
+        <section class="st-slide s-sap" data-ms="11000">
+          <h2><span lang="en">What is SAP?</span><span lang="es">¿Qué es SAP?</span></h2>
+          <p><span lang="en">The software big companies run on behind the scenes.</span><span lang="es">El programa con el que funcionan por dentro las grandes empresas.</span></p>
+          <ul class="st-mods">
+            <li><span class="st-ic"><svg class="i"><use href="#i-coin"/></svg></span><span lang="en">Finance</span><span lang="es">Finanzas</span></li>
+            <li><span class="st-ic"><svg class="i"><use href="#i-box"/></svg></span><span lang="en">Purchasing</span><span lang="es">Compras</span></li>
+            <li><span class="st-ic"><svg class="i"><use href="#i-receipt"/></svg></span><span lang="en">Sales</span><span lang="es">Ventas</span></li>
+            <li class="me"><span class="st-ic"><svg class="i"><use href="#i-user"/></svg></span><span><span lang="en">People</span><span lang="es">Personas</span><small><span lang="en">That's me</span><span lang="es">Aquí estoy yo</span></small></span></li>
+          </ul>
+          <div class="st-fact"><b>99</b><span><span lang="en">of the 100 largest companies in the world use SAP</span><span lang="es">de las 100 empresas más grandes del mundo usan SAP</span><small><span lang="en">Source: SAP, 2026</span><span lang="es">Fuente: SAP, 2026</span></small></span></div>
+          <p class="st-role"><span lang="en"><b>My role:</b> building the made-to-measure parts of payroll in <b>ABAP</b>, SAP's own programming language.</span><span lang="es"><b>Mi papel:</b> programar las piezas a medida de la nómina en <b>ABAP</b>, el lenguaje de SAP.</span></p>
+        </section>
+        <section class="st-slide s-ecp" data-ms="14000">
+          <h2><span lang="en">And what is ECP?</span><span lang="es">¿Y qué es ECP?</span></h2>
+          <p><span lang="en"><b>Employee Central Payroll</b>: SAP's payroll, in the cloud. It works as a pair:</span><span lang="es"><b>Employee Central Payroll</b>: la nómina de SAP, en la nube. Funciona en pareja:</span></p>
+          <ol class="st-chain st-duo">
+            <li class="c-blue"><span class="st-ic"><svg class="i"><use href="#i-user"/></svg></span><span><b>Employee Central (EC)</b><small><span lang="en">Each person's data: contract, salary, bank account</span><span lang="es">Los datos de cada persona: contrato, sueldo, cuenta</span></small></span></li>
+            <li class="c-gold"><span class="st-ic"><svg class="i"><use href="#i-coin"/></svg></span><span><b>Payroll (ECP)</b><small><span lang="en">Works out pay, taxes and contributions every month</span><span lang="es">Calcula cada mes el sueldo, los impuestos y las cotizaciones</span></small></span></li>
+          </ol>
+          <div class="st-note"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg><p><span lang="en"><b>Why now?</b> SAP's classic on-premise HR loses standard maintenance at the end of 2027 (2030 at most, paying extra). That's why so many companies are moving their payroll to ECP.</span><span lang="es"><b>¿Por qué ahora?</b> El SAP de RR.&nbsp;HH. clásico, instalado en cada empresa, pierde su mantenimiento estándar a finales de 2027 (2030 como mucho, pagando extra). Por eso tantas empresas están pasando su nómina a ECP.</span></p></div>
+        </section>
+        <section class="st-slide s-chain" data-ms="8500">
           <h2><span lang="en">When HR changes your salary…</span><span lang="es">Cuando RR.&nbsp;HH. cambia tu sueldo…</span></h2>
           <p><span lang="en">…my code makes sure it reaches your payslip and the bank, correctly.</span><span lang="es">…mi código hace que llegue bien a tu nómina y al banco.</span></p>
           <ol class="st-chain">
-            <li class="c-blue"><span class="st-ic"><svg class="i"><use href="#i-user"/></svg></span><span><b><span lang="en">HR</span><span lang="es">RR.&nbsp;HH.</span></b><small>Employee Central</small></span></li>
-            <li class="c-mint me"><span class="st-ic"><svg class="i"><use href="#i-code"/></svg></span><span><b><span lang="en">My ABAP code</span><span lang="es">Mi código ABAP</span></b><small><span lang="en">Replication, infotypes, reports</span><span lang="es">Replicación, infotipos, informes</span></small></span></li>
-            <li class="c-gold"><span class="st-ic"><svg class="i"><use href="#i-bank"/></svg></span><span><b><span lang="en">Payroll and bank</span><span lang="es">Nómina y banco</span></b><small><span lang="en">ECP · SEPA · third parties</span><span lang="es">ECP · SEPA · terceros</span></small></span></li>
+            <li class="c-blue"><span class="st-ic"><svg class="i"><use href="#i-user"/></svg></span><span><b><span lang="en">HR</span><span lang="es">RR.&nbsp;HH.</span></b><small><span lang="en">Records it in Employee Central</span><span lang="es">Lo apunta en Employee Central</span></small></span></li>
+            <li class="c-mint me"><span class="st-ic"><svg class="i"><use href="#i-code"/></svg></span><span><b><span lang="en">My ABAP code</span><span lang="es">Mi código ABAP</span></b><small><span lang="en">Moves, completes and checks the data</span><span lang="es">Mueve, completa y controla los datos</span></small></span></li>
+            <li class="c-gold"><span class="st-ic"><svg class="i"><use href="#i-bank"/></svg></span><span><b><span lang="en">Payroll and bank</span><span lang="es">Nómina y banco</span></b><small><span lang="en">ECP calculates, the bank pays</span><span lang="es">ECP calcula, el banco paga</span></small></span></li>
           </ol>
         </section>
         <section class="st-slide s-proof" data-ms="7500">
@@ -2501,6 +2526,7 @@ ENDLOOP.</pre>
           <p><span lang="en">The portfolio is all yours.</span><span lang="es">El portfolio es todo tuyo.</span></p>
           <div class="st-cta">
             <a class="btn primary" href="#projects" data-st-go="projects"><span lang="en">See my projects</span><span lang="es">Ver mis proyectos</span></a>
+            <a class="btn coral" href="#converter" data-st-open="converter"><svg class="i"><use href="#i-wand"/></svg><span lang="en">Try the ABAP converter</span><span lang="es">Probar el conversor ABAP</span></a>
             <a class="btn gold" href="quest"><img class="st-quest" src="assets/img/quest-available.png" alt=""><span lang="en">Play ABAP Quest</span><span lang="es">Jugar a ABAP Quest</span></a>
             <a class="btn" href="#contact" data-st-go="contact"><svg class="i"><use href="#i-mail"/></svg><span lang="en">Get in touch</span><span lang="es">Escríbeme</span></a>
           </div>
@@ -2512,6 +2538,6 @@ ENDLOOP.</pre>
     <button type="button" class="st-nav st-next" aria-label="Next" data-es-aria-label="Siguiente"><svg class="i"><use href="#i-chev-r"/></svg></button>
   </div>
 </template>
-<script src="assets/js/app.js?v=897e58da"></script>
+<script src="assets/js/app.js?v=b4e8e5e9"></script>
 </body>
 </html>

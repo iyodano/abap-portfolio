@@ -321,14 +321,14 @@
     check();
   })();
 
-  /* ---------- Stories: "what I do, in 30 seconds" ----------
-     Opened by the "I don't know SAP" path, or once per browser through a link with ?ig (the Instagram bio).
+  /* ---------- Stories: "SAP and what I do, in under a minute" ----------
+     Opened by the "I don't know SAP" path, and on every arrival from Instagram (?ig in the bio link, or the
+     utm_source=ig that Instagram adds to bio links on its own).
      Tap the right side (or →) to move on, the left side (or ←) to go back, hold to pause, Esc or "Skip" to close. */
   (function stories() {
     const tpl = $('#stories-tpl');
     if (!tpl) return;
     const root = document.documentElement;
-    const SEEN = 'danroca.stories.seen';
     let el = null, card, slides, bars, idx = 0, opener = null, down = null;
 
     const projectCards = () => $$('#projects article.card[data-id]:not(.more-card)');
@@ -363,6 +363,7 @@
       const navMark = $('.nav .qb-mark');
       if (navMark) $('.st-quest', el).src = navMark.getAttribute('src');
       slides = $$('.st-slide', el);
+      $('.st-bars', el).innerHTML = slides.map(() => '<i><b></b></i>').join('');
       bars = $$('.st-bars i', el);
       document.body.appendChild(el);
       countProjects();
@@ -377,7 +378,7 @@
         else if (t.matches('.st-prev')) go(idx - 1);
         else if (t.matches('.st-next')) go(idx + 1);
         else if (t.dataset.stGo) { e.preventDefault(); close(() => scrollToId(t.dataset.stGo)); }
-        else if (t.dataset.stOpen) close(() => openProject(t.dataset.stOpen));
+        else if (t.dataset.stOpen) { e.preventDefault(); close(() => openProject(t.dataset.stOpen)); }
       });
       // tap to move, hold to pause (links and buttons keep their own click)
       card.addEventListener('pointerdown', e => {
@@ -436,7 +437,6 @@
       opener = document.activeElement;
       el.hidden = false;
       root.classList.add('locked');
-      try { localStorage.setItem(SEEN, '1'); } catch (e) { /* no storage */ }
       go(0);
       document.addEventListener('keydown', onKey);
       requestAnimationFrame(() => $('.st-close', el).focus({ preventScroll: true }));
@@ -456,15 +456,16 @@
     countProjects();
     $$('[data-stories]').forEach(b => b.addEventListener('click', open));
 
-    // ?ig (the Instagram bio link): show them once per browser, then tidy the address
+    // Arriving from Instagram: open them every time (one tap on "Skip" for whoever has seen them), then tidy the address
     const params = new URLSearchParams(location.search);
-    if (params.has('ig')) {
-      params.delete('ig');
+    let refHost = '';
+    try { refHost = document.referrer ? new URL(document.referrer).hostname : ''; } catch (e) { /* no referrer */ }
+    const fromIg = params.has('ig') || /^(ig|instagram)$/i.test(params.get('utm_source') || '') || /(^|\.)instagram\.com$/.test(refHost);
+    if (fromIg) {
+      ['ig', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'igshid', 'fbclid'].forEach(k => params.delete(k));
       const q = params.toString();
-      history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash);
-      let seen = false;
-      try { seen = localStorage.getItem(SEEN) === '1'; } catch (e) { /* no storage */ }
-      if (!seen && !location.hash) setTimeout(open, 400);
+      try { history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash); } catch (e) { /* no history API */ }
+      if (!location.hash) setTimeout(open, 400);
     }
   })();
 
