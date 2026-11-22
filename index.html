@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=0b494173">
+<link rel="stylesheet" href="assets/css/styles.css?v=1237b824">
 </head>
 <body>
 <!--
@@ -319,7 +319,7 @@
         <div class="tags"><span class="tag">PM01</span><span class="tag"><span lang="en">Replication BAdI</span><span lang="es">BAdI de replicación</span></span><span class="tag"><span lang="en">Infotype framework</span><span lang="es">Framework de infotipos</span></span></div>
         <template class="detail">
           <div lang="en">
-            <div><h4>Context</h4><p>The business needed seven organisational attributes that live in Employee Central (general management, division, department, area, sub-area, group and pay scale) inside ECP, to use them in payroll reporting. The specification was a short email.</p></div>
+            <div><h4>Context</h4><p>The business needed seven organisational attributes that live in Employee Central (general management, division, department, area, sub-area, group and pay scale) inside ECP, to use them in payroll reporting.</p></div>
             <div><h4>What I did</h4><ul>
               <li>Created infotype 9001 with PM01: structure, own data elements and screens. I proposed the time constraint and wrote down the open decisions (field lengths, empty values, how SuccessFactors writes) for the functional team.</li>
               <li>Put the logic in the common replication BAdI (<code>HRSFEC_B_CE_PROCESS_EMPLOYEE</code>, method <code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>), split into one private method per infotype, so an early <code>RETURN</code> in one cannot cut the other.</li>
@@ -349,8 +349,8 @@
             <h4><svg class="i"><use href="#i-code"/></svg><span lang="en">The code that matters</span><span lang="es">El código que importa</span></h4>
             <small><span lang="en">Simplified, anonymised excerpt</span><span lang="es">Extracto simplificado y anonimizado</span></small>
           </div>
-          <p lang="en">The method the common replication BAdI calls for infotype 9001. Everything that makes it safe to run on every replication is here: the cut-off for this infotype only, a generic pay grade, idempotency and no commit of its own. The insert itself is in Docs, under “Writing an infotype inside the replication”.</p>
-          <p lang="es">El método al que llama la BAdI común de la replicación para el infotipo 9001. Aquí está todo lo que permite ejecutarlo en cada replicación sin miedo: la fecha de corte solo para este infotipo, el pay grade genérico, la idempotencia y ningún commit propio. La inserción en sí está en Documentación, en «Grabar un infotipo dentro de la replicación».</p>
+          <p lang="en">The method the common replication BAdI calls for infotype 9001. Everything that makes it safe to run on every replication is here: the cut-off for this infotype only, a generic pay grade, idempotency and no commit of its own. The second tab is the insert itself; Docs has a general version under “Writing an infotype inside the replication”.</p>
+          <p lang="es">El método al que llama la BAdI común de la replicación para el infotipo 9001. Aquí está todo lo que permite ejecutarlo en cada replicación sin miedo: la fecha de corte solo para este infotipo, el pay grade genérico, la idempotencia y ningún commit propio. La segunda pestaña es la inserción en sí; en Documentación hay una versión general, en «Grabar un infotipo dentro de la replicación».</p>
           <div class="code-window">
             <div class="code-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><div class="code-tabs" role="tablist"></div><button type="button" class="btn small code-copy"><svg class="i"><use href="#i-copy"/></svg><span class="btn-label"><span lang="en">Copy</span><span lang="es">Copiar</span></span></button></div>
             <figure class="code-file" data-tab-en="Replication BAdI" data-tab-es="BAdI de replicación">
@@ -396,6 +396,41 @@
   " No COMMIT WORK: the BIB commits per employee, standard and custom infotypes together
 ENDMETHOD.</pre>
             </figure>
+            <figure class="code-file" data-tab-en="Writing the record" data-tab-es="Grabar el registro">
+              <figcaption class="code-obj">ZCL_HR_EC_REPL_COMMON → INSERT_9001</figcaption>
+              <pre class="code-block" data-code>METHOD insert_9001.
+  " Returns abap_true when the record is written.
+  " mo_masterdata_bl: the IF_HRPA_MASTERDATA_BL instance the replication
+  " passed to the BAdI for this employee, kept as an attribute
+  DATA lo_container TYPE REF TO if_hrpa_infty_container.
+  DATA lo_data      TYPE REF TO if_hrpa_infty_container_data.
+
+  DATA(ls_pskey) = VALUE pskey( pernr = is_record-pernr
+                                infty = '9001'
+                                begda = is_record-begda
+                                endda = is_record-endda ).
+
+  " An empty container for the new record, with the BIB's message handler
+  mo_masterdata_bl-&gt;get_infty_container(
+    EXPORTING tclas           = 'A'
+              pskey           = ls_pskey
+              no_auth_check   = abap_true
+              message_handler = io_messages
+    IMPORTING container       = lo_container ).
+
+  " Put the IT9001 fields into it
+  lo_data ?= lo_container.
+  lo_container ?= lo_data-&gt;modify_primary_record( is_record ).
+
+  " Time constraint 1: inserting delimits the overlapping record
+  mo_masterdata_bl-&gt;insert(
+    EXPORTING no_auth_check   = abap_true
+              message_handler = io_messages
+    IMPORTING is_ok           = rv_ok
+    CHANGING  container       = lo_container ).
+  " No flush and no COMMIT WORK: both belong to the BIB
+ENDMETHOD.</pre>
+            </figure>
           </div>
           <ol class="code-notes" data-for="0">
             <li data-line="10-13"><span lang="en">Cut-off in code, for IT9001 only. The BIB transfer start date would have applied it to every infotype, payroll ones included.</span><span lang="es">Fecha de corte en código y solo para el IT9001. La fecha de inicio de transferencia del BIB la habría aplicado a todos los infotipos, también a los de nómina.</span></li>
@@ -403,6 +438,12 @@ ENDMETHOD.</pre>
             <li data-line="29-31"><span lang="en">Idempotent by design: the replication can run as often as it needs to.</span><span lang="es">Idempotente por diseño: la replicación puede ejecutarse tantas veces como haga falta.</span></li>
             <li data-line="35-36"><span lang="en">No staging table and no job: the record is written in the same unit of work as the standard infotypes, and a failure shows up in the employee’s replication log.</span><span lang="es">Sin tabla intermedia ni job: el registro se graba en la misma unidad de trabajo que los infotipos estándar y, si falla, el error aparece en el log de replicación del empleado.</span></li>
             <li data-line="39"><span lang="en">One commit per employee, and it belongs to the BIB. A COMMIT here would split the unit of work.</span><span lang="es">Un commit por empleado, y es del BIB. Un COMMIT aquí partiría la unidad de trabajo.</span></li>
+          </ol>
+          <ol class="code-notes" data-for="1">
+            <li data-line="14,18"><span lang="en">The instance and the message handler are the ones the replication passed in. One of your own from the factory would make the flush and the commit yours, and it would stop being one unit of work.</span><span lang="es">La instancia y el message handler son los que pasa la replicación. Con una instancia propia, creada con la factoría, el flush y el commit pasarían a ser tuyos y ya no sería una sola unidad de trabajo.</span></li>
+            <li data-line="22-23"><span lang="en">The container is immutable: modify_primary_record returns a new one with the record inside, so it is assigned again.</span><span lang="es">El contenedor es inmutable: modify_primary_record devuelve uno nuevo con el registro dentro, por eso se vuelve a asignar.</span></li>
+            <li data-line="26"><span lang="en">With time constraint 1, each insert delimits the record it overlaps, so inserting in date order is enough (map_job_info returns them oldest first). If it fails, the reason is already in the employee's replication log.</span><span lang="es">Con restricción temporal 1, cada inserción delimita el registro con el que se solapa, así que basta con insertar en orden de fechas (map_job_info los devuelve del más antiguo al más reciente). Si falla, el motivo ya está en el log de replicación del empleado.</span></li>
+            <li data-line="31"><span lang="en">The BIB saves the employee once, standard and custom infotypes together: all or nothing.</span><span lang="es">El BIB graba el empleado una sola vez, infotipos estándar y a medida juntos: todo o nada.</span></li>
           </ol>
         </div>
           <div lang="en">
@@ -1804,8 +1845,7 @@ ENDLOOP.</pre>
           <details class="more-item" data-id="sepa-urgent-payments">
             <summary>
               <span class="mi-tile"><svg class="i"><use href="#i-bank"/></svg></span>
-              <span class="mi-text"><span class="mi-kicker"><span lang="en">Payroll · Bank transfers</span><span lang="es">Nómina · Transferencias</span><span class="status"><span lang="en">In testing</span><span lang="es">En pruebas</span></span></span>
-              <span class="mi-title"><span lang="en">SEPA payroll transfers: urgent payments and categories</span><span lang="es">Transferencias SEPA de nómina: pagos urgentes y categorías</span></span><span class="mi-sub"><span lang="en">The transfer file sets urgency and payment category from a table that payroll maintains.</span><span lang="es">El fichero de transferencias marca la urgencia y la categoría del pago desde una tabla que mantiene nómina.</span></span></span>
+              <span class="mi-text"><span class="mi-kicker"><span lang="en">Payroll · Bank transfers</span><span lang="es">Nómina · Transferencias</span><span class="status"><span lang="en">In testing</span><span lang="es">En pruebas</span></span></span><span class="mi-title"><span lang="en">SEPA payroll transfers: urgent payments and categories</span><span lang="es">Transferencias SEPA de nómina: pagos urgentes y categorías</span></span><span class="mi-sub"><span lang="en">The transfer file sets urgency and payment category from a table that payroll maintains.</span><span lang="es">El fichero de transferencias marca la urgencia y la categoría del pago desde una tabla que mantiene nómina.</span></span></span>
               <span class="mi-chev" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span>
             </summary>
             <div class="mi-body">
@@ -2453,7 +2493,10 @@ ENDLOOP.</pre>
     </div>
   </section>
 </main>
-<footer>© 2026 Daniel Cárdenas Roca · SAP ABAP · Employee Central Payroll</footer>
+<footer>
+  <p>© 2026 Daniel Cárdenas Roca · SAP ABAP · Employee Central Payroll</p>
+  <p class="foot-legal"><span lang="en">All rights reserved. SAP, ABAP and SuccessFactors are registered trademarks of SAP SE; this site is personal and not affiliated with SAP.</span><span lang="es">Todos los derechos reservados. SAP, ABAP y SuccessFactors son marcas registradas de SAP SE; esta web es personal y no está afiliada a SAP.</span></p>
+</footer>
 
 <div class="scrim" hidden></div>
 <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
@@ -2521,7 +2564,7 @@ ENDLOOP.</pre>
         </section>
         <section class="st-slide s-go">
           <h2><span lang="en">Where to next?</span><span lang="es">¿Por dónde seguimos?</span></h2>
-          <p><span lang="en">Is all yours.</span><span lang="es">Todo tuyo.</span></p>
+          <p><span lang="en">It's all yours.</span><span lang="es">Todo tuyo.</span></p>
           <div class="st-cta">
             <a class="btn primary" href="#projects" data-st-go="projects"><span lang="en">See my projects</span><span lang="es">Ver mis proyectos</span></a>
             <a class="btn coral" href="#converter" data-st-open="converter"><svg class="i"><use href="#i-wand"/></svg><span lang="en">My ABAP converter</span><span lang="es">Mi conversor de ABAP moderno</span></a>

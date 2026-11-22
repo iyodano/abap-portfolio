@@ -214,6 +214,8 @@ section > .sec-head { display: flex; flex-direction: column; gap: 6px; margin-bo
 .link-row span.v { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .link-row .btn { margin-left: auto; }
 footer { text-align: center; color: var(--ink-dim); font-size: 13px; padding: 0 16px 40px; }
+footer p { margin: 0; }
+footer .foot-legal { max-width: 620px; margin: 8px auto 0; font-size: 11.5px; line-height: 1.5; opacity: .75; }
 
 /* ---------- Expanded sheet ---------- */
 .scrim { position: fixed; inset: 0; z-index: 40; background: rgba(2, 6, 18, .55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }

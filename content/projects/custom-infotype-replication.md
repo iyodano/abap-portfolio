@@ -20,7 +20,7 @@ tags:
 
 ## Context
 
-The business needed seven organisational attributes that live in Employee Central (general management, division, department, area, sub-area, group and pay scale) inside ECP, to use them in payroll reporting. The specification was a short email.
+The business needed seven organisational attributes that live in Employee Central (general management, division, department, area, sub-area, group and pay scale) inside ECP, to use them in payroll reporting.
 
 ## What I did
 
@@ -50,7 +50,7 @@ Transport the whole class. Once, a method travelled without its declaration: in 
 
 ## Contexto
 
-Negocio necesitaba en ECP siete atributos organizativos que viven en Employee Central (dirección general, dirección, departamento, área, subárea, grupo y escala) para explotarlos en informes de nómina. La especificación era un correo de pocas líneas.
+Negocio necesitaba en ECP siete atributos organizativos que viven en Employee Central (dirección general, dirección, departamento, área, subárea, grupo y escala) para explotarlos en informes de nómina.
 
 ## Qué hice
 
@@ -76,8 +76,8 @@ Transporta la clase entera. Una vez viajó un método sin su declaración: en el
 
 # Code
 
-EN: The method the common replication BAdI calls for infotype 9001. Everything that makes it safe to run on every replication is here: the cut-off for this infotype only, a generic pay grade, idempotency and no commit of its own. The insert itself is in Docs, under “Writing an infotype inside the replication”.
-ES: El método al que llama la BAdI común de la replicación para el infotipo 9001. Aquí está todo lo que permite ejecutarlo en cada replicación sin miedo: la fecha de corte solo para este infotipo, el pay grade genérico, la idempotencia y ningún commit propio. La inserción en sí está en Documentación, en «Grabar un infotipo dentro de la replicación».
+EN: The method the common replication BAdI calls for infotype 9001. Everything that makes it safe to run on every replication is here: the cut-off for this infotype only, a generic pay grade, idempotency and no commit of its own. The second tab is the insert itself; Docs has a general version under “Writing an infotype inside the replication”.
+ES: El método al que llama la BAdI común de la replicación para el infotipo 9001. Aquí está todo lo que permite ejecutarlo en cada replicación sin miedo: la fecha de corte solo para este infotipo, el pay grade genérico, la idempotencia y ningún commit propio. La segunda pestaña es la inserción en sí; en Documentación hay una versión general, en «Grabar un infotipo dentro de la replicación».
 
 ## Replication BAdI | BAdI de replicación
 
@@ -136,3 +136,51 @@ ENDMETHOD.
    ES: Sin tabla intermedia ni job: el registro se graba en la misma unidad de trabajo que los infotipos estándar y, si falla, el error aparece en el log de replicación del empleado.
 5. EN: One commit per employee, and it belongs to the BIB. A COMMIT here would split the unit of work.
    ES: Un commit por empleado, y es del BIB. Un COMMIT aquí partiría la unidad de trabajo.
+
+## Writing the record | Grabar el registro
+
+`ZCL_HR_EC_REPL_COMMON → INSERT_9001`
+
+```abap
+METHOD insert_9001.
+  " Returns abap_true when the record is written.
+  " mo_masterdata_bl: the IF_HRPA_MASTERDATA_BL instance the replication
+  " passed to the BAdI for this employee, kept as an attribute
+  DATA lo_container TYPE REF TO if_hrpa_infty_container.
+  DATA lo_data      TYPE REF TO if_hrpa_infty_container_data.
+
+  DATA(ls_pskey) = VALUE pskey( pernr = is_record-pernr
+                                infty = '9001'
+                                begda = is_record-begda
+                                endda = is_record-endda ).
+
+  " An empty container for the new record, with the BIB's message handler
+  mo_masterdata_bl->get_infty_container(  //1
+    EXPORTING tclas           = 'A'
+              pskey           = ls_pskey
+              no_auth_check   = abap_true
+              message_handler = io_messages  //1
+    IMPORTING container       = lo_container ).
+
+  " Put the IT9001 fields into it
+  lo_data ?= lo_container.  //2
+  lo_container ?= lo_data->modify_primary_record( is_record ).  //2
+
+  " Time constraint 1: inserting delimits the overlapping record
+  mo_masterdata_bl->insert(  //3
+    EXPORTING no_auth_check   = abap_true
+              message_handler = io_messages
+    IMPORTING is_ok           = rv_ok
+    CHANGING  container       = lo_container ).
+  " No flush and no COMMIT WORK: both belong to the BIB  //4
+ENDMETHOD.
+```
+
+1. EN: The instance and the message handler are the ones the replication passed in. One of your own from the factory would make the flush and the commit yours, and it would stop being one unit of work.
+   ES: La instancia y el message handler son los que pasa la replicación. Con una instancia propia, creada con la factoría, el flush y el commit pasarían a ser tuyos y ya no sería una sola unidad de trabajo.
+2. EN: The container is immutable: modify_primary_record returns a new one with the record inside, so it is assigned again.
+   ES: El contenedor es inmutable: modify_primary_record devuelve uno nuevo con el registro dentro, por eso se vuelve a asignar.
+3. EN: With time constraint 1, each insert delimits the record it overlaps, so inserting in date order is enough (map_job_info returns them oldest first). If it fails, the reason is already in the employee's replication log.
+   ES: Con restricción temporal 1, cada inserción delimita el registro con el que se solapa, así que basta con insertar en orden de fechas (map_job_info los devuelve del más antiguo al más reciente). Si falla, el motivo ya está en el log de replicación del empleado.
+4. EN: The BIB saves the employee once, standard and custom infotypes together: all or nothing.
+   ES: El BIB graba el empleado una sola vez, infotipos estándar y a medida juntos: todo o nada.
