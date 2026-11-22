@@ -1,6 +1,5 @@
 :root {
-  /* One visual world: deep navy with iOS-style glass cards.
-     Layout: a 1120px column; every section is a grid of cards that open as a modal sheet. */
+  /* Dark navy theme with glass cards. 1120px column; each section is a grid of cards that open in a modal sheet. */
   --navy: #030a19;
   --ink: #eaf1ff;
   --ink-dim: #9fb1d4;
@@ -70,7 +69,7 @@ code, pre, textarea, .mono { font-family: var(--font-mono); }
 .nav { position: sticky; top: 0; z-index: 20; padding: 12px 16px 0; padding-top: max(12px, env(safe-area-inset-top)); }
 .nav-inner { max-width: 1120px; margin: 0 auto; border-radius: 999px; padding: 8px 8px 8px 10px; display: flex; align-items: center; gap: 12px; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
-.logo { width: 36px; height: 36px; flex: none; display: block; margin: -2px 0; }   /* round, with its own glow */
+.logo { width: 36px; height: 36px; flex: none; display: block; margin: -2px 0; }   /* round logo */
 .nav-links { margin-left: auto; display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
 .nav-links::-webkit-scrollbar { display: none; }
 .nav-links a { text-decoration: none; color: var(--ink-dim); font-size: 14px; padding: 7px 12px; border-radius: 999px; white-space: nowrap; transition: background .2s, color .2s; }
@@ -88,8 +87,7 @@ section > .sec-head { display: flex; flex-direction: column; gap: 6px; margin-bo
 @media (min-width: 980px) { .span2 { grid-column: span 2; } }
 
 /* ---------- Hero ---------- */
-/* What I do in one line (the header already shows the logo and the name), the claim, three ways in and three figures. Everything fits on the first screen.
-   Desktop: claim on the left, the paths on the right. Phones and tablets: one column, paths before the figures. */
+/* Hero. Desktop: claim left, paths right. Up to 900px: one column, paths before the figures. */
 .hero { border-radius: 32px; padding: clamp(22px, 4vw, 44px); display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   grid-template-areas: "hello paths" "title paths" "stats paths"; column-gap: 48px; align-items: center; }
 .hero .hello { grid-area: hello; margin: 0; align-self: end; line-height: 1.35; }
@@ -112,14 +110,14 @@ section > .sec-head { display: flex; flex-direction: column; gap: 6px; margin-bo
 .p-tx b { display: block; font-size: 17px; line-height: 1.25; }
 .p-tx > span { display: block; font-size: 14px; line-height: 1.35; color: var(--ink-dim); }
 .p-go { width: 20px; height: 20px; flex: none; margin-left: auto; color: rgb(var(--c)); }
-/* Straight to the converter (coral, like the Tools section): slimmer than the paths, it is a shortcut rather than a way in */
+/* Shortcut to the converter (Tools colour) */
 .path-tool { --c: 255, 166, 128; display: flex; align-items: center; gap: 12px; padding: 11px 18px; border-radius: 16px; text-decoration: none;
   font-size: 15px; font-weight: 600; color: var(--ink); background: rgba(var(--c), .08); border: 1px solid rgba(var(--c), .34);
   -webkit-tap-highlight-color: transparent; transition: transform .25s var(--ease), background .25s, border-color .25s; }
 .path-tool > .i:first-child { width: 20px; height: 20px; flex: none; color: rgb(var(--c)); }
 .path-tool:hover, .path-tool:focus-visible { transform: translateX(4px); background: rgba(var(--c), .14); border-color: rgba(var(--c), .6); }
 .path-tool:active { transform: scale(.985); }
-.path-tool .pt-short { display: none; }   /* phones: the same tool, said in fewer words so it stays on one line */
+.path-tool .pt-short { display: none; }   /* phones: short label */
 .hero-stats { grid-area: stats; list-style: none; margin: 0; padding: 0; display: flex; gap: 10px; }
 .hero-stats li { flex: 1; min-width: 0; padding: 13px 14px; border-radius: 18px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); }
 .hero-stats b { display: block; font: 700 27px/1 var(--font-display); letter-spacing: -.02em; }
@@ -482,9 +480,8 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
 .sheet[data-size="code"] { width: min(980px, calc(100vw - 32px)); }
 @media (max-width: 640px) { .sheet[data-size="code"] { width: 100%; } }
 
-/* ---------- Glass scrollbars ----------
-   Chromium and Safari: a floating pill with a soft highlight, no track, kept clear of the rounded corners.
-   Firefox (no ::-webkit-scrollbar): the standard thin scrollbar in the same colours. */
+/* ---------- Scrollbars ----------
+   WebKit: thin pill, no track. Firefox: scrollbar-width / scrollbar-color. */
 ::-webkit-scrollbar { width: 14px; height: 14px; }
 ::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
 ::-webkit-scrollbar-button { display: none; height: 0; width: 0; }
@@ -495,7 +492,7 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
 ::-webkit-scrollbar-thumb:active { background-color: rgba(114, 182, 255, .6); }
 ::-webkit-scrollbar-thumb:horizontal { background-image: linear-gradient(90deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0)); }
 
-/* The sheet: thinner, quieter until you hover it, clear of the close button and the round corners */
+/* Sheet scrollbar */
 .sheet-scroll::-webkit-scrollbar { width: 16px; }
 .sheet-scroll::-webkit-scrollbar-track { margin: 66px 0 30px; }
 .sheet-scroll::-webkit-scrollbar-thumb { border-width: 5px; background-color: rgba(160, 205, 255, .14); }
@@ -503,7 +500,7 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
 .sheet-scroll::-webkit-scrollbar-thumb:hover { background-color: rgba(160, 205, 255, .45); }
 .sheet-scroll::-webkit-scrollbar-thumb:active { background-color: rgba(114, 182, 255, .65); }
 
-/* Code and tables: a slim mint pill inside the code window */
+/* Code and table scrollbars */
 .code-block::-webkit-scrollbar, .map-wrap::-webkit-scrollbar, .table-wrap::-webkit-scrollbar { height: 12px; }
 .code-block::-webkit-scrollbar-track, .map-wrap::-webkit-scrollbar-track, .table-wrap::-webkit-scrollbar-track { margin: 0 14px; }
 .code-block::-webkit-scrollbar-thumb, .map-wrap::-webkit-scrollbar-thumb { border-width: 3.5px; background-color: rgba(127, 227, 207, .2); }
@@ -515,7 +512,7 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
   .code-block, .map-wrap { scrollbar-color: rgba(127, 227, 207, .35) transparent; }
 }
 
-/* Code that scrolls sideways fades at the edge that has more to show */
+/* Fade on the side that still has content */
 .fade-r { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); }
 .fade-l { -webkit-mask-image: linear-gradient(to right, transparent, #000 36px); mask-image: linear-gradient(to right, transparent, #000 36px); }
 .fade-l.fade-r { -webkit-mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 56px), transparent);
@@ -584,13 +581,13 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
 }
 @media (prefers-reduced-motion: reduce) { .more-item::details-content { transition: none; } }
 
-/* ---------- Closing a card: a soft glint as it lands back in the grid ---------- */
+/* ---------- Card close animation ---------- */
 .card.landing::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
   background: linear-gradient(110deg, transparent 32%, rgba(170, 215, 255, .14) 46%, rgba(255, 255, 255, .24) 50%, rgba(170, 215, 255, .14) 54%, transparent 68%) no-repeat;
   background-size: 260% 100%; animation: card-glint .85s var(--ease) forwards; }
 @keyframes card-glint { from { background-position: 130% 0; opacity: 1; } 80% { opacity: 1; } to { background-position: -30% 0; opacity: 0; } }
 
-/* Touch screens keep :hover after a tap: no lifted card or sheen left behind once the sheet closes */
+/* Touch: no sticky :hover after closing a sheet */
 @media (hover: none) {
   .card:hover { transform: none; }
   .card:hover::before { opacity: 0; }
@@ -614,8 +611,7 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
   .code-panel { margin: 0 -12px; padding: 14px 12px; }
   .code-window { border-radius: 14px; }
 
-  /* The ABAP converter: result like the code above; the editor wraps, with its text drawn at 16px
-     (so iPhone does not zoom in when you tap it) and scaled to the same 11.5px */
+  /* Converter on phones: editor at 16px (no iOS zoom on focus), scaled down to 11.5px */
   .out-code.lines { font-size: 11.5px; }
   .editor { display: block; overflow: hidden; }
   .editor .gutter { display: none; }
@@ -624,10 +620,8 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
 }
 @media (prefers-reduced-motion: reduce) { .card.landing::after { animation: none; display: none; } }
 
-/* ---------- Touch screens: frosted look without real-time blur ----------
-   On phones and tablets, twenty backdrop-filter cards over the animated background had to be re-blurred
-   after every sheet closed, and the cards looked dark for a few seconds. Here the glass is "pre-frosted":
-   a tinted, more opaque background that looks the same over this navy page and costs nothing to draw. */
+/* ---------- Touch screens: no backdrop-filter on the cards ----------
+   Re-blurring them after a sheet closed left them dark for a moment. A more opaque tinted background instead. */
 @media (hover: none), (max-width: 640px) {
   .glass { -webkit-backdrop-filter: none; backdrop-filter: none;
     background: linear-gradient(160deg, rgba(150, 190, 255, .16), rgba(120, 160, 255, .05) 62%), rgba(10, 26, 66, .72); }
@@ -682,9 +676,8 @@ html[lang="es"] [lang="en"], html[lang="en"] [lang="es"] { display: none !import
 @media (hover: none) { .quest-teaser:hover { transform: none; border-color: rgba(244, 203, 110, .3); } }
 @media (prefers-reduced-motion: reduce) { .qt-walk { animation: none; display: none; } }
 
-/* ---------- Section identity: a number, a line and a colour per section ----------
-   Sections with a .sec-head are numbered in order (01, 02…). --sec is the section's colour (r, g, b);
-   it tints the label, its line, the glow behind the title, the card icons and tags, and the card once opened. */
+/* ---------- Section colours and numbering ----------
+   --sec (r, g, b) per section: label, line, title glow, icons, tags and open card. */
 main { counter-reset: sec; --sec: 114, 182, 255; }
 #profile,  .tabbar [href="#profile"]  { --sec: 114, 182, 255; }   /* blue */
 #projects, .tabbar [href="#projects"] { --sec: 127, 227, 207; }   /* mint */
@@ -704,9 +697,8 @@ section .card.glass:hover { border-color: rgba(var(--sec), .45); }
 @media (max-width: 640px) { section > .sec-head::before { left: -60px; width: 400px; height: 240px; } }
 @media (hover: none) { section .card.glass:hover { border-color: var(--stroke); } }
 
-/* ---------- Phones and tablets (up to 1024px): the sections live in a floating glass bar at the bottom ----------
-   The top bar keeps the logo, the name, the ABAP Quest mark and the languages, and hides while scrolling down.
-   The ABAP Quest page has no section bar and keeps its own header. */
+/* ---------- Up to 1024px: section bar at the bottom ----------
+   Top bar: logo, name, ABAP Quest and languages; hides on scroll down. Not on the quest page. */
 .tabbar { display: none; }
 @media (max-width: 1024px) {
   body:not(.quest-page) .nav-links { display: none; }
@@ -721,21 +713,21 @@ section .card.glass:hover { border-color: rgba(var(--sec), .45); }
   .tabbar a > span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
   .tabbar a .i { width: 21px; height: 21px; }
   .tabbar a.on { color: rgb(var(--sec)); background: rgba(var(--sec), .16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 0 0 1px rgba(var(--sec), .25); }
-  /* out of the way while a card is open or the keyboard is up */
+  /* hidden while a sheet or the keyboard is open */
   .locked .tabbar, body:has(textarea:focus, input:focus) .tabbar { opacity: 0; pointer-events: none; transform: translate(-50%, 24px); }
-  /* the top bar slides away while reading down and comes back on the way up (app.js) */
+  /* top bar hides on scroll down (app.js) */
   .nav { transition: transform .35s var(--ease); }
   .nav.nav-hidden { transform: translateY(calc(-100% - 16px)); }
 }
 @media (max-width: 1024px) and (prefers-reduced-motion: reduce) { .nav { transition: none; } }
-/* Phones: the top bar spans the width and the name shortens if it has to */
+/* Phones: full-width top bar */
 @media (max-width: 640px) {
   .nav-inner { padding: 6px 6px 6px 8px; gap: 10px; }
   .brand { min-width: 0; }
   .brand .name { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 15px; letter-spacing: -.015em; }
   .nav-inner .quest-badge { margin-left: auto; }
 }
-/* Tablets: a slightly larger section bar, and a top bar only as wide as its content, centred */
+/* Tablets: bigger section bar, compact centred top bar */
 @media (min-width: 641px) and (max-width: 1024px) {
   body:not(.quest-page) { padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
   body:not(.quest-page) .nav-inner { width: fit-content; max-width: 100%; gap: 14px; padding: 6px 6px 6px 8px; }
@@ -743,14 +735,14 @@ section .card.glass:hover { border-color: rgba(var(--sec), .45); }
   .tabbar a { font-size: 12px; padding: 9px 8px 8px; gap: 4px; }
   .tabbar a .i { width: 22px; height: 22px; }
 }
-/* Desktop safety net: if the system font makes the links too wide for the bar, app.js adds .nav-tight */
+/* Desktop: app.js adds .nav-tight if the links overflow */
 .nav-tight .nav-links a { padding-left: 8px; padding-right: 8px; }
 .nav-tight .quest-badge { padding: 2px 8px; gap: 0; background: none; border-color: transparent; }
 .nav-tight .quest-badge .qb-label { display: none; }
 @media (max-width: 370px) { .brand .name { font-size: 13.5px; } .nav-inner { gap: 8px; } .tabbar a { padding-left: 3px; padding-right: 3px; } }
 
-/* ---------- Stories: "SAP and what I do, in under a minute" (built by app.js from #stories-tpl) ----------
-   Phones: full screen, like Instagram. Tablets and desktop: a vertical card in the middle, the page blurred behind. */
+/* ---------- Stories (built by app.js from #stories-tpl) ----------
+   Phones: full screen. Tablet and desktop: centred card. */
 .stories { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: rgba(2, 6, 18, .78);
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); animation: st-fade .25s ease both; }
 .stories[hidden] { display: none; }
@@ -787,7 +779,6 @@ section .card.glass:hover { border-color: rgba(var(--sec), .45); }
 .st-slide h2 { font-size: 36px; line-height: 1.06; letter-spacing: -.025em; margin: 0 0 14px; }
 .st-slide p { margin: 0; font-size: 17px; line-height: 1.45; color: var(--ink-dim); }
 .st-slide p b { color: var(--ink); }
-.st-big-logo { width: 84px; height: 84px; margin-bottom: 22px; }
 .c-blue { --c: 114, 182, 255; } .c-mint { --c: 127, 227, 207; } .c-gold { --c: 244, 203, 110; }
 .st-chain, .st-projects { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .st-chain li, .st-projects button { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px;
@@ -805,11 +796,11 @@ section .card.glass:hover { border-color: rgba(var(--sec), .45); }
 .st-ic .i { width: 20px; height: 20px; }
 .st-projects button { width: 100%; cursor: pointer; text-align: left; font: 600 14.5px/1.3 var(--font-body); color: var(--ink); transition: background .2s, border-color .2s; }
 .st-projects button:hover { background: rgba(127, 227, 207, .1); border-color: rgba(127, 227, 207, .4); }
-/* first slide: shortcut for people who already know SAP */
+/* slide 1: shortcut to projects */
 .st-skip { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; margin-top: 22px; padding: 9px 12px 9px 15px; border-radius: 999px;
   font-size: 14px; font-weight: 600; text-decoration: none; color: var(--mint); background: rgba(127, 227, 207, .1); border: 1px solid rgba(127, 227, 207, .4); }
 .st-skip .i { width: 16px; height: 16px; }
-/* "What is SAP?": the areas SAP covers, with the one I work in highlighted */
+/* slide 2: SAP areas */
 .st-mods { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .st-mods li { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 8px 12px; border-radius: 16px; font-size: 14.5px; font-weight: 600;
   background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); }
@@ -826,7 +817,7 @@ section .card.glass:hover { border-color: rgba(var(--sec), .45); }
 .st-fact > span { font-size: 14.5px; font-weight: 600; line-height: 1.3; }
 .st-fact small { display: block; margin-top: 3px; font-size: 11.5px; font-weight: 500; color: var(--ink-dim); }
 .st-slide .st-role { margin-top: 14px; font-size: 15.5px; }
-/* "And what is ECP?": EC + ECP, then why companies are moving now */
+/* slide 3: EC + ECP and the deadline note */
 .st-duo { margin-top: 16px; }
 .st-note { display: flex; gap: 12px; align-items: flex-start; margin-top: 12px; padding: 12px 14px; border-radius: 16px;
   background: rgba(255, 166, 128, .08); border: 1px solid rgba(255, 166, 128, .35); }

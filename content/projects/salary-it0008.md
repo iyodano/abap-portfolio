@@ -89,7 +89,7 @@ ES: Dos mitades del mismo control: la replicación solo prepara el salario, y un
 
 ```abap
 METHOD stage_it0008.
-  " Latest EC compensation → one staging row per start date
+  " Latest EC compensation -> one staging row per start date
   DATA(ls_stage) = VALUE zhr_it0008_stage(
     pernr = iv_pernr
     begda = is_comp-start_date
@@ -104,7 +104,7 @@ METHOD stage_it0008.
       WHEN 'BASE_SALARY'.    ls_stage-amt01 = ls_pc-amount.
       WHEN 'SENIORITY'.      ls_stage-amt02 = ls_pc-amount.
       WHEN 'AGREEMENT_PLUS'. ls_stage-amt03 = ls_pc-amount.
-      " … twelve components in total
+      " ... twelve components in total
     ENDCASE.
   ENDLOOP.
   ls_stage-monthly = is_comp-annual_salary / ls_stage-npay.

@@ -1,5 +1,5 @@
 ---
-# ───────────────────────────────────────────────────────────────────────────────
+#
 #  PLANTILLA DE PROYECTO · copia de trabajo para un proyecto nuevo
 #
 #  1. Crea tu fichero:  node build.mjs new mi-proyecto     (o npm run new -- mi-proyecto)
@@ -11,7 +11,7 @@
 #  4. Cuando esté listo, borra la línea "draft: yes" y guarda.
 #
 #  Las líneas que empiezan por # y lo que va detrás de "  #" son notas: no salen en la web.
-# ───────────────────────────────────────────────────────────────────────────────
+#
 id: my-project            # nombre en la URL (danroca.com/#my-project): minúsculas, números y guiones
 draft: yes                # mientras exista esta línea, el proyecto no se publica
 place: main               # main = portada  ·  more = dentro de «Más proyectos»

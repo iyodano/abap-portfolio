@@ -180,7 +180,7 @@ LOOP AT gt_mapping INTO DATA(ls_map).
   ENDCASE.
 
   " The output row was created at runtime from this same table (RTTS):
-  " one component per column, named C + its ORDER (C010, C020…)
+  " one component per column, named C + its ORDER (C010, C020...)
   DATA(lv_column) = |C{ ls_map-orden }|.  //6
   ASSIGN COMPONENT lv_column OF STRUCTURE <ls_row> TO FIELD-SYMBOL(<lv_cell>).  //6
   IF sy-subrc = 0.

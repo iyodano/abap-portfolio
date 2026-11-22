@@ -321,10 +321,9 @@
     check();
   })();
 
-  /* ---------- Stories: "SAP and what I do, in under a minute" ----------
-     Opened by the "I don't know SAP" path, and on every arrival from Instagram (?ig in the bio link, or the
-     utm_source=ig that Instagram adds to bio links on its own).
-     Tap the right side (or →) to move on, the left side (or ←) to go back, hold to pause, Esc or "Skip" to close. */
+  /* ---------- Stories ----------
+     Opened by the "I don't know SAP" path and on arrivals from Instagram.
+     Tap right / left (or arrows) to move, hold to pause, Esc or "Skip" to close. */
   (function stories() {
     const tpl = $('#stories-tpl');
     if (!tpl) return;
@@ -456,7 +455,7 @@
     countProjects();
     $$('[data-stories]').forEach(b => b.addEventListener('click', open));
 
-    // Arriving from Instagram: open them every time (one tap on "Skip" for whoever has seen them), then tidy the address
+    // From Instagram (?ig, utm_source=ig or the referrer): open, then clean the URL
     const params = new URLSearchParams(location.search);
     let refHost = '';
     try { refHost = document.referrer ? new URL(document.referrer).hostname : ''; } catch (e) { /* no referrer */ }
@@ -600,8 +599,7 @@
     const g = geometry(card);
     const start = sheet.style.transform || 'translate(0px, 0px)';
     if (anim) anim.cancel();
-    // No dark panel left on top while the phone redraws the glass: the card is already back underneath
-    // and fades in, the sheet fades out as it lands on it, and a soft glint closes the move.
+    // card fades in underneath while the sheet fades out (no dark flash on phones)
     card.classList.remove('is-source');
     card.animate([{ opacity: 0 }, { opacity: 0, offset: .3 }, { opacity: 1 }], { duration: 420, easing: 'ease-out' });
     anim = sheet.animate([
@@ -662,7 +660,7 @@
     grab.addEventListener('pointercancel', end);
   })();
 
-  // Deep links: index.html#converter opens that card
+  // Deep links: /#converter opens that card
   function fromHash() {
     const id = location.hash.slice(1);
     const card = id && document.querySelector(`.card[data-id="${CSS.escape(id)}"]`);

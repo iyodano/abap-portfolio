@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=33d91e9d">
+<link rel="stylesheet" href="assets/css/styles.css?v=0b494173">
 </head>
 <body>
 <!--
@@ -123,7 +123,7 @@
   <section id="home" class="hero glass" aria-labelledby="hero-title">
     <p class="hello eyebrow"><span lang="en">SAP ABAP Developer · Payroll on ECP</span><span lang="es">Desarrollador SAP ABAP · Nómina en ECP</span></p>
     <h1 id="hero-title"><span lang="en">I write the code behind SAP payroll. <span class="soft">Where do you start?</span></span><span lang="es">Programo la nómina de SAP. <span class="soft">¿Por dónde empiezas?</span></span></h1>
-    <!-- "Choose your path": the middle option opens the Stories intro (app.js); ?ig in the URL opens it on the first visit -->
+    <!-- "Choose your path": the middle option opens the Stories (app.js) -->
     <div class="paths">
       <p class="paths-lbl"><span lang="en">Choose your path</span><span lang="es">Elige tu camino</span></p>
       <a class="path p-sap" href="#projects" data-scroll="projects">
@@ -138,7 +138,7 @@
       </button>
       <a class="path p-quest" href="quest">
         <span class="p-ic"><img class="qb-mark" src="assets/img/quest-available.png" alt=""></span>
-        <span class="p-tx"><b><span lang="en">I want to play</span><span lang="es">Quiero jugar</span></b><span lang="en">ABAP Quest: 8 bosses, 97 challenges</span><span lang="es">ABAP Quest: 8 jefes y 97 retos</span></span>
+        <span class="p-tx"><b><span lang="en">I want to play</span><span lang="es">Quiero jugar</span></b><span lang="en">ABAP Quest: 9 bosses, 97 challenges</span><span lang="es">ABAP Quest: 9 jefes y 97 retos</span></span>
         <svg class="i p-go" aria-hidden="true"><use href="#i-chev-r"/></svg>
       </a>
       <a class="path-tool" href="#converter"><svg class="i"><use href="#i-wand"/></svg><span class="pt-long"><span lang="en">Classic → modern ABAP converter</span><span lang="es">Conversor ABAP clásico → moderno</span></span><span class="pt-short"><span lang="en">Modernize your ABAP code</span><span lang="es">Moderniza tu código ABAP</span></span><svg class="i p-go"><use href="#i-chev-r"/></svg></a>
@@ -458,7 +458,7 @@ ENDMETHOD.</pre>
             <figure class="code-file" data-tab-en="Replication · staging" data-tab-es="Replicación · preparación">
               <figcaption class="code-obj">ZCL_HR_EC_REPL_COMMON → STAGE_IT0008</figcaption>
               <pre class="code-block" data-code>METHOD stage_it0008.
-  " Latest EC compensation → one staging row per start date
+  " Latest EC compensation -&gt; one staging row per start date
   DATA(ls_stage) = VALUE zhr_it0008_stage(
     pernr = iv_pernr
     begda = is_comp-start_date
@@ -473,7 +473,7 @@ ENDMETHOD.</pre>
       WHEN 'BASE_SALARY'.    ls_stage-amt01 = ls_pc-amount.
       WHEN 'SENIORITY'.      ls_stage-amt02 = ls_pc-amount.
       WHEN 'AGREEMENT_PLUS'. ls_stage-amt03 = ls_pc-amount.
-      " … twelve components in total
+      " ... twelve components in total
     ENDCASE.
   ENDLOOP.
   ls_stage-monthly = is_comp-annual_salary / ls_stage-npay.
@@ -1177,7 +1177,7 @@ LOOP AT gt_mapping INTO DATA(ls_map).
   ENDCASE.
 
   " The output row was created at runtime from this same table (RTTS):
-  " one component per column, named C + its ORDER (C010, C020…)
+  " one component per column, named C + its ORDER (C010, C020...)
   DATA(lv_column) = |C{ ls_map-orden }|.
   ASSIGN COMPONENT lv_column OF STRUCTURE &lt;ls_row&gt; TO FIELD-SYMBOL(&lt;lv_cell&gt;).
   IF sy-subrc = 0.
@@ -1613,8 +1613,8 @@ ENDMETHOD.</pre>
               <figcaption class="code-obj">ZHR_PAYROLL_POSTING → LCL_RETRO</figcaption>
               <pre class="code-block" data-code>METHOD process_for_period.
   " One for-period, seen from the selected in-period:
-  "   current set  = every split of it calculated in this in-period    → added
-  "   previous set = every split of it in the previous in-period       → subtracted
+  "   current set  = every split of it calculated in this in-period    -&gt; added
+  "   previous set = every split of it in the previous in-period       -&gt; subtracted
   DATA(lt_current) = build_set( iv_fpper = iv_fpper iv_inper = iv_inper ).
 
   " The previous in-period that calculated this for-period, if any
@@ -1626,7 +1626,7 @@ ENDMETHOD.</pre>
   DATA(lt_previous) = COND tt_rgdir( WHEN lv_prev IS NOT INITIAL
                                      THEN build_set( iv_fpper = iv_fpper iv_inper = lv_prev ) ).
 
-  " A/A → total · A/P → A − P · P/O → P − O · splits → sum
+  " A/A -&gt; total, A/P -&gt; A - P, P/O -&gt; P - O, splits -&gt; sum
   add_set( it_set = lt_current  iv_sign = 1 ).
   add_set( it_set = lt_previous iv_sign = -1 ).
 ENDMETHOD.
@@ -1654,7 +1654,7 @@ METHOD add_set.
                                      kostl = ls_wpbp-kostl
                                      lgart = ls_rt-lgart
                                      betrg = ls_rt-betrg * iv_sign ).
-      COLLECT ls_line INTO gt_lines.      " same key → one line with the total
+      COLLECT ls_line INTO gt_lines.      " same key -&gt; one line with the total
     ENDLOOP.
   ENDLOOP.
 ENDMETHOD.</pre>
@@ -2465,9 +2465,8 @@ ENDLOOP.</pre>
 </div>
 
 <script src="assets/js/abap-modernizer.js?v=aaff02b1"></script>
-<!-- Stories: "what I do, in 30 seconds". app.js builds the dialog from this template when the "I don't know SAP" path is
-     pressed, or on the first visit through a link with ?ig (the Instagram bio: https://danroca.com/?ig).
-     Slide 3 lists the first three project cards; data-ms is how long a slide stays before moving on. -->
+<!-- Stories: built by app.js from this template ("I don't know SAP" path and arrivals from Instagram).
+     The projects slide lists the first three project cards. -->
 <template id="stories-tpl">
   <div class="stories" role="dialog" aria-modal="true" aria-label="SAP and what I do, in under a minute" data-es-aria-label="SAP y lo que hago, en menos de un minuto" hidden>
     <div class="st-card" tabindex="-1">
@@ -2477,11 +2476,9 @@ ENDLOOP.</pre>
         <p><b>danroca.com</b><span lang="en">SAP ABAP · Payroll on ECP</span><span lang="es">SAP ABAP · Nómina en ECP</span></p>
         <button type="button" class="st-close" data-st-close><span lang="en">Skip</span><span lang="es">Saltar</span><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
       </div>
-      <!-- One <section> per slide (the progress bars follow the count); data-ms = time on screen. Written for people who know
-           nothing about SAP; the first slide has a shortcut for those who do. -->
+      <!-- one <section> per slide, data-ms = time on screen -->
       <div class="st-slides" aria-live="polite">
         <section class="st-slide s-hello" data-ms="6000">
-          <img class="st-big-logo" src="assets/img/logo.png" alt="" width="84" height="84">
           <h2><span lang="en">Hi, I'm Dan 👋</span><span lang="es">Hola, soy Dan 👋</span></h2>
           <p><span lang="en">I write SAP code for the least visible and most delicate part of any company: <b>payroll</b>.</span><span lang="es">Programo en SAP la parte menos visible y más delicada de una empresa: <b>la nómina</b>.</span></p>
           <a class="st-skip" href="#projects" data-st-go="projects"><span lang="en">Already know SAP? Straight to my projects</span><span lang="es">¿Ya sabes de SAP? Directo a mis proyectos</span><svg class="i" aria-hidden="true"><use href="#i-chev-r"/></svg></a>
@@ -2493,12 +2490,12 @@ ENDLOOP.</pre>
             <li><span class="st-ic"><svg class="i"><use href="#i-coin"/></svg></span><span lang="en">Finance</span><span lang="es">Finanzas</span></li>
             <li><span class="st-ic"><svg class="i"><use href="#i-box"/></svg></span><span lang="en">Purchasing</span><span lang="es">Compras</span></li>
             <li><span class="st-ic"><svg class="i"><use href="#i-receipt"/></svg></span><span lang="en">Sales</span><span lang="es">Ventas</span></li>
-            <li class="me"><span class="st-ic"><svg class="i"><use href="#i-user"/></svg></span><span><span lang="en">People</span><span lang="es">Personas</span><small><span lang="en">That's me</span><span lang="es">Aquí estoy yo</span></small></span></li>
+            <li class="me"><span class="st-ic"><svg class="i"><use href="#i-user"/></svg></span><span><span lang="en">HR</span><span lang="es">RR.&nbsp;HH.</span><small><span lang="en">I code here</span><span lang="es">Aquí programo yo</span></small></span></li>
           </ul>
           <div class="st-fact"><b>99</b><span><span lang="en">of the 100 largest companies in the world use SAP</span><span lang="es">de las 100 empresas más grandes del mundo usan SAP</span><small><span lang="en">Source: SAP, 2026</span><span lang="es">Fuente: SAP, 2026</span></small></span></div>
           <p class="st-role"><span lang="en"><b>My role:</b> building the made-to-measure parts of payroll in <b>ABAP</b>, SAP's own programming language.</span><span lang="es"><b>Mi papel:</b> programar las piezas a medida de la nómina en <b>ABAP</b>, el lenguaje de SAP.</span></p>
         </section>
-        <section class="st-slide s-ecp" data-ms="14000">
+        <section class="st-slide s-ecp" data-ms="22000">
           <h2><span lang="en">And what is ECP?</span><span lang="es">¿Y qué es ECP?</span></h2>
           <p><span lang="en"><b>Employee Central Payroll</b>: SAP's payroll, in the cloud. It works as a pair:</span><span lang="es"><b>Employee Central Payroll</b>: la nómina de SAP, en la nube. Funciona en pareja:</span></p>
           <ol class="st-chain st-duo">
@@ -2538,6 +2535,6 @@ ENDLOOP.</pre>
     <button type="button" class="st-nav st-next" aria-label="Next" data-es-aria-label="Siguiente"><svg class="i"><use href="#i-chev-r"/></svg></button>
   </div>
 </template>
-<script src="assets/js/app.js?v=b4e8e5e9"></script>
+<script src="assets/js/app.js?v=c0ff08a0"></script>
 </body>
 </html>

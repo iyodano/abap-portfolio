@@ -7,8 +7,7 @@
     node build.mjs new <id>       create content/projects/<id>.md from content/_template.md
 
   Only the block between the @projects:start and @projects:end markers of index.html is rewritten.
-  Everything else in index.html is yours to edit by hand. The file format is explained in
-  content/_template.md.
+  Everything else in index.html is edited by hand. File format: content/_template.md.
 */
 import { readFileSync, writeFileSync, readdirSync, existsSync, watch } from 'node:fs';
 import { join, dirname, basename } from 'node:path';

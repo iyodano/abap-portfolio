@@ -73,8 +73,8 @@ ES: La solución, en código: trabajar con conjuntos de tramos en lugar de resul
 ```abap
 METHOD process_for_period.
   " One for-period, seen from the selected in-period:
-  "   current set  = every split of it calculated in this in-period    → added
-  "   previous set = every split of it in the previous in-period       → subtracted
+  "   current set  = every split of it calculated in this in-period    -> added
+  "   previous set = every split of it in the previous in-period       -> subtracted
   DATA(lt_current) = build_set( iv_fpper = iv_fpper iv_inper = iv_inper ).
 
   " The previous in-period that calculated this for-period, if any
@@ -86,7 +86,7 @@ METHOD process_for_period.
   DATA(lt_previous) = COND tt_rgdir( WHEN lv_prev IS NOT INITIAL  //2
                                      THEN build_set( iv_fpper = iv_fpper iv_inper = lv_prev ) ).  //2
 
-  " A/A → total · A/P → A − P · P/O → P − O · splits → sum
+  " A/A -> total, A/P -> A - P, P/O -> P - O, splits -> sum
   add_set( it_set = lt_current  iv_sign = 1 ).  //3
   add_set( it_set = lt_previous iv_sign = -1 ).  //3
 ENDMETHOD.
@@ -114,7 +114,7 @@ METHOD add_set.
                                      kostl = ls_wpbp-kostl  //6
                                      lgart = ls_rt-lgart
                                      betrg = ls_rt-betrg * iv_sign ).
-      COLLECT ls_line INTO gt_lines.      " same key → one line with the total
+      COLLECT ls_line INTO gt_lines.      " same key -> one line with the total
     ENDLOOP.
   ENDLOOP.
 ENDMETHOD.
