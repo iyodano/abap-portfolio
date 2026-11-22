@@ -91,8 +91,8 @@ section > .sec-head { display: flex; flex-direction: column; gap: 6px; margin-bo
 .hero { border-radius: 32px; padding: clamp(22px, 4vw, 44px); display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   grid-template-areas: "hello paths" "title paths" "stats paths"; column-gap: 48px; align-items: center; }
 .hero .hello { grid-area: hello; margin: 0; align-self: end; line-height: 1.35; }
-.hero h1 { grid-area: title; font-size: clamp(32px, 5.2vw, 54px); line-height: 1.04; font-weight: 700; margin: 14px 0 24px; }
-.hero h1 .soft { color: var(--ink-dim); font-weight: 600; }
+.hero h1 { grid-area: title; font-size: clamp(30px, 4.4vw, 46px); line-height: 1.06; font-weight: 700; margin: 14px 0 24px; }
+.hero h1 .soft { display: block; margin-top: .4em; font-size: .56em; line-height: 1.2; color: var(--ink-dim); font-weight: 600; }
 .paths { grid-area: paths; display: flex; flex-direction: column; gap: 12px; }
 .paths-lbl { margin: 0 0 2px 4px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-dim); }
 .path { --c: 114, 182, 255; display: flex; align-items: center; gap: 16px; width: 100%; padding: 16px 18px; border-radius: 22px; text-align: left; cursor: pointer;
@@ -131,7 +131,7 @@ section > .sec-head { display: flex; flex-direction: column; gap: 6px; margin-bo
   main:has(> .hero:first-child) { padding-top: 14px; }
   .hero { padding: 16px 16px 16px; border-radius: 26px; }
   .hero .hello { font-size: 11.5px; letter-spacing: .07em; }
-  .hero h1 { font-size: 30px; line-height: 1.06; margin: 7px 0 12px; }
+  .hero h1 { font-size: 28px; line-height: 1.08; margin: 7px 0 12px; }
   .paths { gap: 7px; }
   .paths-lbl { font-size: 11px; }
   .path { gap: 12px; padding: 9px 12px; border-radius: 18px; }
@@ -145,7 +145,7 @@ section > .sec-head { display: flex; flex-direction: column; gap: 6px; margin-bo
   .hero-stats li { padding: 8px 10px; border-radius: 14px; }
   .hero-stats b { font-size: 19px; } .hero-stats span { font-size: 11px; margin-top: 3px; }
 }
-@media (max-width: 370px) { .hero h1 { font-size: 27px; } .p-tx > span { font-size: 12px; } }
+@media (max-width: 370px) { .hero h1 { font-size: 26px; } .p-tx > span { font-size: 12px; } }
 @media (prefers-reduced-motion: reduce) { .path, .path:hover { transition: none; transform: none; } }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
 .chip { font-size: 13px; padding: 5px 11px; border-radius: 999px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .1); color: #cfdcf6; white-space: nowrap; }
