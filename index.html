@@ -7,6 +7,7 @@
 <meta name="description" content="SAP ABAP developer working on SAP SuccessFactors Employee Central Payroll: EC to ECP replication, payroll reporting and integrations through SAP Integration Suite.">
 <link rel="icon" href="assets/img/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icon-192.png">
+<link rel="canonical" href="https://danroca.com/">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <meta name="theme-color" content="#030a19">
 <script>
@@ -16,11 +17,30 @@
     try { lang = localStorage.getItem('lang') || ((navigator.language || '').toLowerCase().indexOf('es') === 0 ? 'es' : 'en'); } catch (e) { /* no storage */ }
     document.documentElement.lang = lang === 'es' ? 'es' : 'en';
   })();
+  // Clean addresses: links point to "./" and "quest", and GitHub Pages serves index.html and quest.html for them.
+  // Someone arriving at an old /index.html or /quest.html link sees the clean address instead.
+  // Anywhere else (double-clicked file, local preview server) the links get their ".html" back on click.
+  (function () {
+    var live = /(^|\.)danroca\.com$|\.github\.io$/.test(location.hostname), p = location.pathname;
+    if (live) {
+      if (/\/(index|quest)\.html$/.test(p)) {
+        try { history.replaceState(null, '', p.replace(/index\.html$/, '').replace(/\.html$/, '') + location.search + location.hash); } catch (e) { /* no history API */ }
+      }
+      return;
+    }
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href]'), m = a && /^(\.\/|quest)(#.*)?$/.exec(a.getAttribute('href'));
+      if (!m || e.button !== 0) return;
+      e.preventDefault();
+      var url = (m[1] === 'quest' ? 'quest.html' : 'index.html') + (m[2] || '');
+      if (e.ctrlKey || e.metaKey || e.shiftKey) window.open(url); else location.href = url;
+    }, true);
+  })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=e739a5a6">
+<link rel="stylesheet" href="assets/css/styles.css?v=dee62f00">
 </head>
 <body>
 <!--
@@ -75,7 +95,7 @@
       <a href="#contact" data-scroll="contact"><span lang="en">Contact</span><span lang="es">Contacto</span></a>
     </nav>
     <!-- ABAP Quest: gold "!" for new visitors, gold "?" once they have started playing (app.js swaps the image) -->
-    <a class="quest-badge" href="quest.html" aria-label="ABAP Quest" title="ABAP Quest: an RPG to learn modern ABAP" data-es-title="ABAP Quest: un RPG para aprender ABAP moderno"><img class="qb-mark" src="assets/img/quest-available.png" alt="" height="30"><span class="qb-label">ABAP Quest</span></a>
+    <a class="quest-badge" href="quest" aria-label="ABAP Quest" title="ABAP Quest: an RPG to learn modern ABAP" data-es-title="ABAP Quest: un RPG para aprender ABAP moderno"><img class="qb-mark" src="assets/img/quest-available.png" alt="" height="30"><span class="qb-label">ABAP Quest</span></a>
     <div class="lang-switch" role="group" aria-label="Language" data-es-aria-label="Idioma">
       <button type="button" data-lang="en" aria-pressed="true" title="English">
         <svg class="flag" viewBox="0 0 60 30" aria-hidden="true"><clipPath id="flag-uk-s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="flag-uk-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#flag-uk-s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#flag-uk-t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>
@@ -101,10 +121,7 @@
 <main>
   <!-- ================= HERO ================= -->
   <section id="home" class="hero glass" aria-labelledby="hero-title">
-    <div class="hello">
-      <img class="hello-logo" src="assets/img/logo.png" alt="" width="48" height="48">
-      <p><b><span lang="en">Hi, I'm Dan 👋</span><span lang="es">Hola, soy Dan 👋</span></b><span lang="en">SAP ABAP Developer · Payroll on ECP</span><span lang="es">Desarrollador SAP ABAP · Nómina en ECP</span></p>
-    </div>
+    <p class="hello eyebrow"><span lang="en">SAP ABAP Developer · Payroll on ECP</span><span lang="es">Desarrollador SAP ABAP · Nómina en ECP</span></p>
     <h1 id="hero-title"><span lang="en">I write the code behind SAP payroll. <span class="soft">Where do you start?</span></span><span lang="es">Programo la nómina de SAP. <span class="soft">¿Por dónde empiezas?</span></span></h1>
     <!-- "Choose your path": the middle option opens the Stories intro (app.js); ?ig in the URL opens it on the first visit -->
     <div class="paths">
@@ -119,7 +136,7 @@
         <span class="p-tx"><b><span lang="en">I don't know SAP</span><span lang="es">No sé de SAP</span></b><span lang="en">What I do, explained in 30 seconds</span><span lang="es">Qué hago, explicado en 30 segundos</span></span>
         <svg class="i p-go" aria-hidden="true"><use href="#i-chev-r"/></svg>
       </button>
-      <a class="path p-quest" href="quest.html">
+      <a class="path p-quest" href="quest">
         <span class="p-ic"><img class="qb-mark" src="assets/img/quest-available.png" alt=""></span>
         <span class="p-tx"><b><span lang="en">I want to play</span><span lang="es">Quiero jugar</span></b><span lang="en">ABAP Quest: 8 bosses, 97 challenges</span><span lang="es">ABAP Quest: 8 jefes y 97 retos</span></span>
         <svg class="i p-go" aria-hidden="true"><use href="#i-chev-r"/></svg>
@@ -2404,9 +2421,9 @@ ENDLOOP.</pre>
   </section>
 
   <!-- ================= ABAP QUEST ================= -->
-  <!-- The game lives in quest.html (assets/js/quest.js + quest-data.js). Saved progress is shown here by app.js. -->
+  <!-- The game lives in quest.html, served as /quest (assets/js/quest.js + quest-data.js). Saved progress is shown here by app.js. -->
   <section id="quest" aria-labelledby="quest-title">
-    <a class="quest-teaser glass" href="quest.html">
+    <a class="quest-teaser glass" href="quest">
       <div class="qt-copy">
         <p class="eyebrow qt-eyebrow"><span lang="en">Side project · Game</span><span lang="es">Proyecto paralelo · Juego</span></p>
         <h2 id="quest-title" class="qt-title">ABAP Quest</h2>
@@ -2484,7 +2501,7 @@ ENDLOOP.</pre>
           <p><span lang="en">The portfolio is all yours.</span><span lang="es">El portfolio es todo tuyo.</span></p>
           <div class="st-cta">
             <a class="btn primary" href="#projects" data-st-go="projects"><span lang="en">See my projects</span><span lang="es">Ver mis proyectos</span></a>
-            <a class="btn gold" href="quest.html"><img class="st-quest" src="assets/img/quest-available.png" alt=""><span lang="en">Play ABAP Quest</span><span lang="es">Jugar a ABAP Quest</span></a>
+            <a class="btn gold" href="quest"><img class="st-quest" src="assets/img/quest-available.png" alt=""><span lang="en">Play ABAP Quest</span><span lang="es">Jugar a ABAP Quest</span></a>
             <a class="btn" href="#contact" data-st-go="contact"><svg class="i"><use href="#i-mail"/></svg><span lang="en">Get in touch</span><span lang="es">Escríbeme</span></a>
           </div>
         </section>

@@ -12,7 +12,7 @@
 #
 #  Las líneas que empiezan por # y lo que va detrás de "  #" son notas: no salen en la web.
 # ───────────────────────────────────────────────────────────────────────────────
-id: my-project            # nombre en la URL (index.html#my-project): minúsculas, números y guiones
+id: my-project            # nombre en la URL (danroca.com/#my-project): minúsculas, números y guiones
 draft: yes                # mientras exista esta línea, el proyecto no se publica
 place: main               # main = portada  ·  more = dentro de «Más proyectos»
 order: 90                 # orden dentro de su sitio: los números bajos van primero (portada: 10…80 ya usados)

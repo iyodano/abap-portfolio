@@ -7,6 +7,7 @@
 <meta name="description" content="ABAP Quest: a small browser RPG to learn modern ABAP. Eight zones, nine bosses and 97 questions on ADT, modern syntax, OO, ABAP Unit, CDS, RAP, clean core and HCM integrations, in English and Spanish.">
 <link rel="icon" href="assets/img/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/img/icon-192.png">
+<link rel="canonical" href="https://danroca.com/quest">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <meta name="theme-color" content="#030a19">
 <script>
@@ -16,11 +17,30 @@
     try { lang = localStorage.getItem('lang') || ((navigator.language || '').toLowerCase().indexOf('es') === 0 ? 'es' : 'en'); } catch (e) { /* no storage */ }
     document.documentElement.lang = lang === 'es' ? 'es' : 'en';
   })();
+  // Clean addresses: links point to "./" and "quest", and GitHub Pages serves index.html and quest.html for them.
+  // Someone arriving at an old /index.html or /quest.html link sees the clean address instead.
+  // Anywhere else (double-clicked file, local preview server) the links get their ".html" back on click.
+  (function () {
+    var live = /(^|\.)danroca\.com$|\.github\.io$/.test(location.hostname), p = location.pathname;
+    if (live) {
+      if (/\/(index|quest)\.html$/.test(p)) {
+        try { history.replaceState(null, '', p.replace(/index\.html$/, '').replace(/\.html$/, '') + location.search + location.hash); } catch (e) { /* no history API */ }
+      }
+      return;
+    }
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href]'), m = a && /^(\.\/|quest)(#.*)?$/.exec(a.getAttribute('href'));
+      if (!m || e.button !== 0) return;
+      e.preventDefault();
+      var url = (m[1] === 'quest' ? 'quest.html' : 'index.html') + (m[2] || '');
+      if (e.ctrlKey || e.metaKey || e.shiftKey) window.open(url); else location.href = url;
+    }, true);
+  })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=e739a5a6">
+<link rel="stylesheet" href="assets/css/styles.css?v=dee62f00">
 <link rel="stylesheet" href="assets/css/quest.css?v=89c207c1">
 </head>
 <body class="quest-page">
@@ -68,7 +88,7 @@
   <div class="nav-inner glass">
     <a class="brand q-brand" href="#" data-home><span class="q-mono"><svg class="i"><use href="#q-sword"/></svg></span><span class="name">ABAP Quest</span></a>
     <nav class="nav-links" aria-label="Pages" data-es-aria-label="Páginas">
-      <a class="q-back" href="index.html"><span class="q-arrow" aria-hidden="true">←&nbsp;</span><svg class="i q-chev" aria-hidden="true"><use href="#q-chev"/></svg><span>Portfolio</span></a>
+      <a class="q-back" href="./"><span class="q-arrow" aria-hidden="true">←&nbsp;</span><svg class="i q-chev" aria-hidden="true"><use href="#q-chev"/></svg><span>Portfolio</span></a>
     </nav>
     <div class="lang-switch" role="group" aria-label="Language" data-es-aria-label="Idioma">
       <button type="button" data-lang="en" aria-pressed="true" title="English">
@@ -95,7 +115,7 @@
 </footer>
 <div class="q-toasts" aria-live="polite"></div>
 
-<script src="assets/js/quest-data.js?v=7e584e2a"></script>
+<script src="assets/js/quest-data.js?v=d2d5f69a"></script>
 <script src="assets/js/quest.js?v=31c60e28"></script>
 </body>
 </html>
