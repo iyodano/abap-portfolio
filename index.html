@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=8f57947b">
+<link rel="stylesheet" href="assets/css/styles.css?v=e739a5a6">
 </head>
 <body>
 <!--
@@ -60,6 +60,8 @@
   <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></symbol>
   <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
+  <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
 </svg>
 
 <header class="nav">
@@ -87,7 +89,7 @@
   </div>
 </header>
 
-<!-- Phones only: the sections in a floating glass bar at the bottom (app.js lights up the section on screen) -->
+<!-- Phones and tablets (up to 1024px): the sections in a floating glass bar at the bottom (app.js lights up the section on screen) -->
 <nav class="tabbar glass" aria-label="Sections" data-es-aria-label="Secciones">
   <a href="#profile" data-scroll="profile"><svg class="i"><use href="#i-user"/></svg><span lang="en">Profile</span><span lang="es">Perfil</span></a>
   <a href="#projects" data-scroll="projects"><svg class="i"><use href="#i-layers"/></svg><span lang="en">Projects</span><span lang="es">Proyectos</span></a>
@@ -99,32 +101,35 @@
 <main>
   <!-- ================= HERO ================= -->
   <section id="home" class="hero glass" aria-labelledby="hero-title">
-    <div>
-      <p class="eyebrow"><span lang="en">SAP ABAP Developer · Employee Central Payroll</span><span lang="es">Desarrollador SAP ABAP · Employee Central Payroll</span></p>
-      <h1 id="hero-title"><span lang="en">I build the integrations around <span class="soft">Employee Central Payroll</span></span><span lang="es">Construyo las integraciones de <span class="soft">Employee Central Payroll</span></span></h1>
-      <p class="lead" lang="en">Everything I develop runs on SAP SuccessFactors Employee Central Payroll: from moving custom code into a new ECP system to extending the replication from Employee Central, building payroll reports on the payroll cluster and connecting ECP with third parties through SAP Integration Suite.</p>
-      <p class="lead" lang="es">Cada desarrollo corre sobre SAP SuccessFactors Employee Central Payroll: desde llevar el código a medida a un sistema ECP nuevo hasta ampliar la replicación desde Employee Central, crear informes de nómina sobre el clúster de resultados y conectar ECP con terceros a través de SAP Integration Suite.</p>
-      <div class="chips">
-        <span class="chip">ABAP OO 7.5x</span>
-        <span class="chip"><span lang="en">EC → ECP replication</span><span lang="es">Replicación EC → ECP</span></span>
-        <span class="chip"><span lang="en">Replication BAdIs</span><span lang="es">BAdIs de replicación</span></span>
-        <span class="chip"><span lang="en">Payroll cluster</span><span lang="es">Clúster de nómina</span></span>
-        <span class="chip">SAP Integration Suite</span>
-        <span class="chip"><span lang="en">SOAP proxies</span><span lang="es">Proxies SOAP</span></span>
-      </div>
-      <div class="cta">
-        <a class="btn primary" href="#projects" data-scroll="projects"><span lang="en">View projects</span><span lang="es">Ver proyectos</span></a>
-        <a class="btn" href="#tools" data-scroll="tools"><svg class="i"><use href="#i-wand"/></svg><span lang="en">ABAP 7.40+ converter</span><span lang="es">Conversor ABAP 7.40+</span></a>
-      </div>
+    <div class="hello">
+      <img class="hello-logo" src="assets/img/logo.png" alt="" width="48" height="48">
+      <p><b><span lang="en">Hi, I'm Dan 👋</span><span lang="es">Hola, soy Dan 👋</span></b><span lang="en">SAP ABAP Developer · Payroll on ECP</span><span lang="es">Desarrollador SAP ABAP · Nómina en ECP</span></p>
     </div>
-    <div class="flow" aria-label="How employee data travels from Employee Central to third parties" data-es-aria-label="Cómo viajan los datos del empleado desde Employee Central hasta terceros">
-      <span class="pulse" aria-hidden="true"></span>
-      <div class="node"><div><b>Employee Central</b><span lang="en">Employee master data</span><span lang="es">Datos maestros del empleado</span></div><span class="tx">EC</span></div>
-      <div class="node"><div><b><span lang="en">Point-to-point replication</span><span lang="es">Replicación point-to-point</span></b><span>Compound Employee API · BAdIs</span></div><span class="tx">HRSFEC_PTP_EE_REPL</span></div>
-      <div class="node ecp"><div><b>Employee Central Payroll</b><span lang="en">Infotypes · payroll · PCC</span><span lang="es">Infotipos · nómina · PCC</span></div><span class="tx">PA · PCL2</span></div>
-      <div class="node"><div><b>SAP Integration Suite</b><span lang="en">iFlows · SFTP adapter</span><span lang="es">iFlows · adaptador SFTP</span></div><span class="tx">CPI</span></div>
-      <div class="node"><div><b><span lang="en">Third parties</span><span lang="es">Terceros</span></b><span lang="en">Time &amp; attendance, health <br>&amp; safety, banks</span><span lang="es">Control horario, prevención, bancos</span></div><span class="tx">SOAP · SFTP · SEPA</span></div>
+    <h1 id="hero-title"><span lang="en">I write the code behind SAP payroll. <span class="soft">Where do you start?</span></span><span lang="es">Programo la nómina de SAP. <span class="soft">¿Por dónde empiezas?</span></span></h1>
+    <!-- "Choose your path": the middle option opens the Stories intro (app.js); ?ig in the URL opens it on the first visit -->
+    <div class="paths">
+      <p class="paths-lbl"><span lang="en">Choose your path</span><span lang="es">Elige tu camino</span></p>
+      <a class="path p-sap" href="#projects" data-scroll="projects">
+        <span class="p-ic"><svg class="i"><use href="#i-code"/></svg></span>
+        <span class="p-tx"><b><span lang="en">I know SAP</span><span lang="es">Sé de SAP</span></b><span lang="en">Real projects, with their ABAP annotated</span><span lang="es">Proyectos reales con su ABAP comentado</span></span>
+        <svg class="i p-go" aria-hidden="true"><use href="#i-chev-r"/></svg>
+      </a>
+      <button class="path p-new" type="button" data-stories aria-haspopup="dialog">
+        <span class="p-ic"><svg class="i"><use href="#i-bulb"/></svg></span>
+        <span class="p-tx"><b><span lang="en">I don't know SAP</span><span lang="es">No sé de SAP</span></b><span lang="en">What I do, explained in 30 seconds</span><span lang="es">Qué hago, explicado en 30 segundos</span></span>
+        <svg class="i p-go" aria-hidden="true"><use href="#i-chev-r"/></svg>
+      </button>
+      <a class="path p-quest" href="quest.html">
+        <span class="p-ic"><img class="qb-mark" src="assets/img/quest-available.png" alt=""></span>
+        <span class="p-tx"><b><span lang="en">I want to play</span><span lang="es">Quiero jugar</span></b><span lang="en">ABAP Quest: 8 bosses, 97 challenges</span><span lang="es">ABAP Quest: 8 jefes y 97 retos</span></span>
+        <svg class="i p-go" aria-hidden="true"><use href="#i-chev-r"/></svg>
+      </a>
     </div>
+    <ul class="hero-stats">
+      <li><b>2023</b><span lang="en">started in SAP</span><span lang="es">empecé en SAP</span></li>
+      <li><b data-count="projects">12</b><span lang="en">real projects</span><span lang="es">proyectos reales</span></li>
+      <li><b>97</b><span lang="en">ABAP Quest challenges</span><span lang="es">retos en ABAP Quest</span></li>
+    </ul>
   </section>
 
   <!-- ================= PROFILE ================= -->
@@ -148,6 +153,17 @@
               <p>I joined my current team in the middle of an ECP go-live, migrating the custom code from the client's previous SAP HCM system. Since then I have worked on evolutive development and support, from a BAdI in the replication to a SEPA transfer file.</p>
             </div>
             <div>
+              <h4>Where my code lives</h4>
+              <div class="flow" aria-label="How employee data travels from Employee Central to third parties" data-es-aria-label="Cómo viajan los datos del empleado desde Employee Central hasta terceros">
+              <span class="pulse" aria-hidden="true"></span>
+              <div class="node"><div><b>Employee Central</b><span lang="en">Employee master data</span><span lang="es">Datos maestros del empleado</span></div><span class="tx">EC</span></div>
+              <div class="node"><div><b><span lang="en">Point-to-point replication</span><span lang="es">Replicación point-to-point</span></b><span>Compound Employee API · BAdIs</span></div><span class="tx">HRSFEC_PTP_EE_REPL</span></div>
+              <div class="node ecp"><div><b>Employee Central Payroll</b><span lang="en">Infotypes · payroll · PCC</span><span lang="es">Infotipos · nómina · PCC</span></div><span class="tx">PA · PCL2</span></div>
+              <div class="node"><div><b>SAP Integration Suite</b><span lang="en">iFlows · SFTP adapter</span><span lang="es">iFlows · adaptador SFTP</span></div><span class="tx">CPI</span></div>
+              <div class="node"><div><b><span lang="en">Third parties</span><span lang="es">Terceros</span></b><span lang="en">Time &amp; attendance, health <br>&amp; safety, banks</span><span lang="es">Control horario, prevención, bancos</span></div><span class="tx">SOAP · SFTP · SEPA</span></div>
+              </div>
+            </div>
+            <div>
               <h4>First project: an ECP go-live</h4>
               <p>The client was moving its payroll from SAP HCM on-premise to Employee Central Payroll, and every custom development had to reach the new system with no transport route between the two. I moved the transport requests by hand: data files and cofiles through AL11, then the import queue.</p>
               <p>About 3,000 import errors appeared, many of them chained. Instead of fixing them one by one, I grouped them by root cause: each root cause fixed cleared hundreds of errors at once, and the custom code was running for go-live.</p>
@@ -168,6 +184,17 @@
               <h4>En resumen</h4>
               <p>Parte técnica de la nómina en Employee Central Payroll: la replicación desde Employee Central, infotipos a medida, informes de nómina sobre el clúster de resultados e interfaces de salida hacia bancos y sistemas de terceros.</p>
               <p>Me incorporé a mi equipo actual en pleno arranque de un ECP, migrando el código a medida del sistema SAP HCM anterior. Desde entonces trabajo en evolutivos y soporte, desde una BAdI de la replicación hasta un fichero de transferencias SEPA.</p>
+            </div>
+            <div>
+              <h4>Dónde vive mi código</h4>
+              <div class="flow" aria-label="How employee data travels from Employee Central to third parties" data-es-aria-label="Cómo viajan los datos del empleado desde Employee Central hasta terceros">
+              <span class="pulse" aria-hidden="true"></span>
+              <div class="node"><div><b>Employee Central</b><span lang="en">Employee master data</span><span lang="es">Datos maestros del empleado</span></div><span class="tx">EC</span></div>
+              <div class="node"><div><b><span lang="en">Point-to-point replication</span><span lang="es">Replicación point-to-point</span></b><span>Compound Employee API · BAdIs</span></div><span class="tx">HRSFEC_PTP_EE_REPL</span></div>
+              <div class="node ecp"><div><b>Employee Central Payroll</b><span lang="en">Infotypes · payroll · PCC</span><span lang="es">Infotipos · nómina · PCC</span></div><span class="tx">PA · PCL2</span></div>
+              <div class="node"><div><b>SAP Integration Suite</b><span lang="en">iFlows · SFTP adapter</span><span lang="es">iFlows · adaptador SFTP</span></div><span class="tx">CPI</span></div>
+              <div class="node"><div><b><span lang="en">Third parties</span><span lang="es">Terceros</span></b><span lang="en">Time &amp; attendance, health <br>&amp; safety, banks</span><span lang="es">Control horario, prevención, bancos</span></div><span class="tx">SOAP · SFTP · SEPA</span></div>
+              </div>
             </div>
             <div>
               <h4>Primer proyecto: un arranque de ECP</h4>
@@ -2420,6 +2447,54 @@ ENDLOOP.</pre>
 </div>
 
 <script src="assets/js/abap-modernizer.js?v=aaff02b1"></script>
-<script src="assets/js/app.js?v=7f0c634d"></script>
+<!-- Stories: "what I do, in 30 seconds". app.js builds the dialog from this template when the "I don't know SAP" path is
+     pressed, or on the first visit through a link with ?ig (the Instagram bio: https://danroca.com/?ig).
+     Slide 3 lists the first three project cards; data-ms is how long a slide stays before moving on. -->
+<template id="stories-tpl">
+  <div class="stories" role="dialog" aria-modal="true" aria-label="What I do, in 30 seconds" data-es-aria-label="Qué hago, en 30 segundos" hidden>
+    <div class="st-card" tabindex="-1">
+      <div class="st-bars" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+      <div class="st-head">
+        <img src="assets/img/logo.png" alt="" width="32" height="32">
+        <p><b>danroca.com</b><span lang="en">SAP ABAP · Payroll on ECP</span><span lang="es">SAP ABAP · Nómina en ECP</span></p>
+        <button type="button" class="st-close" data-st-close><span lang="en">Skip</span><span lang="es">Saltar</span><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+      </div>
+      <div class="st-slides" aria-live="polite">
+        <section class="st-slide s-hello" data-ms="5500">
+          <img class="st-big-logo" src="assets/img/logo.png" alt="" width="84" height="84">
+          <h2><span lang="en">Hi, I'm Dan 👋</span><span lang="es">Hola, soy Dan 👋</span></h2>
+          <p><span lang="en">I write SAP code for the least visible and most delicate part of any company: <b>payroll</b>.</span><span lang="es">Programo en SAP la parte menos visible y más delicada de una empresa: <b>la nómina</b>.</span></p>
+        </section>
+        <section class="st-slide s-chain" data-ms="8000">
+          <h2><span lang="en">When HR changes your salary…</span><span lang="es">Cuando RR.&nbsp;HH. cambia tu sueldo…</span></h2>
+          <p><span lang="en">…my code makes sure it reaches your payslip and the bank, correctly.</span><span lang="es">…mi código hace que llegue bien a tu nómina y al banco.</span></p>
+          <ol class="st-chain">
+            <li class="c-blue"><span class="st-ic"><svg class="i"><use href="#i-user"/></svg></span><span><b><span lang="en">HR</span><span lang="es">RR.&nbsp;HH.</span></b><small>Employee Central</small></span></li>
+            <li class="c-mint me"><span class="st-ic"><svg class="i"><use href="#i-code"/></svg></span><span><b><span lang="en">My ABAP code</span><span lang="es">Mi código ABAP</span></b><small><span lang="en">Replication, infotypes, reports</span><span lang="es">Replicación, infotipos, informes</span></small></span></li>
+            <li class="c-gold"><span class="st-ic"><svg class="i"><use href="#i-bank"/></svg></span><span><b><span lang="en">Payroll and bank</span><span lang="es">Nómina y banco</span></b><small><span lang="en">ECP · SEPA · third parties</span><span lang="es">ECP · SEPA · terceros</span></small></span></li>
+          </ol>
+        </section>
+        <section class="st-slide s-proof" data-ms="7500">
+          <h2><span data-count="projects">12</span> <span lang="en">real projects</span><span lang="es">proyectos reales</span></h2>
+          <p><span lang="en">Each one tells the context, what I did and the code that makes it work. No client names.</span><span lang="es">Cada uno cuenta el contexto, lo que hice y el código que lo hace funcionar. Sin nombres de clientes.</span></p>
+          <ul class="st-projects"></ul>
+        </section>
+        <section class="st-slide s-go">
+          <h2><span lang="en">Where to next?</span><span lang="es">¿Por dónde sigues?</span></h2>
+          <p><span lang="en">The portfolio is all yours.</span><span lang="es">El portfolio es todo tuyo.</span></p>
+          <div class="st-cta">
+            <a class="btn primary" href="#projects" data-st-go="projects"><span lang="en">See my projects</span><span lang="es">Ver mis proyectos</span></a>
+            <a class="btn gold" href="quest.html"><img class="st-quest" src="assets/img/quest-available.png" alt=""><span lang="en">Play ABAP Quest</span><span lang="es">Jugar a ABAP Quest</span></a>
+            <a class="btn" href="#contact" data-st-go="contact"><svg class="i"><use href="#i-mail"/></svg><span lang="en">Get in touch</span><span lang="es">Escríbeme</span></a>
+          </div>
+        </section>
+      </div>
+      <p class="st-hint" aria-hidden="true"><span class="h-touch"><span lang="en">Tap to continue</span><span lang="es">Toca para seguir</span></span><span class="h-mouse"><span lang="en">Click or press → to continue</span><span lang="es">Haz clic o pulsa → para seguir</span></span></p>
+    </div>
+    <button type="button" class="st-nav st-prev" aria-label="Previous" data-es-aria-label="Anterior"><svg class="i"><use href="#i-chev-l"/></svg></button>
+    <button type="button" class="st-nav st-next" aria-label="Next" data-es-aria-label="Siguiente"><svg class="i"><use href="#i-chev-r"/></svg></button>
+  </div>
+</template>
+<script src="assets/js/app.js?v=897e58da"></script>
 </body>
 </html>

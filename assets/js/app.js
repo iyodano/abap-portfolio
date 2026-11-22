@@ -37,7 +37,7 @@
   const refreshers = []; // re-render functions of the tool open in the sheet
 
   function localizeAttrs(root) {
-    const els = root.querySelectorAll ? root.querySelectorAll('*') : [];
+    const els = root.querySelectorAll ? [...(root.nodeType === 1 ? [root] : []), ...root.querySelectorAll('*')] : [];   // the root element counts too
     els.forEach(el => {
       for (const a of [...el.attributes]) {
         if (!a.name.startsWith('data-es-')) continue;
@@ -284,11 +284,11 @@
     update();
   })();
 
-  /* ---------- Phones: the top bar hides while scrolling down and comes back on the way up ---------- */
+  /* ---------- Phones and tablets: the top bar hides while scrolling down and comes back on the way up ---------- */
   (function autoHideNav() {
     const nav = $('.nav');
     if (!nav) return;
-    const phone = matchMedia('(max-width: 640px)');
+    const phone = matchMedia('(max-width: 1024px)');   // same breakpoint as the section bar in styles.css
     let lastY = scrollY, hidden = false, raf = 0;
     const set = h => { if (h !== hidden) { hidden = h; nav.classList.toggle('nav-hidden', h); } };
     const onScroll = () => {
@@ -303,13 +303,177 @@
     phone.addEventListener('change', onScroll);
   })();
 
+  /* ---------- Desktop: if the system font makes the section links too wide, tighten the bar (.nav-tight) ---------- */
+  (function fitNav() {
+    const links = $('.nav-links');
+    const root = document.documentElement;
+    if (!links || !$('.tabbar')) return;
+    let raf = 0;
+    const check = () => {
+      raf = 0;
+      root.classList.remove('nav-tight');
+      if (links.offsetParent && links.scrollWidth > links.clientWidth + 1) root.classList.add('nav-tight');
+    };
+    const later = () => { if (!raf) raf = requestAnimationFrame(check); };
+    addEventListener('resize', later);
+    new MutationObserver(later).observe(root, { attributes: true, attributeFilter: ['lang'] });   // labels change length with the language
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(later);
+    check();
+  })();
+
+  /* ---------- Stories: "what I do, in 30 seconds" ----------
+     Opened by the "I don't know SAP" path, or once per browser through a link with ?ig (the Instagram bio).
+     Tap the right side (or →) to move on, the left side (or ←) to go back, hold to pause, Esc or "Skip" to close. */
+  (function stories() {
+    const tpl = $('#stories-tpl');
+    if (!tpl) return;
+    const root = document.documentElement;
+    const SEEN = 'danroca.stories.seen';
+    let el = null, card, slides, bars, idx = 0, opener = null, down = null;
+
+    const projectCards = () => $$('#projects article.card[data-id]:not(.more-card)');
+    const countProjects = () => {
+      const more = $('#projects .more-card template');   // "More projects" keeps its items inside the card's template
+      const n = projectCards().length + (more ? more.content.querySelectorAll('.more-item').length : 0);
+      if (n) $$('[data-count="projects"]').forEach(x => { x.textContent = n; });
+    };
+    const scrollToId = id => {
+      const target = document.getElementById(id);
+      if (target) scrollTo({ top: target.getBoundingClientRect().top + scrollY - 84, behavior: reduced ? 'auto' : 'smooth' });
+    };
+    const openProject = id => {
+      if (location.hash.slice(1) === id) dispatchEvent(new HashChangeEvent('hashchange'));
+      else location.hash = id;
+    };
+
+    function build() {
+      el = tpl.content.firstElementChild.cloneNode(true);
+      card = $('.st-card', el);
+      const list = $('.st-projects', el);
+      projectCards().slice(0, 3).forEach(c => {
+        const li = document.createElement('li');
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.dataset.stOpen = c.dataset.id;
+        const tile = $('.tile', c), h3 = $('h3', c);
+        b.innerHTML = `<span class="st-ic">${tile ? tile.innerHTML : ''}</span><span>${h3 ? h3.innerHTML : ''}</span>`;
+        li.appendChild(b);
+        list.appendChild(li);
+      });
+      const navMark = $('.nav .qb-mark');
+      if (navMark) $('.st-quest', el).src = navMark.getAttribute('src');
+      slides = $$('.st-slide', el);
+      bars = $$('.st-bars i', el);
+      document.body.appendChild(el);
+      countProjects();
+      localizeAttrs(el);
+
+      el.addEventListener('animationend', e => { if (e.animationName === 'st-progress') go(idx + 1); });
+      el.addEventListener('click', e => {
+        if (e.target === el) { close(); return; }   // the blurred page around the card
+        const t = e.target.closest('button, a');
+        if (!t) return;
+        if (t.matches('[data-st-close]')) close();
+        else if (t.matches('.st-prev')) go(idx - 1);
+        else if (t.matches('.st-next')) go(idx + 1);
+        else if (t.dataset.stGo) { e.preventDefault(); close(() => scrollToId(t.dataset.stGo)); }
+        else if (t.dataset.stOpen) close(() => openProject(t.dataset.stOpen));
+      });
+      // tap to move, hold to pause (links and buttons keep their own click)
+      card.addEventListener('pointerdown', e => {
+        if (e.button > 0 || e.target.closest('button, a')) return;
+        down = { x: e.clientX, y: e.clientY, t: Date.now() };
+        el.classList.add('paused');
+      });
+      const up = e => {
+        if (!down) return;
+        const d = down;
+        down = null;
+        el.classList.remove('paused');
+        if (e.type === 'pointercancel' || Date.now() - d.t > 450 || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 12) return;
+        const r = card.getBoundingClientRect();
+        go(e.clientX - r.left < r.width * 0.3 ? idx - 1 : idx + 1);
+      };
+      card.addEventListener('pointerup', up);
+      card.addEventListener('pointercancel', up);
+      card.addEventListener('contextmenu', e => e.preventDefault());   // long press on phones = pause, not a menu
+      document.addEventListener('visibilitychange', () => { if (el && !el.hidden) el.classList.toggle('paused', document.hidden); });
+    }
+
+    function go(n) {
+      idx = Math.max(0, Math.min(slides.length - 1, n));
+      const last = idx === slides.length - 1;
+      slides.forEach((s, k) => { s.classList.toggle('on', k === idx); s.inert = k !== idx; });
+      bars.forEach((b, k) => { b.classList.remove('run'); b.classList.toggle('done', k < idx || (k === idx && (last || reduced))); });
+      el.classList.toggle('first', idx === 0);
+      el.classList.toggle('last', last);
+      slides[idx].scrollTop = 0;
+      if (!last && !reduced) {   // with reduced motion the slides only move when asked to
+        const bar = bars[idx];
+        bar.style.setProperty('--dur', (Number(slides[idx].dataset.ms) || 6000) + 'ms');
+        void bar.offsetWidth;   // restart the progress animation
+        bar.classList.add('run');
+      }
+    }
+
+    function onKey(e) {
+      if (e.key === 'Escape') { e.preventDefault(); close(); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); go(idx + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); go(idx - 1); }
+      else if (e.key === 'Tab') {   // keep focus inside the dialog
+        const f = $$('button, a[href]', el).filter(x => x.offsetParent !== null && !x.closest('[inert]'));
+        if (!f.length) return;
+        const i = f.indexOf(document.activeElement);
+        if (i === -1) { e.preventDefault(); (e.shiftKey ? f[f.length - 1] : f[0]).focus(); }
+        else if (e.shiftKey && i === 0) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+      }
+    }
+
+    function open() {
+      if (!el) build();
+      if (!el.hidden) return;
+      opener = document.activeElement;
+      el.hidden = false;
+      root.classList.add('locked');
+      try { localStorage.setItem(SEEN, '1'); } catch (e) { /* no storage */ }
+      go(0);
+      document.addEventListener('keydown', onKey);
+      requestAnimationFrame(() => $('.st-close', el).focus({ preventScroll: true }));
+    }
+
+    function close(then) {
+      if (!el || el.hidden) return;
+      el.hidden = true;
+      el.classList.remove('paused');
+      bars.forEach(b => b.classList.remove('run'));
+      root.classList.remove('locked');
+      document.removeEventListener('keydown', onKey);
+      if (opener && opener.focus && document.contains(opener)) opener.focus({ preventScroll: true });
+      if (then) requestAnimationFrame(then);
+    }
+
+    countProjects();
+    $$('[data-stories]').forEach(b => b.addEventListener('click', open));
+
+    // ?ig (the Instagram bio link): show them once per browser, then tidy the address
+    const params = new URLSearchParams(location.search);
+    if (params.has('ig')) {
+      params.delete('ig');
+      const q = params.toString();
+      history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash);
+      let seen = false;
+      try { seen = localStorage.getItem(SEEN) === '1'; } catch (e) { /* no storage */ }
+      if (!seen && !location.hash) setTimeout(open, 400);
+    }
+  })();
+
   /* ---------- ABAP Quest teaser: progress saved by quest.html in this browser ---------- */
   (function questProgress() {
     let st = null;
     try { st = JSON.parse(localStorage.getItem('abapquest.portfolio.v1') || 'null'); } catch (e) { /* no storage */ }
     if (!st || !st.xp) return;
-    const mark = $('.qb-mark');
-    if (mark) mark.src = 'assets/img/quest-progress.png';   // "?": a quest in progress
+    $$('.qb-mark').forEach(m => { m.src = 'assets/img/quest-progress.png'; });   // "?": a quest in progress
     const el = $('[data-quest-progress]');
     if (!el) return;
     const level = st.level || 1;
