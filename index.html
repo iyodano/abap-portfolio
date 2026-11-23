@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Geist:wght@400..800&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=1d428253">
+<link rel="stylesheet" href="assets/css/styles.css?v=c4c26740">
 </head>
 <body>
 <!--
@@ -133,7 +133,7 @@
       </a>
       <button class="path p-new" type="button" data-stories aria-haspopup="dialog">
         <span class="p-ic"><svg class="i"><use href="#i-bulb"/></svg></span>
-        <span class="p-tx"><b><span lang="en">I don't know SAP</span><span lang="es">No sé de SAP</span></b><span lang="en">SAP and what I do, in 1 minute</span><span lang="es">Qué es SAP y qué hago, en 1 minuto</span></span>
+        <span class="p-tx"><b><span lang="en">I don't know SAP</span><span lang="es">No sé qué es SAP</span></b><span lang="en">SAP and what I do, in 1 minute</span><span lang="es">Qué es SAP y qué hago, en 1 minuto</span></span>
         <svg class="i p-go" aria-hidden="true"><use href="#i-chev-r"/></svg>
       </button>
       <a class="path p-quest" href="quest">
@@ -1928,35 +1928,55 @@ ENDLOOP.</pre>
         <p lang="en">Point-to-point replication step by step: who calls whom, where custom logic goes and where to look when it fails.</p>
         <p lang="es">La replicación point-to-point paso a paso: quién llama a quién, dónde va la lógica a medida y dónde mirar cuando falla.</p>
         <div class="front-flow" aria-hidden="true"><span><span lang="en">Job in ECP</span><span lang="es">Job en ECP</span></span><i>→</i><span>Compound Employee API</span><i>→</i><span><span lang="en">BIB mapping + BAdIs</span><span lang="es">Mapeo BIB + BAdIs</span></span><i>→</i><span><span lang="en">Infotypes</span><span lang="es">Infotipos</span></span><i>→</i><span>SLG1 + DRM</span></div>
-        <div class="tags"><span class="tag">PTP</span><span class="tag">BIB</span><span class="tag">DRM</span></div>
+        <div class="tags"><span class="tag">PTP</span><span class="tag">BIB</span><span class="tag">Key mapping</span><span class="tag">DRM</span></div>
         <template class="detail">
           <div lang="en">
             <ol class="steps">
               <li>The ECP replication program, RP_HRSFEC_PTP_EE_REPLICATION (transaction HRSFEC_PTP_EE_REPL), usually scheduled as a job, calls the Compound Employee API in Employee Central.</li>
-              <li>Employee Central returns the employees changed since the last run.</li>
+              <li>Employee Central returns the employees changed since the last run. That date is kept in <code>HRSFEC_PTP_LMOD</code> (maintained in SM30): change it and the next run asks for changes from that date.</li>
+              <li>Each employee is looked up in the key mapping table <code>HRSFEC_D_EEKEYMP</code>, which links the IDs in Employee Central (user ID, person ID) to the PERNR in ECP. With no entry, it is handled as a hire and gets a new PERNR.</li>
               <li>The Business Integration Builder applies the field and value mappings, runs the replication BAdIs and writes the infotypes.</li>
               <li>Each employee's result goes to the application log (SLG1, object HRSFEC, subobject EMPLOYEE, external ID = the employee's ID in EC) and back to Employee Central. Subobject EMPLOYEE_PTP holds the technical log of each run: the query sent to EC and the confirmation back.</li>
               <li>In Employee Central, the Data Replication Monitor shows the status per employee.</li>
             </ol>
+            <div class="lesson"><h4>Which BAdI for what</h4><p>All of them in enhancement spot <code>HRSFEC_CE_MASTER_DATA_REPL</code>:</p>
+              <ul class="badi-list">
+                <li><code>HRSFEC_B_CE_PROCESS_EMPLOYEE</code><span>Logic that needs the whole employee (method <code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>).</span></li>
+                <li><code>HRSFEC_B_CE_PROCESS_ET</code><span>One employment at a time, for example to validate the payment information EC sends.</span></li>
+                <li><code>HRSFEC_B_CE_CHANGE_IT0001</code><span>Changes the IT0001 fields before they are written, for example to set a personnel subarea that only exists in ECP. There are more like it for other infotypes (IT0000, IT0006, IT0008…).</span></li>
+                <li><code>HRSFEC_B_CE_DECIDE_HIRE_REHIRE</code><span>Decides between hire and rehire, for example to keep the PERNR when someone moves to another company.</span></li>
+                <li><code>HRSFEC_B_CE_EXT_PERNR_MAP</code><span>Keeps the same employee number in EC and ECP.</span></li>
+              </ul>
+              <p>The infotype BAdIs only run when that infotype is in the BIB field mapping: check it with an external breakpoint before building on them.</p></div>
             <div class="callouts">
-              <div class="lesson"><h4>Where custom logic goes</h4><p>Logic that needs the whole employee goes in the common BAdI: <code>HRSFEC_B_CE_PROCESS_EMPLOYEE</code>, method <code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>, in enhancement spot <code>HRSFEC_CE_MASTER_DATA_REPL</code>. Infotype-specific BAdIs, such as the one for IT0008, only run when that infotype is in the BIB field mapping: check it with an external breakpoint before building on it.</p></div>
+              <div class="improve"><h4>Before the first replication</h4><p>Load the key mapping for everyone who already exists in ECP, with <code>RP_HRSFEC_UPLOAD_EEKEY_MAPPING</code>. Otherwise the replication tries to hire them again and stops with “Person already hired” (PG 002). And put a date in <code>HRSFEC_PTP_LMOD</code>: with none, EC sends the changes since the last data load.</p></div>
               <div class="improve"><h4>Never inside the BIB</h4><p>No <code>COMMIT WORK</code>, no <code>HR_INFOTYPE_OPERATION</code> on the same employee. The replication has its own unit of work and locks: write through <code>IF_HRPA_MASTERDATA_BL</code> and let it commit.</p></div>
             </div>
-            <div class="result"><h4>To debug one employee</h4><p>Run the replication for a single Person ID and compare with the SFAPI Audit Log in Employee Central: there you see exactly what was sent. To step through it, set an external breakpoint in <code>CL_HRSFEC_EE_MDR_MAIN</code>, method <code>PROCESS_EMPLOYEE</code>, or in your own BAdI implementation.</p></div>
+            <div class="result"><h4>To debug one employee</h4><p>Run the replication for a single Person ID and compare with the SFAPI Audit Log in Employee Central: there you see exactly what was sent. To step through it, set an external breakpoint in <code>CL_HRSFEC_EE_MDR_MAIN</code>, method <code>PROCESS_EMPLOYEE</code>, or in your own BAdI implementation. If the PERNR is not the one you expect, look at <code>HRSFEC_D_EEKEYMP</code> in SE16 first.</p></div>
           </div>
           <div lang="es">
             <ol class="steps">
               <li>El programa de replicación de ECP, RP_HRSFEC_PTP_EE_REPLICATION (transacción HRSFEC_PTP_EE_REPL), normalmente planificado en un job, llama a la Compound Employee API de Employee Central.</li>
-              <li>Employee Central devuelve los empleados modificados desde la última ejecución.</li>
+              <li>Employee Central devuelve los empleados modificados desde la última ejecución. Esa fecha se guarda en <code>HRSFEC_PTP_LMOD</code> (se mantiene en SM30): si la cambias, la siguiente ejecución pide los cambios desde esa fecha.</li>
+              <li>Cada empleado se busca en la tabla de key mapping <code>HRSFEC_D_EEKEYMP</code>, que une los ID de Employee Central (user ID, person ID) con el PERNR de ECP. Si no tiene entrada, se trata como un alta y recibe un PERNR nuevo.</li>
               <li>El Business Integration Builder aplica los mapeos de campos y valores, ejecuta las BAdIs de replicación y graba los infotipos.</li>
               <li>El resultado de cada empleado va al log de aplicación (SLG1, objeto HRSFEC, subobjeto EMPLOYEE, ID externo = el ID del empleado en EC) y de vuelta a Employee Central. El subobjeto EMPLOYEE_PTP guarda el log técnico de cada ejecución: la consulta enviada a EC y la confirmación de vuelta.</li>
               <li>En Employee Central, el Data Replication Monitor muestra el estado de cada empleado.</li>
             </ol>
+            <div class="lesson"><h4>Qué BAdI para qué</h4><p>Todas en el punto de ampliación <code>HRSFEC_CE_MASTER_DATA_REPL</code>:</p>
+              <ul class="badi-list">
+                <li><code>HRSFEC_B_CE_PROCESS_EMPLOYEE</code><span>La lógica que necesita el empleado completo (método <code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>).</span></li>
+                <li><code>HRSFEC_B_CE_PROCESS_ET</code><span>Un empleo cada vez; por ejemplo, para validar la información de pago que envía EC.</span></li>
+                <li><code>HRSFEC_B_CE_CHANGE_IT0001</code><span>Cambia los campos del IT0001 antes de grabarlos; por ejemplo, para poner una subdivisión de personal que solo existe en ECP. Hay más como esta para otros infotipos (IT0000, IT0006, IT0008…).</span></li>
+                <li><code>HRSFEC_B_CE_DECIDE_HIRE_REHIRE</code><span>Decide entre alta y reingreso; por ejemplo, para mantener el PERNR cuando alguien cambia de sociedad.</span></li>
+                <li><code>HRSFEC_B_CE_EXT_PERNR_MAP</code><span>Mantiene el mismo número de empleado en EC y en ECP.</span></li>
+              </ul>
+              <p>Las de infotipo solo se ejecutan cuando ese infotipo está en el mapeo de campos del BIB: compruébalo con un breakpoint externo antes de construir sobre ellas.</p></div>
             <div class="callouts">
-              <div class="lesson"><h4>Dónde va la lógica a medida</h4><p>La lógica que necesita el empleado completo va en la BAdI común: <code>HRSFEC_B_CE_PROCESS_EMPLOYEE</code>, método <code>PROCESS_EMPLOYEE_COMMON_ADDIN</code>, en el punto de ampliación <code>HRSFEC_CE_MASTER_DATA_REPL</code>. Las BAdIs específicas de infotipo, como la del IT0008, solo se ejecutan cuando ese infotipo está en el mapeo de campos del BIB: compruébalo con un breakpoint externo antes de construir sobre ellas.</p></div>
+              <div class="improve"><h4>Antes de la primera replicación</h4><p>Carga el key mapping de todos los que ya existen en ECP con <code>RP_HRSFEC_UPLOAD_EEKEY_MAPPING</code>. Si no, la replicación intenta darlos de alta otra vez y se para con «Person already hired» (PG 002). Y pon una fecha en <code>HRSFEC_PTP_LMOD</code>: sin ella, EC envía los cambios desde la última carga de datos.</p></div>
               <div class="improve"><h4>Nunca dentro del BIB</h4><p>Ni <code>COMMIT WORK</code> ni <code>HR_INFOTYPE_OPERATION</code> sobre el mismo empleado. La replicación tiene su propia unidad de trabajo y sus bloqueos: graba a través de <code>IF_HRPA_MASTERDATA_BL</code> y deja que confirme ella.</p></div>
             </div>
-            <div class="result"><h4>Para depurar un empleado</h4><p>Lanza la replicación para un único Person ID y compara con el SFAPI Audit Log de Employee Central: ahí ves exactamente lo que se ha enviado. Para seguirla paso a paso, pon un breakpoint externo en <code>CL_HRSFEC_EE_MDR_MAIN</code>, método <code>PROCESS_EMPLOYEE</code>, o en tu propia implementación de la BAdI.</p></div>
+            <div class="result"><h4>Para depurar un empleado</h4><p>Lanza la replicación para un único Person ID y compara con el SFAPI Audit Log de Employee Central: ahí ves exactamente lo que se ha enviado. Para seguirla paso a paso, pon un breakpoint externo en <code>CL_HRSFEC_EE_MDR_MAIN</code>, método <code>PROCESS_EMPLOYEE</code>, o en tu propia implementación de la BAdI. Si el PERNR no es el que esperas, mira primero <code>HRSFEC_D_EEKEYMP</code> en SE16.</p></div>
           </div>
         </template>
       </article>

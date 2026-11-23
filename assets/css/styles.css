@@ -373,6 +373,11 @@ textarea.code::placeholder { color: rgba(159, 177, 212, .5); }
 .lesson p { color: #dce9ff; }
 .improve { border-radius: 18px; padding: 16px 18px; background: rgba(255, 197, 107, .07); border: 1px solid rgba(255, 197, 107, .28); }
 .improve h4 { color: var(--warn); }
+/* BAdI name over its use, so long names wrap on phones */
+.badi-list { list-style: none; padding: 0 !important; margin: 10px 0 12px !important; gap: 10px !important; }
+.badi-list li { display: grid; gap: 2px; }
+.badi-list code { overflow-wrap: anywhere; justify-self: start; }
+.badi-list span { font-size: 14.5px; }
 .callouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 14px; }
 .lessons { list-style: none; padding: 0 !important; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 12px !important; }
 .lessons li { border-radius: 16px; padding: 14px 16px; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .09); }
